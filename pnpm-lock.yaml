@@ -150,8 +150,8 @@ dependencies:
     specifier: ^2.3.0
     version: 2.3.0
   unicode-emoji-json:
-    specifier: ^0.4.0
-    version: 0.4.0
+    specifier: ^0.6.0
+    version: 0.6.0
   unplugin-auto-import:
     specifier: ^0.16.4
     version: 0.16.4(@vueuse/core@10.9.0)(rollup@2.79.1)
@@ -8638,8 +8638,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /unicode-emoji-json@0.4.0:
-    resolution: {integrity: sha512-lVNOwh2AnmbwqtSrEVjAWKQoVzWgyWmXVqPuPkPfKb0tnA0+uYN/4ILCTdy9IRj/+3drAVhmjwjNJQr2dhCwnA==}
+  /unicode-emoji-json@0.6.0:
+    resolution: {integrity: sha512-tAYF+EsOxa8jo/XPNYHRX7Nc8uoII+/edIpHM4DQI4nMp3AuRmwGZhL8fEBe0kUk0zHK+6wiwxxxNwfW5ap2Tg==}
     dev: false
 
   /unicode-match-property-ecmascript@2.0.0:
