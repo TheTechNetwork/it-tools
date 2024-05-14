@@ -127,7 +127,7 @@ dependencies:
     version: 1.3.1
   oui-data:
     specifier: ^1.0.10
-    version: 1.0.10
+    version: 1.1.112
   pdf-signature-reader:
     specifier: ^1.4.2
     version: 1.4.3
@@ -7161,8 +7161,8 @@ packages:
     resolution: {integrity: sha512-TvAWxi0nDe1j/rtMcWcIj94+Ffe6n7zhow33h40SKxmsmozs6dz/e+EajymfoFcHd7sxNn8yHM8839uixMOV6g==}
     dev: false
 
-  /oui-data@1.0.10:
-    resolution: {integrity: sha512-PPrr40z5/MPStTTGJ0QtSD9KtaGHmnexBQWANWLWQOZZwbNMf/VyG/Uh29LwxExd51p3S323oM3kHbjRqmBiLg==}
+  /oui-data@1.1.112:
+    resolution: {integrity: sha512-b+xfchIFq8Inw5I7URkkcucA2UeuBeyCNyvZ7Sjg6pKP8REAWnWb/IrADZf21LZYTyVASFzoZ3m5bntsZ8HXPA==}
     dev: false
 
   /p-limit@2.3.0:
