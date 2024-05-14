@@ -100,7 +100,7 @@ dependencies:
     version: 3.1.2
   libphonenumber-js:
     specifier: ^1.10.28
-    version: 1.10.61
+    version: 1.11.1
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -3167,7 +3167,7 @@ packages:
       '@typescript-eslint/types': 6.21.0
       '@typescript-eslint/typescript-estree': 6.21.0(typescript@5.4.5)
       eslint: 8.57.0
-      semver: 7.6.2
+      semver: 7.6.1
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -6612,8 +6612,8 @@ packages:
       type-check: 0.4.0
     dev: true
 
-  /libphonenumber-js@1.10.61:
-    resolution: {integrity: sha512-TsQsyzDttDvvzWNkbp/i0fVbzTGJIG0mUu/uNalIaRQEYeJxVQ/FPg+EJgSqfSXezREjM0V3RZ8cLVsKYhhw0Q==}
+  /libphonenumber-js@1.11.1:
+    resolution: {integrity: sha512-Wze1LPwcnzvcKGcRHFGFECTaLzxOtujwpf924difr5zniyYv1C2PiW0419qDR7m8lKDxsImu5mwxFuXhXpjmvw==}
     dev: false
 
   /lines-and-columns@1.2.4:
