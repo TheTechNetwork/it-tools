@@ -3,7 +3,8 @@
  */
 module.exports = {
   root: true,
-  extends: ['@antfu', './.eslintrc-auto-import.json', '@unocss'],
+#  extends: ['@antfu', './.eslintrc-auto-import.json', '@unocss'],
+  extends: ['./.eslintrc-auto-import.json', '@unocss'],
 
   rules: {
     'curly': ['error', 'all'],
