@@ -1,3 +1,5 @@
+![Status](https://uptime.promarktech.co/api/badge/87/status)  ![Uptime](https://uptime.promarktech.co/api/badge/87/uptime) ![PingResponse](https://uptime.promarktech.co/api/badge/87/ping) ![avg-response](https://uptime.promarktech.co/api/badge/87/avg-response) ![cert-exp](https://uptime.promarktech.co/api/badge/87/cert-exp) ![response](https://uptime.promarktech.co/api/badge/87/response) 
+
 ![logo](.github/logo.png)
 
 Useful tools for developer and people working in IT. [Have a look !](https://it-tools.tech). 
