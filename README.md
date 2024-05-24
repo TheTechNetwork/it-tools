@@ -1,4 +1,4 @@
-![Status](https://uptime.promarktech.co/api/badge/87/status)  ![Uptime](https://uptime.promarktech.co/api/badge/87/uptime) ![PingResponse](https://uptime.promarktech.co/api/badge/87/ping) ![avg-response](https://uptime.promarktech.co/api/badge/87/avg-response) ![cert-exp](https://uptime.promarktech.co/api/badge/87/cert-exp) ![response](https://uptime.promarktech.co/api/badge/87/response) 
+![Status](https://status.thetech.network/api/badge/20/status)  ![Uptime](https://status.thetech.network/api/badge/20/uptime) ![PingResponse](https://status.thetech.network/api/badge/20/ping) ![avg-response](https://status.thetech.network/api/badge/20/avg-response) ![cert-exp](https://status.thetech.network/api/badge/20/cert-exp) ![response](https://status.thetech.network/api/badge/20/response) 
 
 ![logo](.github/logo.png)
 
