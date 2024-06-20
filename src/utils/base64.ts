@@ -1,8 +1,12 @@
 export { textToBase64, base64ToText, isValidBase64, removePotentialDataAndMimePrefix };
 
 function textToBase64(str: string, { makeUrlSafe = false }: { makeUrlSafe?: boolean } = {}): string {
-  const encoded = window.btoa(str);
-  return makeUrlSafe ? makeUriSafe(encoded) : encoded;
+  try {
+    const encoded = window.btoa(str);
+    return makeUrlSafe ? makeUriSafe(encoded) : encoded;
+  } catch (error) {
+    throw new Error('The string to be encoded contains invalid characters.');
+  }
 }
 
 function base64ToText(str: string, { makeUrlSafe = false }: { makeUrlSafe?: boolean } = {}): string {
@@ -17,7 +21,7 @@ function base64ToText(str: string, { makeUrlSafe = false }: { makeUrlSafe?: bool
 
   try {
     return window.atob(cleanStr);
-  } catch (_) {
+  } catch (error) {
     throw new Error('Incorrect base64 string');
   }
 }
@@ -33,9 +37,6 @@ function isValidBase64(str: string, { makeUrlSafe = false }: { makeUrlSafe?: boo
   }
 
   try {
-    if (makeUrlSafe) {
-      return removePotentialPadding(window.btoa(window.atob(cleanStr))) === cleanStr;
-    }
     return window.btoa(window.atob(cleanStr)) === cleanStr;
   } catch (err) {
     return false;
@@ -48,8 +49,4 @@ function makeUriSafe(encoded: string): string {
 
 function unURI(encoded: string): string {
   return encoded.replace(/-/g, '+').replace(/_/g, '/');
-}
-
-function removePotentialPadding(str: string): string {
-  return str.replace(/=/g, '');
 }
