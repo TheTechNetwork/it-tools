@@ -78,8 +78,8 @@ dependencies:
     specifier: ^1.7.0
     version: 1.7.0
   figue:
-    specifier: ^1.2.0
-    version: 1.2.0
+    specifier: ^2.0.0
+    version: 2.0.0
   fuse.js:
     specifier: ^7.0.0
     version: 7.0.0
@@ -5485,10 +5485,10 @@ packages:
     hasBin: true
     dev: false
 
-  /figue@1.2.0:
-    resolution: {integrity: sha512-CXKr12kiNWjKtUK3X+YHeXKepn80s9Rg6pgZXoLQYEybgwaGJ9uGW4DrBrVK30ZWZf1mcvTbXF56AcovG7gLVw==}
+  /figue@2.0.0:
+    resolution: {integrity: sha512-xaXat57+po21EKMb0aV7gqPOULKC0sIgdS3H3yy5gUOGd33i3tic0vYGB1oCROdNpoOlhTa1Gemnat4/V2OFNQ==}
     dependencies:
-      lodash: 4.17.21
+      zod: 3.23.8
     dev: false
 
   /file-entry-cache@6.0.1:
@@ -9717,6 +9717,10 @@ packages:
 
   /zhead@2.2.4:
     resolution: {integrity: sha512-8F0OI5dpWIA5IGG5NHUg9staDwz/ZPxZtvGVf01j7vHqSyZ0raHY+78atOVxRqb73AotX22uV1pXt3gYSstGag==}
+    dev: false
+
+  /zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
     dev: false
 
   /zx@7.2.3:
