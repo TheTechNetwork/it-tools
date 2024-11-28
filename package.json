@@ -118,7 +118,7 @@
     "@vue/compiler-sfc": "3.4.27",
     "@vue/runtime-dom": "3.4.27",
     "@vue/test-utils": "2.4.6",
-    "@vue/tsconfig": "0.4.0",
+    "@vue/tsconfig": "0.7.0",
     "consola": "3.2.3",
     "eslint": "8.57.0",
     "hygen": "6.2.11",

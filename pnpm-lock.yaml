@@ -251,8 +251,8 @@ devDependencies:
     specifier: 2.4.6
     version: 2.4.6
   '@vue/tsconfig':
-    specifier: 0.4.0
-    version: 0.4.0
+    specifier: 0.7.0
+    version: 0.7.0(typescript@5.4.5)(vue@3.4.27)
   consola:
     specifier: 3.2.3
     version: 3.2.3
@@ -3653,8 +3653,19 @@ packages:
       vue-component-type-helpers: 2.0.16
     dev: true
 
-  /@vue/tsconfig@0.4.0:
-    resolution: {integrity: sha512-CPuIReonid9+zOG/CGTT05FXrPYATEqoDGNrEaqS4hwcw5BUNM2FguC0mOwJD4Jr16UpRVl9N0pY3P+srIbqmg==}
+  /@vue/tsconfig@0.7.0(typescript@5.4.5)(vue@3.4.27):
+    resolution: {integrity: sha512-ku2uNz5MaZ9IerPPUyOHzyjhXoX2kVJaVf7hL315DC17vS6IiZRmmCPfggNbU16QTvM80+uYYy3eYJB59WCtvg==}
+    peerDependencies:
+      typescript: 5.x
+      vue: ^3.4.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      vue:
+        optional: true
+    dependencies:
+      typescript: 5.4.5
+      vue: 3.4.27(typescript@5.4.5)
     dev: true
 
   /@vueuse/core@10.9.0(vue@3.4.27):
