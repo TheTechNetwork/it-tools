@@ -20,7 +20,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
-    - uses: pnpm/action-setup@0609f0983b7a228f052f81ef4c3d6510cae254ad
+    - uses: pnpm/action-setup@d648c2dd069001a242c621c8306af467f150e99d
       with:
         version: 6.10.0
     - name: Use Node.js ${{ matrix.node-version }}
