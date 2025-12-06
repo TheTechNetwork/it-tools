@@ -6,9 +6,9 @@ type ValidatorReturnType = unknown;
 type GetErrorMessageReturnType = string;
 
 export interface UseValidationRule<T> {
-  validator: (value: T) => ValidatorReturnType
-  getErrorMessage?: (value: T) => GetErrorMessageReturnType
-  message: string
+  validator: (value: T) => ValidatorReturnType;
+  getErrorMessage?: (value: T) => GetErrorMessageReturnType;
+  message: string;
 }
 
 export function isFalsyOrHasThrown(cb: () => ValidatorReturnType): boolean {
@@ -36,8 +36,8 @@ export function getErrorMessageOrThrown(cb: () => GetErrorMessageReturnType): st
 }
 
 export interface ValidationAttrs {
-  feedback: string
-  validationStatus: string | undefined
+  feedback: string;
+  validationStatus: string | undefined;
 }
 
 export function useValidation<T>({
@@ -45,15 +45,15 @@ export function useValidation<T>({
   rules,
   watch: watchRefs = [],
 }: {
-  source: Ref<T>
-  rules: MaybeRef<UseValidationRule<T>[]>
-  watch?: Ref<unknown>[]
+  source: Ref<T>;
+  rules: MaybeRef<UseValidationRule<T>[]>;
+  watch?: Ref<unknown>[];
 }) {
   const state = reactive<{
-    message: string
-    status: undefined | 'error'
-    isValid: boolean
-    attrs: ValidationAttrs
+    message: string;
+    status: undefined | 'error';
+    isValid: boolean;
+    attrs: ValidationAttrs;
   }>({
     message: '',
     status: undefined,

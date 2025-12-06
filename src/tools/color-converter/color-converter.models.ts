@@ -16,12 +16,12 @@ function buildColorFormat({
   invalidMessage = `Invalid ${label.toLowerCase()} format.`,
   type = 'text',
 }: {
-  label: string
-  parse?: (value: string) => Colord
-  format: (value: Colord) => string
-  placeholder?: string
-  invalidMessage?: string
-  type?: 'text' | 'color-picker'
+  label: string;
+  parse?: (value: string) => Colord;
+  format: (value: Colord) => string;
+  placeholder?: string;
+  invalidMessage?: string;
+  type?: 'text' | 'color-picker';
 }) {
   const value = ref('');
 

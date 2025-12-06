@@ -48,9 +48,9 @@ function generateHOTP({ key, counter = 0 }: { key: string; counter?: number }) {
   const offset = bytes[19] & 0xF;
   const v
     = ((bytes[offset] & 0x7F) << 24)
-    | ((bytes[offset + 1] & 0xFF) << 16)
-    | ((bytes[offset + 2] & 0xFF) << 8)
-    | (bytes[offset + 3] & 0xFF);
+      | ((bytes[offset + 1] & 0xFF) << 16)
+      | ((bytes[offset + 2] & 0xFF) << 8)
+      | (bytes[offset + 3] & 0xFF);
 
   const code = String(v % 1000000).padStart(6, '0');
 
@@ -63,10 +63,10 @@ function verifyHOTP({
   window = 0,
   counter = 0,
 }: {
-  token: string
-  key: string
-  window?: number
-  counter?: number
+  token: string;
+  key: string;
+  window?: number;
+  counter?: number;
 }) {
   for (let i = counter - window; i <= counter + window; ++i) {
     if (generateHOTP({ key, counter: i }) === token) {
@@ -94,11 +94,11 @@ function verifyTOTP({
   now = Date.now(),
   timeStep = 30,
 }: {
-  token: string
-  key: string
-  window?: number
-  now?: number
-  timeStep?: number
+  token: string;
+  key: string;
+  window?: number;
+  now?: number;
+  timeStep?: number;
 }) {
   const counter = getCounterFromTime({ now, timeStep });
 
@@ -113,12 +113,12 @@ function buildKeyUri({
   digits = 6,
   period = 30,
 }: {
-  secret: string
-  app?: string
-  account?: string
-  algorithm?: string
-  digits?: number
-  period?: number
+  secret: string;
+  app?: string;
+  account?: string;
+  algorithm?: string;
+  digits?: number;
+  period?: number;
 }) {
   const params = {
     issuer: app,

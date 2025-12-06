@@ -6,31 +6,31 @@ import { type UseValidationRule, useValidation } from '@/composable/validation';
 
 const props = withDefaults(
   defineProps<{
-    value?: string
-    id?: string
-    placeholder?: string
-    label?: string
-    readonly?: boolean
-    disabled?: boolean
-    validationRules?: UseValidationRule<string>[]
-    validationWatch?: Ref<unknown>[]
-    validation?: ReturnType<typeof useValidation>
-    labelPosition?: 'top' | 'left'
-    labelWidth?: string
-    labelAlign?: 'left' | 'right'
-    clearable?: boolean
-    testId?: string
-    autocapitalize?: 'none' | 'sentences' | 'words' | 'characters' | 'on' | 'off' | string
-    autocomplete?: 'on' | 'off' | string
-    autocorrect?: 'on' | 'off' | string
-    spellcheck?: 'true' | 'false' | boolean
-    rawText?: boolean
-    type?: 'text' | 'password'
-    multiline?: boolean
-    rows?: number | string
-    autosize?: boolean
-    autofocus?: boolean
-    monospace?: boolean
+    value?: string;
+    id?: string;
+    placeholder?: string;
+    label?: string;
+    readonly?: boolean;
+    disabled?: boolean;
+    validationRules?: UseValidationRule<string>[];
+    validationWatch?: Ref<unknown>[];
+    validation?: ReturnType<typeof useValidation>;
+    labelPosition?: 'top' | 'left';
+    labelWidth?: string;
+    labelAlign?: 'left' | 'right';
+    clearable?: boolean;
+    testId?: string;
+    autocapitalize?: 'none' | 'sentences' | 'words' | 'characters' | 'on' | 'off' | string;
+    autocomplete?: 'on' | 'off' | string;
+    autocorrect?: 'on' | 'off' | string;
+    spellcheck?: 'true' | 'false' | boolean;
+    rawText?: boolean;
+    type?: 'text' | 'password';
+    multiline?: boolean;
+    rows?: number | string;
+    autosize?: boolean;
+    autofocus?: boolean;
+    monospace?: boolean;
   }>(),
   {
     value: '',
@@ -68,11 +68,11 @@ const { id, placeholder, label, validationRules, labelPosition, labelWidth, labe
 
 const validation
   = props.validation
-  ?? useValidation({
-    rules: validationRules,
-    source: value,
-    watch: props.validationWatch,
-  });
+    ?? useValidation({
+      rules: validationRules,
+      source: value,
+      watch: props.validationWatch,
+    });
 
 const theme = useTheme();
 const appTheme = useAppTheme();

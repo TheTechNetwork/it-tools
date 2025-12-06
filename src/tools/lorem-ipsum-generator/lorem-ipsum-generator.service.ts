@@ -194,11 +194,11 @@ export function generateLoremIpsum({
   startWithLoremIpsum = true,
   asHTML = false,
 }: {
-  paragraphCount?: number
-  sentencePerParagraph?: number
-  wordCount?: number
-  startWithLoremIpsum?: boolean
-  asHTML?: boolean
+  paragraphCount?: number;
+  sentencePerParagraph?: number;
+  wordCount?: number;
+  startWithLoremIpsum?: boolean;
+  asHTML?: boolean;
 }) {
   const paragraphs = Array.from({ length: paragraphCount }).map(() =>
     Array.from({ length: sentencePerParagraph }).map(() => generateSentence(wordCount)),

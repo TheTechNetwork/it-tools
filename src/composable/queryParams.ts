@@ -51,12 +51,10 @@ function useQueryParamOrStorage<T>({ name, storageName, defaultValue }: { name: 
 
   const r = ref(defaultValue);
 
-  watch(r,
-    (value) => {
-      proxy.value = transformer.toQuery(value as never);
-      storageRef.value = value as never;
-    },
-    { deep: true });
+  watch(r, (value) => {
+    proxy.value = transformer.toQuery(value as never);
+    storageRef.value = value as never;
+  }, { deep: true });
 
   r.value = (proxy.value && proxy.value !== proxyDefaultValue
     ? transformer.fromQuery(proxy.value) as unknown as T

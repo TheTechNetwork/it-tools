@@ -97,7 +97,7 @@ const regexesData = [
 describe('regex-tester', () => {
   for (const reg of regexesData) {
     const { regex, text, flags, result: expected_result } = reg;
-    it(`Should matchRegex("${regex}","${text}","${flags}") return correct result`, async () => {
+    it(`should matchRegex("`, async () => {
       const result = matchRegex(regex, text, `${flags}d`);
 
       expect(result).to.deep.equal(expected_result);

@@ -12,9 +12,9 @@ const rawEndAddress = useStorage('ipv4-range-expander:endAddress', '192.168.6.25
 const result = computed(() => calculateCidr({ startIp: rawStartAddress.value, endIp: rawEndAddress.value }));
 
 const calculatedValues: {
-  label: string
-  getOldValue: (result: Ipv4RangeExpanderResult | undefined) => string | undefined
-  getNewValue: (result: Ipv4RangeExpanderResult | undefined) => string | undefined
+  label: string;
+  getOldValue: (result: Ipv4RangeExpanderResult | undefined) => string | undefined;
+  getNewValue: (result: Ipv4RangeExpanderResult | undefined) => string | undefined;
 }[] = [
   {
     label: 'Start address',

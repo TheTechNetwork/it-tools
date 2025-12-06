@@ -25,9 +25,9 @@ function formatJson({
   sortKeys = true,
   indentSize = 3,
 }: {
-  rawJson: MaybeRef<string>
-  sortKeys?: MaybeRef<boolean>
-  indentSize?: MaybeRef<number>
+  rawJson: MaybeRef<string>;
+  sortKeys?: MaybeRef<boolean>;
+  indentSize?: MaybeRef<number>;
 }) {
   const parsedObject = JSON5.parse(get(rawJson));
 

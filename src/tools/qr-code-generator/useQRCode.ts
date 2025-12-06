@@ -8,10 +8,10 @@ export function useQRCode({
   errorCorrectionLevel,
   options,
 }: {
-  text: MaybeRef<string>
-  color: { foreground: MaybeRef<string>; background: MaybeRef<string> }
-  errorCorrectionLevel?: MaybeRef<QRCodeErrorCorrectionLevel>
-  options?: QRCodeToDataURLOptions
+  text: MaybeRef<string>;
+  color: { foreground: MaybeRef<string>; background: MaybeRef<string> };
+  errorCorrectionLevel?: MaybeRef<QRCodeErrorCorrectionLevel>;
+  options?: QRCodeToDataURLOptions;
 }) {
   const qrcode = ref('');
 

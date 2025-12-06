@@ -5,9 +5,9 @@ import type { CButtonSelectOption } from './c-buttons-select.types';
 
 const props = withDefaults(
   defineProps<{
-    options?: CButtonSelectOption<T>[] | string[] | Record<string, T>
-    value?: T
-    size?: 'small' | 'medium' | 'large'
+    options?: CButtonSelectOption<T>[] | string[] | Record<string, T>;
+    value?: T;
+    size?: 'small' | 'medium' | 'large';
   } & CLabelProps >(),
   {
     options: () => [],

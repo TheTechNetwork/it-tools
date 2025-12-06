@@ -20,15 +20,14 @@ watchEffect(async () => {
       whitespaceBreak: true,
     };
     output.value = await (new Promise<string>((resolve, reject) =>
-      figlet.text(input.value, options,
-        (err, text) => {
-          if (err) {
-            reject(err);
-            return;
-          }
+      figlet.text(input.value, options, (err, text) => {
+        if (err) {
+          reject(err);
+          return;
+        }
 
-          resolve(text ?? '');
-        })));
+        resolve(text ?? '');
+      })));
     errored.value = false;
   }
   catch (e: any) {

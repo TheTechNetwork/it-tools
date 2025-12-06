@@ -8,12 +8,12 @@ export function createToken({
   length = 64,
   alphabet,
 }: {
-  withUppercase?: boolean
-  withLowercase?: boolean
-  withNumbers?: boolean
-  withSymbols?: boolean
-  length?: number
-  alphabet?: string
+  withUppercase?: boolean;
+  withLowercase?: boolean;
+  withNumbers?: boolean;
+  withSymbols?: boolean;
+  length?: number;
+  alphabet?: string;
 }) {
   const allAlphabet = alphabet ?? [
     withUppercase ? 'ABCDEFGHIJKLMOPQRSTUVWXYZ' : '',
