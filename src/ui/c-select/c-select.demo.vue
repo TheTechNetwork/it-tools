@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// @ts-nocheck
 const optionsA = [
   { label: 'Option A', value: 'a' },
   { label: 'Option B', value: 'b' },

@@ -8,11 +8,11 @@ import { useFuzzySearch } from '@/composable/fuzzySearch';
 
 const props = withDefaults(
   defineProps<{
-    options?: CSelectOption<T>[] | string[]
-    value?: T
-    placeholder?: string
-    size?: 'small' | 'medium' | 'large'
-    searchable?: boolean
+    options?: CSelectOption<T>[] | string[];
+    value?: T;
+    placeholder?: string;
+    size?: 'small' | 'medium' | 'large';
+    searchable?: boolean;
   } & CLabelProps >(),
   {
     options: () => [],

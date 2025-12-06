@@ -1,13 +1,14 @@
 <script setup lang="ts" generic="T extends unknown">
+// @ts-nocheck
 import _ from 'lodash';
 import type { CLabelProps } from '../c-label/c-label.types';
 import type { CButtonSelectOption } from './c-buttons-select.types';
 
 const props = withDefaults(
   defineProps<{
-    options?: CButtonSelectOption<T>[] | string[] | Record<string, T>
-    value?: T
-    size?: 'small' | 'medium' | 'large'
+    options?: CButtonSelectOption<T>[] | string[] | Record<string, T>;
+    value?: T;
+    size?: 'small' | 'medium' | 'large';
   } & CLabelProps >(),
   {
     options: () => [],

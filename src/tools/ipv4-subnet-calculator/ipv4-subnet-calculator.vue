@@ -21,9 +21,9 @@ const ipValidationRules = [
 ];
 
 const sections: {
-  label: string
-  getValue: (blocks: Netmask) => string | undefined
-  undefinedFallback?: string
+  label: string;
+  getValue: (blocks: Netmask) => string | undefined;
+  undefinedFallback?: string;
 }[] = [
   {
     label: 'Netmask',

@@ -14,7 +14,8 @@ const { download } = useDownloadFileFromBase64Refs(
     source: base64Input,
     filename: fileName,
     extension: fileExtension,
-  });
+  },
+);
 const base64InputValidation = useValidation({
   source: base64Input,
   rules: [

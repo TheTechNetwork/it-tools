@@ -5,13 +5,13 @@ import CInputText from '@/ui/c-input-text/c-input-text.vue';
 
 const props = withDefaults(
   defineProps<{
-    transformer?: (v: string) => string
-    inputValidationRules?: UseValidationRule<string>[]
-    inputLabel?: string
-    inputPlaceholder?: string
-    inputDefault?: string
-    outputLabel?: string
-    outputLanguage?: string
+    transformer?: (v: string) => string;
+    inputValidationRules?: UseValidationRule<string>[];
+    inputLabel?: string;
+    inputPlaceholder?: string;
+    inputDefault?: string;
+    outputLabel?: string;
+    outputLanguage?: string;
   }>(),
   {
     transformer: _.identity,

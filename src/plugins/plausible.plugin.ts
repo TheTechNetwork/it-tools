@@ -15,11 +15,11 @@ function createPlausibleInstance({
   config,
 }: {
   config: {
-    isTrackerEnabled: boolean
-    domain: string
-    apiHost: string
-    trackLocalhost: boolean
-  }
+    isTrackerEnabled: boolean;
+    domain: string;
+    apiHost: string;
+    trackLocalhost: boolean;
+  };
 }) {
   if (config.isTrackerEnabled) {
     return Plausible(config);

@@ -1,11 +1,11 @@
 export const codesByCategories: {
-  category: string
+  category: string;
   codes: {
-    code: number
-    name: string
-    description: string
-    type: 'HTTP' | 'WebDav'
-  }[]
+    code: number;
+    name: string;
+    description: string;
+    type: 'HTTP' | 'WebDav';
+  }[];
 }[] = [
   {
     category: '1xx informational response',

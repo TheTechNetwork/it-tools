@@ -24,7 +24,7 @@ const units = reactive<
     string | TemperatureScale,
     { title: string; unit: string; ref: number; toKelvin: (v: number) => number; fromKelvin: (v: number) => number }
   >
-      >({
+>({
         kelvin: {
           title: 'Kelvin',
           unit: 'K',

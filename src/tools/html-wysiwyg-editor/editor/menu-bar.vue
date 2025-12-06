@@ -26,11 +26,11 @@ const { editor } = toRefs(props);
 
 type MenuItem =
   | {
-    icon: Component
-    title: string
-    action: () => void
-    isActive?: () => boolean
-    type: 'button'
+    icon: Component;
+    title: string;
+    action: () => void;
+    isActive?: () => boolean;
+    type: 'button';
   }
   | { type: 'divider' };
 

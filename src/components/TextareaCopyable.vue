@@ -12,11 +12,11 @@ import { useCopy } from '@/composable/copy';
 
 const props = withDefaults(
   defineProps<{
-    value: string
-    followHeightOf?: HTMLElement | null
-    language?: string
-    copyPlacement?: 'top-right' | 'bottom-right' | 'outside' | 'none'
-    copyMessage?: string
+    value: string;
+    followHeightOf?: HTMLElement | null;
+    language?: string;
+    copyPlacement?: 'top-right' | 'bottom-right' | 'outside' | 'none';
+    copyMessage?: string;
   }>(),
   {
     followHeightOf: null,

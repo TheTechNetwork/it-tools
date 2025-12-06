@@ -2,9 +2,9 @@
 import _ from 'lodash';
 
 const props = withDefaults(defineProps<{
-  multiple?: boolean
-  accept?: string
-  title?: string
+  multiple?: boolean;
+  accept?: string;
+  title?: string;
 }>(), {
   multiple: false,
   accept: undefined,
@@ -12,8 +12,8 @@ const props = withDefaults(defineProps<{
 });
 
 const emit = defineEmits<{
-  (event: 'filesUpload', files: File[]): void
-  (event: 'fileUpload', file: File): void
+  (event: 'filesUpload', files: File[]): void;
+  (event: 'fileUpload', file: File): void;
 }>();
 
 const { multiple } = toRefs(props);

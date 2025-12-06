@@ -23,7 +23,8 @@ const headers = computed(() => {
     }
 
     return _.map(rawHeaders.value, (value, key) => ({
-      key, label: value,
+      key,
+      label: value,
     }));
   }
 

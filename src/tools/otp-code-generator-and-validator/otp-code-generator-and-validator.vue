@@ -42,7 +42,7 @@ const { qrcode } = useQRCode({
 const secretValidationRules = [
   {
     message: 'Secret should be a base32 string',
-    validator: (value: string) => value.toUpperCase().match(/^[A-Z234567]+$/),
+    validator: (value: string) => value.toUpperCase().match(/^[A-Z2-7]+$/),
   },
   {
     message: 'Please set a secret',
