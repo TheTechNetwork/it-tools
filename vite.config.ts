@@ -102,10 +102,23 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'crypto': 'crypto-browserify',
+      'stream': 'stream-browserify',
+      'buffer': 'buffer',
+      'events': 'events',
+      'path': 'path-browserify',
+      'vm': 'vm-browserify',
     },
   },
   define: {
     'import.meta.env.PACKAGE_VERSION': JSON.stringify(process.env.npm_package_version),
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: 'globalThis',
+      },
+    },
   },
   test: {
     exclude: [...configDefaults.exclude, '**/*.e2e.spec.ts'],
