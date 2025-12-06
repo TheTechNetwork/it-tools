@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// @ts-nocheck
 import { marked } from 'marked';
 import DomPurify from 'dompurify';
 

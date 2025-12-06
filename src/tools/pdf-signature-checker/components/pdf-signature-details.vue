@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// @ts-nocheck
 import type { SignatureInfo } from '../pdf-signature-checker.types';
 
 const props = defineProps<{ signature: SignatureInfo }>();

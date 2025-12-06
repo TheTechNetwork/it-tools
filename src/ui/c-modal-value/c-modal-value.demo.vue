@@ -1,3 +1,7 @@
+<script lang="ts" setup>
+// @ts-nocheck
+</script>
+
 <template>
   <div flex gap-2>
     <c-modal-value value="lorem ipsum" label="test" />

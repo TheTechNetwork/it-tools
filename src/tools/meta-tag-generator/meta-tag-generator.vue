@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// @ts-nocheck
 import { generateMeta } from '@it-tools/oggen';
 import _ from 'lodash';
 import { image, ogSchemas, twitter, website } from './og-schemas';

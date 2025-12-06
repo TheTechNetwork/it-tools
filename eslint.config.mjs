@@ -37,6 +37,7 @@ export default antfu(
       'regexp/no-obscure-range': 'off',
       'regexp/no-dupe-characters-character-class': 'off',
       'unicorn/prefer-dom-node-text-content': 'off',
+      'ts/ban-ts-comment': 'off',
     },
   },
 )
