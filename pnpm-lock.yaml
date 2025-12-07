@@ -239,8 +239,8 @@ devDependencies:
     specifier: 3.0.5
     version: 3.0.5
   '@types/jsdom':
-    specifier: 21.1.6
-    version: 21.1.6
+    specifier: 21.1.7
+    version: 21.1.7
   '@types/lodash':
     specifier: 4.17.1
     version: 4.17.1
@@ -2706,8 +2706,8 @@ packages:
       '@types/node': 18.19.33
     dev: true
 
-  /@types/jsdom@21.1.6:
-    resolution: {integrity: sha512-/7kkMsC+/kMs7gAYmmBR9P0vGTnOoLhQhyhQJSlXGI5bzTHp6xdo0TtKWQAsz6pmSAeVqKSbqeyP6hytqr9FDw==}
+  /@types/jsdom@21.1.7:
+    resolution: {integrity: sha512-yOriVnggzrnQ3a9OKOCxaVuSug3w3/SbOj5i7VwXWZEyUNl3bLF9V3MfxGbZKuwqJOQyRfqXyROBB1CoZLFWzA==}
     dependencies:
       '@types/node': 18.19.33
       '@types/tough-cookie': 4.0.5
