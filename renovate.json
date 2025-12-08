@@ -1,6 +1,6 @@
 {
   "configMigration": true,
-  "branchConcurrentLimit": 10,
+  "branchConcurrentLimit": 5,
   "prHourlyLimit": 25,
   "recreateWhen": "always",
   "prCreation": "immediate",
