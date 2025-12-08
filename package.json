@@ -134,7 +134,7 @@
     "buffer": "6.0.3",
     "consola": "3.2.3",
     "crypto-browserify": "3.12.1",
-    "eslint": "8.57.0",
+    "eslint": "8.57.1",
     "events": "3.3.0",
     "hygen": "6.2.11",
     "jsdom": "24.0.0",
