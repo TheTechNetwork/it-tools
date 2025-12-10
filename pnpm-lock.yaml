@@ -79,7 +79,7 @@ dependencies:
     version: 3.6.0
   dompurify:
     specifier: ^3.0.6
-    version: 3.3.0
+    version: 3.3.1
   email-normalizer:
     specifier: ^1.0.0
     version: 1.0.0
@@ -4783,8 +4783,8 @@ packages:
       domelementtype: 2.3.0
     dev: true
 
-  /dompurify@3.3.0:
-    resolution: {integrity: sha512-r+f6MYR1gGN1eJv0TVQbhA7if/U7P87cdPl3HN5rikqaBSBxLiCb/b9O+2eG0cxz0ghyU+mU1QkbsOwERMYlWQ==}
+  /dompurify@3.3.1:
+    resolution: {integrity: sha512-qkdCKzLNtrgPFP1Vo+98FRzJnBRGe4ffyCea9IwHB1fyxPOeNTHpLKYGd4Uk9xvNoH0ZoOjwZxNptyMwqrId1Q==}
     optionalDependencies:
       '@types/trusted-types': 2.0.7
     dev: false
