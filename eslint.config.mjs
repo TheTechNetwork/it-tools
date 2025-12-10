@@ -22,8 +22,7 @@ export default antfu(
   {
     rules: {
       'curly': ['error', 'all'],
-      'ts/semi': ['error', 'always'],
-      'ts/no-use-before-define': ['error', { allowNamedExports: true, functions: false }],
+      '@typescript-eslint/no-use-before-define': ['error', { allowNamedExports: true, functions: false }],
       'vue/no-empty-component-block': ['error'],
       'no-restricted-imports': ['error', {
         paths: [{
