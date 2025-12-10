@@ -1,0 +1,213 @@
+name: PR Review & Recommendations
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_run:
+    workflows: ["ci", "E2E tests", "Node.js CI with pnpm"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: read
+  actions: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Get PR Details
+        id: pr-info
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "workflow_run" ]; then
+            PR_NUMBER=$(gh pr list --head "${{ github.event.workflow_run.head_branch }}" --json number --jq '.[0].number')
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check Workflow Files
+        id: workflow-check
+        run: |
+          echo "## Workflow Analysis" > review.md
+          echo "" >> review.md
+
+          # Check for workflow file changes
+          WORKFLOW_CHANGES=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -E '\.github/workflows/.*\.ya?ml$' || true)
+
+          if [ -n "$WORKFLOW_CHANGES" ]; then
+            echo "### ⚙️ Workflow Files Modified" >> review.md
+            echo "" >> review.md
+            echo "$WORKFLOW_CHANGES" | while read file; do
+              echo "- \`$file\`" >> review.md
+            done
+            echo "" >> review.md
+
+            # Validate workflow syntax
+            echo "### 🔍 Workflow Validation" >> review.md
+            echo "" >> review.md
+
+            for workflow in $WORKFLOW_CHANGES; do
+              if [ -f "$workflow" ]; then
+                echo "**Checking \`$workflow\`:**" >> review.md
+
+                # Basic YAML syntax check
+                if command -v yamllint > /dev/null; then
+                  yamllint "$workflow" >> review.md 2>&1 || echo "⚠️ YAML linting issues detected" >> review.md
+                fi
+
+                # Check for common issues
+                if grep -q 'uses:.*@master' "$workflow"; then
+                  echo "- ⚠️ **Warning**: Action uses \`@master\` branch. Consider pinning to a specific version or SHA for security." >> review.md
+                fi
+
+                if grep -q '\${{.*secrets\.' "$workflow" | grep -v 'GITHUB_TOKEN'; then
+                  echo "- ℹ️ **Info**: Workflow uses secrets. Ensure they are properly configured in repository settings." >> review.md
+                fi
+
+                echo "" >> review.md
+              fi
+            done
+          else
+            echo "No workflow files were modified in this PR." >> review.md
+            echo "" >> review.md
+          fi
+
+      - name: Check Failed Workflows
+        id: workflow-status
+        run: |
+          echo "### 📊 Workflow Status Check" >> review.md
+          echo "" >> review.md
+
+          # Get workflow runs for this PR
+          if [ -n "${{ steps.pr-info.outputs.pr_number }}" ]; then
+            FAILED_WORKFLOWS=$(gh run list \
+              --repo ${{ github.repository }} \
+              --branch ${{ github.head_ref || github.ref_name }} \
+              --limit 10 \
+              --json conclusion,name,databaseId,url \
+              --jq '.[] | select(.conclusion == "failure") | "- ❌ [\(.name)](\(.url)) (Run #\(.databaseId))"' || true)
+
+            if [ -n "$FAILED_WORKFLOWS" ]; then
+              echo "**Failed Workflows Detected:**" >> review.md
+              echo "" >> review.md
+              echo "$FAILED_WORKFLOWS" >> review.md
+              echo "" >> review.md
+              echo "**Recommendations:**" >> review.md
+              echo "- Review the logs for each failed workflow" >> review.md
+              echo "- Check for dependency conflicts or version mismatches" >> review.md
+              echo "- Verify all required secrets and environment variables are configured" >> review.md
+              echo "- Ensure tests pass locally before pushing" >> review.md
+              echo "" >> review.md
+            else
+              echo "✅ No failed workflows detected for this branch." >> review.md
+              echo "" >> review.md
+            fi
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Code Quality Review
+        id: code-review
+        run: |
+          echo "### 📝 Code Quality Observations" >> review.md
+          echo "" >> review.md
+
+          # Check for package.json changes
+          if git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -q 'package.json'; then
+            echo "**Dependencies Modified:**" >> review.md
+            echo "- \`package.json\` has been updated" >> review.md
+            echo "- ⚠️ **Reminder**: Run \`pnpm install\` to update lockfile if needed" >> review.md
+            echo "- ⚠️ **Reminder**: Check for breaking changes in updated dependencies" >> review.md
+            echo "" >> review.md
+          fi
+
+          # Check for lock file changes
+          if git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -q 'pnpm-lock.yaml'; then
+            echo "**Lock File Updated:**" >> review.md
+            echo "- \`pnpm-lock.yaml\` has been modified" >> review.md
+            echo "- ✅ This is expected when dependencies change" >> review.md
+            echo "" >> review.md
+          fi
+
+          # Check for test file changes
+          TEST_CHANGES=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -E '\.(test|spec)\.(ts|js|tsx|jsx)$' || true)
+          if [ -n "$TEST_CHANGES" ]; then
+            echo "**Tests Modified:**" >> review.md
+            echo "$TEST_CHANGES" | while read file; do
+              echo "- \`$file\`" >> review.md
+            done
+            echo "" >> review.md
+          fi
+
+          # Check for TypeScript config changes
+          if git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -q 'tsconfig.json'; then
+            echo "**TypeScript Configuration Changed:**" >> review.md
+            echo "- ⚠️ **Warning**: \`tsconfig.json\` modified. Verify type checking still works correctly." >> review.md
+            echo "- Run \`pnpm typecheck\` locally to validate" >> review.md
+            echo "" >> review.md
+          fi
+
+      - name: General Recommendations
+        id: recommendations
+        run: |
+          echo "### 💡 General Recommendations" >> review.md
+          echo "" >> review.md
+          echo "**Before merging, ensure:**" >> review.md
+          echo "- ✅ All CI checks pass (lint, test, typecheck, build)" >> review.md
+          echo "- ✅ E2E tests complete successfully" >> review.md
+          echo "- ✅ Code has been reviewed by at least one team member" >> review.md
+          echo "- ✅ No merge conflicts exist" >> review.md
+          echo "- ✅ Branch is up to date with base branch" >> review.md
+          echo "" >> review.md
+          echo "**If workflows are failing:**" >> review.md
+          echo "1. Click on the failed workflow to view detailed logs" >> review.md
+          echo "2. Look for error messages in the step that failed" >> review.md
+          echo "3. Common issues:" >> review.md
+          echo "   - Linting errors: Run \`pnpm lint\` locally and fix issues" >> review.md
+          echo "   - Test failures: Run \`pnpm test\` locally to reproduce" >> review.md
+          echo "   - Type errors: Run \`pnpm typecheck\` to identify type issues" >> review.md
+          echo "   - Build failures: Run \`pnpm build\` to check for build errors" >> review.md
+          echo "   - E2E failures: Run \`pnpm test:e2e\` locally or check for UI regressions" >> review.md
+          echo "" >> review.md
+          echo "---" >> review.md
+          echo "*🤖 This review was automatically generated. Please use it as a guide, not a replacement for human review.*" >> review.md
+
+      - name: Post Review Comment
+        if: steps.pr-info.outputs.pr_number != ''
+        run: |
+          # Check if we already posted a comment
+          EXISTING_COMMENT=$(gh pr view ${{ steps.pr-info.outputs.pr_number }} \
+            --json comments \
+            --jq '.comments[] | select(.author.login == "github-actions[bot]" and (.body | contains("## 🔍 Automated PR Review"))) | .id' \
+            | head -n 1 || true)
+
+          # Prepare the comment body
+          cat > comment.md << 'EOF'
+          ## 🔍 Automated PR Review & Recommendations
+
+          EOF
+          cat review.md >> comment.md
+
+          if [ -n "$EXISTING_COMMENT" ]; then
+            # Update existing comment
+            gh api \
+              --method PATCH \
+              -H "Accept: application/vnd.github+json" \
+              "/repos/${{ github.repository }}/issues/comments/$EXISTING_COMMENT" \
+              -f body="$(cat comment.md)"
+          else
+            # Post new comment
+            gh pr comment ${{ steps.pr-info.outputs.pr_number }} --body-file comment.md
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
