@@ -109,7 +109,7 @@
     "@eslint/eslintrc": "3.3.3",
     "@iconify-json/mdi": "1.2.3",
     "@intlify/unplugin-vue-i18n": "4.0.0",
-    "@playwright/test": "1.44.0",
+    "@playwright/test": "1.57.0",
     "@rushstack/eslint-patch": "1.10.2",
     "@tsconfig/node18": "18.2.6",
     "@types/bcryptjs": "2.4.6",
