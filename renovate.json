@@ -9,5 +9,12 @@
     "docker:pinDigests",
     "helpers:pinGitHubActionDigests",
     ":pinDevDependencies"
+  ],
+  "packageRules": [
+    {
+      "groupName": "TypeScript toolchain",
+      "matchPackageNames": ["typescript", "vue-tsc"],
+      "matchUpdateTypes": ["major", "minor", "patch"]
+    }
   ]
 }
