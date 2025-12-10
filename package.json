@@ -130,7 +130,7 @@
     "@vue/compiler-sfc": "3.5.25",
     "@vue/runtime-dom": "3.5.25",
     "@vue/test-utils": "2.4.6",
-    "@vue/tsconfig": "0.4.0",
+    "@vue/tsconfig": "0.8.1",
     "buffer": "6.0.3",
     "consola": "3.2.3",
     "crypto-browserify": "3.12.1",
