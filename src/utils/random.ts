@@ -1,13 +1,13 @@
 const random = () => Math.random();
 
-const randFromArray = <T>(array: T[]): T => {
+function randFromArray<T>(array: T[]): T {
   const index = Math.floor(random() * array.length);
   const value = array[index];
   if (value === undefined) {
     throw new Error('Array is empty or index out of bounds');
   }
   return value;
-};
+}
 
 const randIntFromInterval = (min: number, max: number) => Math.floor(random() * (max - min) + min);
 

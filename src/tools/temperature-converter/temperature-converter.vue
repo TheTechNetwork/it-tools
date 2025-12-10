@@ -117,7 +117,7 @@ update('kelvin');
       <n-input-number
         :value="units[key as TemperatureScale]?.ref"
         style="flex: 1"
-        @update:value="(value) => { const unit = units[key as TemperatureScale]; if (unit) { unit.ref = value; update(key as TemperatureScale); } }"
+        @update:value="(value) => { const unit = units[key as TemperatureScale]; if (unit && value !== null) { unit.ref = value; update(key as TemperatureScale); } }"
       />
 
       <n-input-group-label style="width: 50px">
