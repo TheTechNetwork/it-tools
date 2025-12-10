@@ -284,8 +284,8 @@ devDependencies:
     specifier: 2.4.6
     version: 2.4.6
   '@vue/tsconfig':
-    specifier: 0.4.0
-    version: 0.4.0
+    specifier: 0.8.1
+    version: 0.8.1(typescript@5.4.5)(vue@3.5.25)
   buffer:
     specifier: 6.0.3
     version: 6.0.3
@@ -3820,8 +3820,19 @@ packages:
       vue-component-type-helpers: 2.2.12
     dev: true
 
-  /@vue/tsconfig@0.4.0:
-    resolution: {integrity: sha512-CPuIReonid9+zOG/CGTT05FXrPYATEqoDGNrEaqS4hwcw5BUNM2FguC0mOwJD4Jr16UpRVl9N0pY3P+srIbqmg==}
+  /@vue/tsconfig@0.8.1(typescript@5.4.5)(vue@3.5.25):
+    resolution: {integrity: sha512-aK7feIWPXFSUhsCP9PFqPyFOcz4ENkb8hZ2pneL6m2UjCkccvaOhC/5KCKluuBufvp2KzkbdA2W2pk20vLzu3g==}
+    peerDependencies:
+      typescript: 5.x
+      vue: ^3.4.0
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+      vue:
+        optional: true
+    dependencies:
+      typescript: 5.4.5
+      vue: 3.5.25(typescript@5.4.5)
     dev: true
 
   /@vueuse/core@10.11.1(vue@3.5.25):
