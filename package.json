@@ -91,7 +91,7 @@
     "sql-formatter": "^13.0.0",
     "ua-parser-js": "^1.0.35",
     "ulid": "^2.3.0",
-    "unicode-emoji-json": "^0.6.0",
+    "unicode-emoji-json": "^0.8.0",
     "unplugin-auto-import": "^0.17.0",
     "uuid": "^9.0.0",
     "vue": "^3.3.4",
