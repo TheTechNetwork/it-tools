@@ -339,7 +339,7 @@ devDependencies:
     version: 4.5.14(@types/node@18.19.130)(less@4.4.2)
   vite-plugin-pwa:
     specifier: 0.20.0
-    version: 0.20.0(vite@4.5.14)(workbox-build@7.4.0)(workbox-window@7.1.0)
+    version: 0.20.0(vite@4.5.14)(workbox-build@7.4.0)(workbox-window@7.4.0)
   vite-plugin-vue-markdown:
     specifier: 0.23.8
     version: 0.23.8(rollup@2.79.2)(vite@4.5.14)
@@ -353,8 +353,8 @@ devDependencies:
     specifier: 1.1.2
     version: 1.1.2
   workbox-window:
-    specifier: 7.1.0
-    version: 7.1.0
+    specifier: 7.4.0
+    version: 7.4.0
   zx:
     specifier: 7.2.4
     version: 7.2.4
@@ -9788,7 +9788,7 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-pwa@0.20.0(vite@4.5.14)(workbox-build@7.4.0)(workbox-window@7.1.0):
+  /vite-plugin-pwa@0.20.0(vite@4.5.14)(workbox-build@7.4.0)(workbox-window@7.4.0):
     resolution: {integrity: sha512-/kDZyqF8KqoXRpMUQtR5Atri/7BWayW8Gp7Kz/4bfstsV6zSFTxjREbXZYL7zSuRL40HGA+o2hvUAFRmC+bL7g==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -9805,7 +9805,7 @@ packages:
       pretty-bytes: 6.1.1
       vite: 4.5.14(@types/node@18.19.130)(less@4.4.2)
       workbox-build: 7.4.0
-      workbox-window: 7.1.0
+      workbox-window: 7.4.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -10289,10 +10289,6 @@ packages:
       workbox-core: 7.4.0
     dev: true
 
-  /workbox-core@7.1.0:
-    resolution: {integrity: sha512-5KB4KOY8rtL31nEF7BfvU7FMzKT4B5TkbYa2tzkS+Peqj0gayMT9SytSFtNzlrvMaWgv6y/yvP9C0IbpFjV30Q==}
-    dev: true
-
   /workbox-core@7.4.0:
     resolution: {integrity: sha512-6BMfd8tYEnN4baG4emG9U0hdXM4gGuDU3ectXuVHnj71vwxTFI7WOpQJC4siTOlVtGqCUtj0ZQNsrvi6kZZTAQ==}
     dev: true
@@ -10365,13 +10361,6 @@ packages:
 
   /workbox-sw@7.4.0:
     resolution: {integrity: sha512-ltU+Kr3qWR6BtbdlMnCjobZKzeV1hN+S6UvDywBrwM19TTyqA03X66dzw1tEIdJvQ4lYKkBFox6IAEhoSEZ8Xw==}
-    dev: true
-
-  /workbox-window@7.1.0:
-    resolution: {integrity: sha512-ZHeROyqR+AS5UPzholQRDttLFqGMwP0Np8MKWAdyxsDETxq3qOAyXvqessc3GniohG6e0mAqSQyKOHmT8zPF7g==}
-    dependencies:
-      '@types/trusted-types': 2.0.7
-      workbox-core: 7.1.0
     dev: true
 
   /workbox-window@7.4.0:
