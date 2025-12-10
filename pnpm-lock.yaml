@@ -224,8 +224,8 @@ devDependencies:
     specifier: 1.57.0
     version: 1.57.0
   '@rushstack/eslint-patch':
-    specifier: 1.10.2
-    version: 1.10.2
+    specifier: 1.15.0
+    version: 1.15.0
   '@tsconfig/node18':
     specifier: 18.2.6
     version: 18.2.6
@@ -2333,8 +2333,8 @@ packages:
       picomatch: 4.0.3
       rollup: 2.79.2
 
-  /@rushstack/eslint-patch@1.10.2:
-    resolution: {integrity: sha512-hw437iINopmQuxWPSUEvqE56NCPsiU8N4AYtfHmJFckclktzK9YQJieD3XkDCDH4OjL+C7zgPUh73R/nrcHrqw==}
+  /@rushstack/eslint-patch@1.15.0:
+    resolution: {integrity: sha512-ojSshQPKwVvSMR8yT2L/QtUkV5SXi/IfDiJ4/8d6UbTPjiHVmxZzUAzGD8Tzks1b9+qQkZa0isUOvYObedITaw==}
     dev: true
 
   /@sinclair/typebox@0.27.8:
