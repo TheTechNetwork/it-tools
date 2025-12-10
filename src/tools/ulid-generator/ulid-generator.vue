@@ -6,7 +6,7 @@ import { useCopy } from '@/composable/copy';
 
 const amount = useStorage('ulid-generator-amount', 1);
 const formats = [{ label: 'Raw', value: 'raw' as const }, { label: 'JSON', value: 'json' as const }];
-const format = useStorage<typeof formats[number]['value']>('ulid-generator-format', formats[0].value);
+const format = useStorage<typeof formats[number]['value']>('ulid-generator-format', formats[0]?.value ?? 'raw');
 
 const [ulids, refreshUlids] = computedRefreshable(() => {
   const ids = _.times(amount.value, () => ulid());

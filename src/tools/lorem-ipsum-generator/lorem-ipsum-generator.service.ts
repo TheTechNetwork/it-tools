@@ -204,7 +204,7 @@ export function generateLoremIpsum({
     Array.from({ length: sentencePerParagraph }).map(() => generateSentence(wordCount)),
   );
 
-  if (startWithLoremIpsum) {
+  if (startWithLoremIpsum && paragraphs[0]?.[0] !== undefined) {
     paragraphs[0][0] = firstSentence;
   }
 

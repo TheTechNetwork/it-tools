@@ -45,12 +45,12 @@ function generateHOTP({ key, counter = 0 }: { key: string; counter?: number }) {
   const bytes = hexToBytes(digest);
 
   // Truncate
-  const offset = bytes[19] & 0xF;
+  const offset = (bytes[19] ?? 0) & 0xF;
   const v
-    = ((bytes[offset] & 0x7F) << 24)
-      | ((bytes[offset + 1] & 0xFF) << 16)
-      | ((bytes[offset + 2] & 0xFF) << 8)
-      | (bytes[offset + 3] & 0xFF);
+    = (((bytes[offset] ?? 0) & 0x7F) << 24)
+      | (((bytes[offset + 1] ?? 0) & 0xFF) << 16)
+      | (((bytes[offset + 2] ?? 0) & 0xFF) << 8)
+      | ((bytes[offset + 3] ?? 0) & 0xFF);
 
   const code = String(v % 1000000).padStart(6, '0');
 
