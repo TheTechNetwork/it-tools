@@ -30,7 +30,7 @@ watchEffect(async () => {
       })));
     errored.value = false;
   }
-  catch (e: any) {
+  catch {
     errored.value = true;
   }
   processing.value = false;

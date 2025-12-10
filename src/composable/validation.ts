@@ -21,7 +21,7 @@ export function isFalsyOrHasThrown(cb: () => ValidatorReturnType): boolean {
 
     return returnValue === false;
   }
-  catch (_) {
+  catch {
     return true;
   }
 }

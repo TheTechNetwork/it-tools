@@ -53,7 +53,7 @@ const results = computed(() => {
   try {
     return matchRegex(regex.value, text.value, flags);
   }
-  catch (_) {
+  catch {
     return [];
   }
 });
@@ -63,7 +63,7 @@ const sample = computed(() => {
     const randexp = new RandExp(new RegExp(regex.value.replace(/\(\?<[^>]*>/g, '(?:')));
     return randexp.gen();
   }
-  catch (_) {
+  catch {
     return '';
   }
 });
@@ -82,7 +82,7 @@ watchEffect(
       try {
         await render(regexValue, svg);
       }
-      catch (_) {
+      catch {
       }
       visualizer.appendChild(svg);
     }

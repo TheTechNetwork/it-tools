@@ -17,7 +17,7 @@ async function onVerifyClicked(uploadedFile: File) {
     signatures.value = parsedSignatures;
     status.value = 'parsed';
   }
-  catch (e) {
+  catch {
     signatures.value = [];
     status.value = 'error';
   }
