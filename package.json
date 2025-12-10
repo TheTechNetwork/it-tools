@@ -132,7 +132,7 @@
     "@vue/test-utils": "2.4.6",
     "@vue/tsconfig": "0.8.1",
     "buffer": "6.0.3",
-    "consola": "3.2.3",
+    "consola": "3.4.2",
     "crypto-browserify": "3.12.1",
     "eslint": "8.57.1",
     "events": "3.3.0",
