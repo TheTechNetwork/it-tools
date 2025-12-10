@@ -90,7 +90,7 @@ async function requestPermissions() {
   try {
     await ensurePermissions();
   }
-  catch (e) {
+  catch {
     permissionCannotBePrompted.value = true;
   }
 }

@@ -28,7 +28,7 @@ const base64InputValidation = useValidation({
 
 watch(
   base64Input,
-  (newValue, _) => {
+  (newValue) => {
     const { mimeType } = getMimeTypeFromBase64({ base64String: newValue });
     if (mimeType) {
       fileExtension.value = getExtensionFromMimeType(mimeType) || fileExtension.value;
@@ -50,7 +50,7 @@ function previewImage() {
       previewContainer.appendChild(image);
     }
   }
-  catch (_) {
+  catch {
     //
   }
 }
@@ -63,7 +63,7 @@ function downloadFile() {
   try {
     download();
   }
-  catch (_) {
+  catch {
     //
   }
 }
