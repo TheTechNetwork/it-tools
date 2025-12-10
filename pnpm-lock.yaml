@@ -39,8 +39,8 @@ dependencies:
     specifier: ^0.13.0
     version: 0.13.0
   '@vicons/tabler':
-    specifier: ^0.12.0
-    version: 0.12.0
+    specifier: ^0.13.0
+    version: 0.13.0
   '@vueuse/core':
     specifier: ^10.3.0
     version: 10.11.1(vue@3.5.25)
@@ -3977,8 +3977,8 @@ packages:
     resolution: {integrity: sha512-lKVxFNprM+CaBkUH3gt6VjIeiMsKQl2zARQMwTCZruQl2vRHzyeZiKeCflWS99CEfv2JzX/6y697smxlzyxcVw==}
     dev: false
 
-  /@vicons/tabler@0.12.0:
-    resolution: {integrity: sha512-3+wUFuxb7e8OzZ8Wryct1pzfA2vyoF4lwW98O9s27ZrfCGaJGNmqG+q8A7vQ92Mf+COCgxpK+rhNPTtTvaU6qw==}
+  /@vicons/tabler@0.13.0:
+    resolution: {integrity: sha512-AykuhiqjszkIoAL/7knIFm6RDOBS1ZmQdJfQ+RNLEah0fVsxykUFCfMBSNZh8lOzC85EtdD1k5g/sv5GYk0Ohg==}
     dev: false
 
   /@vitejs/plugin-vue-jsx@3.1.0(vite@4.5.14)(vue@3.5.25):
