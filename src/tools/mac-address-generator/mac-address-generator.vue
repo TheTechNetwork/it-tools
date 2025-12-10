@@ -14,7 +14,7 @@ const casesTransformers = [
   { label: 'Uppercase', value: (value: string) => value.toUpperCase() },
   { label: 'Lowercase', value: (value: string) => value.toLowerCase() },
 ];
-const caseTransformer = ref(casesTransformers[0].value);
+const caseTransformer = ref(casesTransformers[0]?.value ?? ((value: string) => value.toUpperCase()));
 
 const separators = [
   {
@@ -34,7 +34,7 @@ const separators = [
     value: '',
   },
 ];
-const separator = useStorage('mac-address-generator-separator', separators[0].value);
+const separator = useStorage('mac-address-generator-separator', separators[0]?.value ?? ':');
 
 const [macAddresses, refreshMacAddresses] = computedRefreshable(() => {
   if (!prefixValidation.isValid) {

@@ -5,7 +5,7 @@ const demoPages = import.meta.glob('../*/*.demo.vue', { eager: true });
 
 export const demoRoutes = Object.keys(demoPages).map((demoComponentPath) => {
   const [, , fileName] = demoComponentPath.split('/');
-  const demoComponentName = fileName.split('.').shift();
+  const demoComponentName = fileName?.split('.').shift() ?? 'unknown';
 
   return {
     path: demoComponentName,

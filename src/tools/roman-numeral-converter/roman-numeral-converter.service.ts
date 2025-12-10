@@ -22,9 +22,12 @@ export function arabicToRoman(num: number) {
   };
   let roman = '';
   for (const i in lookup) {
-    while (num >= lookup[i]) {
-      roman += i;
-      num -= lookup[i];
+    const value = lookup[i];
+    if (value !== undefined) {
+      while (num >= value) {
+        roman += i;
+        num -= value;
+      }
     }
   }
   return roman;
@@ -41,5 +44,5 @@ export function romanToArabic(s: string) {
     return null;
   }
   const map: { [key: string]: number } = { I: 1, V: 5, X: 10, L: 50, C: 100, D: 500, M: 1000 };
-  return [...s].reduce((r, c, i, s) => (map[s[i + 1]] > map[c] ? r - map[c] : r + map[c]), 0);
+  return [...s].reduce((r, c, i, s) => ((map[s[i + 1] ?? ''] ?? 0) > (map[c] ?? 0) ? r - (map[c] ?? 0) : r + (map[c] ?? 0)), 0);
 }

@@ -62,7 +62,9 @@ whenever(() => isOpen.value, () => {
 });
 
 onClickOutside(elementRef, close);
-whenever(keys.escape, close);
+if (keys.escape) {
+  whenever(keys.escape, close);
+}
 
 watch(
   value,
@@ -110,7 +112,10 @@ function handleKeydown(event: KeyboardEvent) {
     const valueCanBeSelected = isOpen.value && focusIndex.value !== -1;
 
     if (valueCanBeSelected) {
-      selectOption({ option: filteredOptions.value[focusIndex.value] });
+      const option = filteredOptions.value[focusIndex.value];
+      if (option) {
+        selectOption({ option });
+      }
     }
     else {
       toggleOpen();

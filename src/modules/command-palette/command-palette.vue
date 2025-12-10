@@ -27,9 +27,15 @@ const keys = useMagicKeys({
 
 whenever(isModalOpen, () => inputRef.value?.focus());
 
-whenever(keys.ctrl_k, open);
-whenever(keys.meta_k, open);
-whenever(keys.escape, close);
+if (keys.ctrl_k) {
+  whenever(keys.ctrl_k, open);
+}
+if (keys.meta_k) {
+  whenever(keys.meta_k, open);
+}
+if (keys.escape) {
+  whenever(keys.escape, close);
+}
 
 function open() {
   return isModalOpen.value = true;

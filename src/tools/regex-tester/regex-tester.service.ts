@@ -31,22 +31,28 @@ export function matchRegex(regex: string, text: string, flags: string) {
     const captures: Array<GroupCapture> = [];
     Object.entries(match).forEach(([captureName, captureValue]) => {
       if (captureName !== '0' && captureName.match(/\d+/)) {
-        captures.push({
-          name: captureName,
-          value: captureValue,
-          start: indices[Number(captureName)][0],
-          end: indices[Number(captureName)][1],
-        });
+        const captureIndices = indices?.[Number(captureName)];
+        if (captureIndices) {
+          captures.push({
+            name: captureName,
+            value: captureValue,
+            start: captureIndices[0] ?? 0,
+            end: captureIndices[1] ?? 0,
+          });
+        }
       }
     });
     const groups: Array<GroupCapture> = [];
     Object.entries(match.groups || {}).forEach(([groupName, groupValue]) => {
-      groups.push({
-        name: groupName,
-        value: groupValue,
-        start: indices.groups[groupName][0],
-        end: indices.groups[groupName][1],
-      });
+      const groupIndices = indices?.groups?.[groupName];
+      if (groupIndices) {
+        groups.push({
+          name: groupName,
+          value: groupValue,
+          start: groupIndices[0] ?? 0,
+          end: groupIndices[1] ?? 0,
+        });
+      }
     });
     results.push({
       index: match.index,

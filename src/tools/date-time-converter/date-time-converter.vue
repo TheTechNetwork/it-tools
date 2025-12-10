@@ -104,7 +104,12 @@ const normalizedDate = computed(() => {
     return now.value;
   }
 
-  const { toDate } = formats[formatIndex.value];
+  const format = formats[formatIndex.value];
+  if (!format) {
+    return undefined;
+  }
+
+  const { toDate } = format;
 
   try {
     return toDate(inputDate.value);
@@ -133,7 +138,12 @@ const validation = useValidation({
             return true;
           }
 
-          const maybeDate = formats[formatIndex.value].toDate(value);
+          const format = formats[formatIndex.value];
+          if (!format) {
+            return false;
+          }
+
+          const maybeDate = format.toDate(value);
           return isDate(maybeDate) && isValid(maybeDate);
         }, false),
     },

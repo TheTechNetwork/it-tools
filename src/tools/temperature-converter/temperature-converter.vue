@@ -84,14 +84,22 @@ const units = reactive<
       });
 
 function update(key: TemperatureScale) {
-  const { ref: value, toKelvin } = units[key];
+  const unit = units[key];
+  if (!unit) {
+    return;
+  }
+
+  const { ref: value, toKelvin } = unit;
 
   const kelvins = toKelvin(value) ?? 0;
 
   _.chain(units)
     .omit(key)
     .forEach(({ fromKelvin }, index) => {
-      units[index].ref = Math.floor((fromKelvin(kelvins) ?? 0) * 100) / 100;
+      const targetUnit = units[index];
+      if (targetUnit) {
+        targetUnit.ref = Math.floor((fromKelvin(kelvins) ?? 0) * 100) / 100;
+      }
     })
     .value();
 }
@@ -107,9 +115,9 @@ update('kelvin');
       </n-input-group-label>
 
       <n-input-number
-        v-model:value="units[key].ref"
+        :value="units[key as TemperatureScale]?.ref"
         style="flex: 1"
-        @update:value="() => update(key as TemperatureScale)"
+        @update:value="(value) => { const unit = units[key as TemperatureScale]; if (unit) { unit.ref = value; update(key as TemperatureScale); } }"
       />
 
       <n-input-group-label style="width: 50px">
