@@ -36,8 +36,8 @@ dependencies:
     specifier: ^13.0.7
     version: 13.0.9
   '@vicons/material':
-    specifier: ^0.12.0
-    version: 0.12.0
+    specifier: ^0.13.0
+    version: 0.13.0
   '@vicons/tabler':
     specifier: ^0.12.0
     version: 0.12.0
@@ -3973,8 +3973,8 @@ packages:
     dev: true
     optional: true
 
-  /@vicons/material@0.12.0:
-    resolution: {integrity: sha512-chv1CYAl8P32P3Ycwgd5+vw/OFNc2mtkKdb1Rw4T5IJmKy6GVDsoUKV3N2l208HATn7CCQphZtuPDdsm7K2kmA==}
+  /@vicons/material@0.13.0:
+    resolution: {integrity: sha512-lKVxFNprM+CaBkUH3gt6VjIeiMsKQl2zARQMwTCZruQl2vRHzyeZiKeCflWS99CEfv2JzX/6y697smxlzyxcVw==}
     dev: false
 
   /@vicons/tabler@0.12.0:
