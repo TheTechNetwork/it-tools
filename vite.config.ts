@@ -56,6 +56,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       strategies: 'generateSW',
+      workbox: {
+        maximumFileSizeToCacheInBytes: 8 * 1024 * 1024, // 8 MB
+      },
       manifest: {
         name: 'IT Tools',
         description: 'Aggregated set of useful tools for developers.',
