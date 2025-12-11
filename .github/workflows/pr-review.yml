@@ -4,8 +4,6 @@ on:
   workflow_run:
     workflows: ["ci", "E2E tests", "Node.js CI with pnpm"]
     types: [completed]
-  pull_request:
-    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
@@ -26,12 +24,10 @@ jobs:
       - name: Get PR Details
         id: pr-info
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event_name }}" = "workflow_run" ]; then
-            PR_NUMBER=$(gh pr list --head "${{ github.event.workflow_run.head_branch }}" --json number --jq '.[0].number')
-            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
-          fi
+          # Get PR number from workflow_run event
+          PR_NUMBER=$(gh pr list --head "${{ github.event.workflow_run.head_branch }}" --json number --jq '.[0].number')
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "head_branch=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -142,11 +138,12 @@ jobs:
 
           # Get workflow runs for this PR
           if [ -n "${{ steps.pr-info.outputs.pr_number }}" ]; then
-            # Get all recent workflow runs
+            # Get all recent workflow runs for this branch
+            BRANCH_NAME="${{ steps.pr-info.outputs.head_branch }}"
             ALL_RUNS=$(gh run list \
               --repo ${{ github.repository }} \
-              --branch ${{ github.head_ref || github.ref_name }} \
-              --limit 20 \
+              --branch "$BRANCH_NAME" \
+              --limit 50 \
               --json conclusion,name,databaseId,url,status,createdAt,workflowName 2>/dev/null || echo "[]")
 
             # Count by status
@@ -334,17 +331,19 @@ jobs:
             # Get PR details
             PR_DATA=$(gh pr view ${{ steps.pr-info.outputs.pr_number }} --json mergeable,reviewDecision,commits 2>/dev/null || echo '{}')
 
-            # Check workflow status
+            # Check workflow status - use branch from pr-info
+            BRANCH_NAME="${{ steps.pr-info.outputs.head_branch }}"
             ALL_RUNS=$(gh run list \
               --repo ${{ github.repository }} \
-              --branch ${{ github.head_ref || github.ref_name }} \
-              --limit 30 \
-              --json conclusion,workflowName,status 2>/dev/null || echo "[]")
+              --branch "$BRANCH_NAME" \
+              --limit 50 \
+              --json conclusion,workflowName,status,createdAt 2>/dev/null || echo "[]")
 
-            # Check each required workflow
-            CI_STATUS=$(echo "$ALL_RUNS" | jq -r '[.[] | select(.workflowName == "ci")] | .[0].conclusion // "pending"')
-            E2E_STATUS=$(echo "$ALL_RUNS" | jq -r '[.[] | select(.workflowName == "E2E tests")] | .[0].conclusion // "pending"')
-            NODE_STATUS=$(echo "$ALL_RUNS" | jq -r '[.[] | select(.workflowName == "Node.js CI with pnpm")] | .[0].conclusion // "pending"')
+            # Check each required workflow (get most recent run of each type)
+            # Sort by createdAt and get the first (most recent) for each workflow
+            CI_STATUS=$(echo "$ALL_RUNS" | jq -r '[.[] | select(.workflowName == "ci")] | sort_by(.createdAt) | reverse | .[0].conclusion // "not_run"')
+            E2E_STATUS=$(echo "$ALL_RUNS" | jq -r '[.[] | select(.workflowName == "E2E tests")] | sort_by(.createdAt) | reverse | .[0].conclusion // "not_run"')
+            NODE_STATUS=$(echo "$ALL_RUNS" | jq -r '[.[] | select(.workflowName == "Node.js CI with pnpm")] | sort_by(.createdAt) | reverse | .[0].conclusion // "not_run"')
 
             # Check reviews
             REVIEW_DECISION=$(echo "$PR_DATA" | jq -r '.reviewDecision // "REVIEW_REQUIRED"')
@@ -356,9 +355,17 @@ jobs:
 
             # CI checks
             if [ "$CI_STATUS" = "success" ] && [ "$E2E_STATUS" = "success" ] && [ "$NODE_STATUS" = "success" ]; then
-              echo "- [x] All CI checks pass (ci, E2E tests, Node.js CI)" >> review.md
+              echo "- [x] All CI checks pass ✅" >> review.md
+            elif [ "$CI_STATUS" = "not_run" ] || [ "$E2E_STATUS" = "not_run" ] || [ "$NODE_STATUS" = "not_run" ]; then
+              echo "- [ ] All CI checks pass (⏳ Some workflows haven't run yet)" >> review.md
+              echo "  - ci: ${CI_STATUS}" >> review.md
+              echo "  - E2E tests: ${E2E_STATUS}" >> review.md
+              echo "  - Node.js CI: ${NODE_STATUS}" >> review.md
             else
-              echo "- [ ] All CI checks pass (ci: $CI_STATUS, E2E: $E2E_STATUS, Node.js: $NODE_STATUS)" >> review.md
+              echo "- [ ] All CI checks pass" >> review.md
+              echo "  - ci: ${CI_STATUS}" >> review.md
+              echo "  - E2E tests: ${E2E_STATUS}" >> review.md
+              echo "  - Node.js CI: ${NODE_STATUS}" >> review.md
             fi
 
             # Code review
