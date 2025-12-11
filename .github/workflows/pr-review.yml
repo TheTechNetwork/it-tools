@@ -133,17 +133,21 @@ jobs:
 
       - name: Check Failed Workflows
         id: workflow-status
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr-info.outputs.pr_number }}
+          HEAD_BRANCH: ${{ steps.pr-info.outputs.head_branch }}
+          REPO: ${{ github.repository }}
         run: |
           echo "## 🚦 Workflow Status Check" >> review.md
           echo "" >> review.md
 
           # Get workflow runs for this PR
-          if [ -n "${{ steps.pr-info.outputs.pr_number }}" ]; then
+          if [ -n "$PR_NUMBER" ]; then
             # Get all recent workflow runs for this branch
-            BRANCH_NAME="${{ steps.pr-info.outputs.head_branch }}"
             ALL_RUNS=$(gh run list \
-              --repo ${{ github.repository }} \
-              --branch "$BRANCH_NAME" \
+              --repo "$REPO" \
+              --branch "$HEAD_BRANCH" \
               --limit 50 \
               --json conclusion,name,databaseId,url,status,createdAt,workflowName 2>/dev/null || echo "[]")
 
@@ -209,8 +213,6 @@ jobs:
               echo "" >> review.md
             fi
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Code Quality Review
         id: code-review
@@ -324,19 +326,23 @@ jobs:
 
       - name: Dynamic Checklist
         id: dynamic-checklist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr-info.outputs.pr_number }}
+          HEAD_BRANCH: ${{ steps.pr-info.outputs.head_branch }}
+          REPO: ${{ github.repository }}
         run: |
           echo "## ✅ Pre-Merge Checklist" >> review.md
           echo "" >> review.md
 
-          if [ -n "${{ steps.pr-info.outputs.pr_number }}" ]; then
+          if [ -n "$PR_NUMBER" ]; then
             # Get PR details
-            PR_DATA=$(gh pr view ${{ steps.pr-info.outputs.pr_number }} --json mergeable,reviewDecision,commits 2>/dev/null || echo '{}')
+            PR_DATA=$(gh pr view "$PR_NUMBER" --json mergeable,reviewDecision,commits 2>/dev/null || echo '{}')
 
             # Check workflow status - use branch from pr-info
-            # BRANCH_NAME is set from the env block below for security
             ALL_RUNS=$(gh run list \
-              --repo ${{ github.repository }} \
-              --branch "$BRANCH_NAME" \
+              --repo "$REPO" \
+              --branch "$HEAD_BRANCH" \
               --limit 50 \
               --json conclusion,workflowName,status,createdAt 2>/dev/null || echo "[]")
 
@@ -386,7 +392,7 @@ jobs:
             fi
 
             # Branch up to date (check commits behind)
-            BEHIND=$(gh pr view ${{ steps.pr-info.outputs.pr_number }} --json baseRefName,headRefName --jq '.baseRefName' 2>/dev/null | xargs -I {} git rev-list --count HEAD..origin/{} 2>/dev/null || echo "0")
+            BEHIND=$(gh pr view "$PR_NUMBER" --json baseRefName,headRefName --jq '.baseRefName' 2>/dev/null | xargs -I {} git rev-list --count HEAD..origin/{} 2>/dev/null || echo "0")
             if [ "$BEHIND" = "0" ]; then
               echo "- [x] Branch is up to date with \`main\`" >> review.md
             else
@@ -412,9 +418,6 @@ jobs:
           echo "- [ ] Performance impact considered" >> review.md
           echo "- [ ] Accessibility reviewed (if UI changes)" >> review.md
           echo "" >> review.md
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH_NAME: ${{ steps.pr-info.outputs.head_branch }}
 
       - name: Add Testing Guide
         id: testing-guide
@@ -451,9 +454,13 @@ jobs:
 
       - name: Post Review Comment
         if: steps.pr-info.outputs.pr_number != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ steps.pr-info.outputs.pr_number }}
+          REPO: ${{ github.repository }}
         run: |
           # Check if we already posted a comment
-          EXISTING_COMMENT=$(gh pr view ${{ steps.pr-info.outputs.pr_number }} \
+          EXISTING_COMMENT=$(gh pr view "$PR_NUMBER" \
             --json comments \
             --jq '.comments[] | select(.author.login == "github-actions[bot]" and (.body | contains("## 🔍 Automated PR Review"))) | .id' \
             | head -n 1 || true)
@@ -470,11 +477,9 @@ jobs:
             gh api \
               --method PATCH \
               -H "Accept: application/vnd.github+json" \
-              "/repos/${{ github.repository }}/issues/comments/$EXISTING_COMMENT" \
+              "/repos/$REPO/issues/comments/$EXISTING_COMMENT" \
               -f body="$(cat comment.md)"
           else
             # Post new comment
-            gh pr comment ${{ steps.pr-info.outputs.pr_number }} --body-file comment.md
+            gh pr comment "$PR_NUMBER" --body-file comment.md
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
