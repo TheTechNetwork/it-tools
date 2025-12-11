@@ -1,6 +1,6 @@
+import { useStorage } from '@vueuse/core';
 import { useRouteQuery } from '@vueuse/router';
 import { computed } from 'vue';
-import { useStorage } from '@vueuse/core';
 
 export { useQueryParam, useQueryParamOrStorage };
 

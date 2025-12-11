@@ -1,17 +1,17 @@
-import { HmacSHA1, enc } from 'crypto-js';
+import { enc, HmacSHA1 } from 'crypto-js';
 import _ from 'lodash';
 import { createToken } from '../token-generator/token-generator.service';
 
 export {
+  base32toHex,
+  buildKeyUri,
   generateHOTP,
+  generateSecret,
+  generateTOTP,
+  getCounterFromTime,
   hexToBytes,
   verifyHOTP,
-  generateTOTP,
   verifyTOTP,
-  buildKeyUri,
-  generateSecret,
-  base32toHex,
-  getCounterFromTime,
 };
 
 function hexToBytes(hex: string) {

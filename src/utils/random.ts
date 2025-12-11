@@ -33,11 +33,11 @@ const shuffleString = (str: string, delimiter = ''): string => shuffleArrayMutat
 const generateRandomId = () => `id-${random().toString(36).substring(2, 12)}`;
 
 export {
+  generateRandomId,
   randFromArray,
   randIntFromInterval,
   random,
   shuffleArray,
   shuffleArrayMutate,
   shuffleString,
-  generateRandomId,
 };

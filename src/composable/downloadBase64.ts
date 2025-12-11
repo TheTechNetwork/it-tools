@@ -1,14 +1,14 @@
-import { extension as getExtensionFromMimeType, extension as getMimeTypeFromExtension } from 'mime-types';
 import type { Ref } from 'vue';
 import _ from 'lodash';
+import { extension as getExtensionFromMimeType, extension as getMimeTypeFromExtension } from 'mime-types';
 
 export {
+  getExtensionFromMimeType,
   getMimeTypeFromBase64,
   getMimeTypeFromExtension,
-  getExtensionFromMimeType,
+  previewImageFromBase64,
   useDownloadFileFromBase64,
   useDownloadFileFromBase64Refs,
-  previewImageFromBase64,
 };
 
 const commonMimeTypesSignatures = {
