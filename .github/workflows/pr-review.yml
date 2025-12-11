@@ -333,7 +333,7 @@ jobs:
             PR_DATA=$(gh pr view ${{ steps.pr-info.outputs.pr_number }} --json mergeable,reviewDecision,commits 2>/dev/null || echo '{}')
 
             # Check workflow status - use branch from pr-info
-            BRANCH_NAME="${{ steps.pr-info.outputs.head_branch }}"
+            # BRANCH_NAME is set from the env block below for security
             ALL_RUNS=$(gh run list \
               --repo ${{ github.repository }} \
               --branch "$BRANCH_NAME" \
@@ -414,6 +414,7 @@ jobs:
           echo "" >> review.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_NAME: ${{ steps.pr-info.outputs.head_branch }}
 
       - name: Add Testing Guide
         id: testing-guide
