@@ -1,0 +1,23 @@
+name: PR Review Simple Test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  test-comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post test comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🤖 **PR Review Workflow Test**\n\nThis workflow is working! PR #' + context.issue.number + ' triggered successfully.\n\n_Timestamp: ' + new Date().toISOString() + '_'
+            })
