@@ -1,11 +1,11 @@
 name: PR Review & Recommendations
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
   workflow_run:
     workflows: ["ci", "E2E tests", "Node.js CI with pnpm"]
     types: [completed]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
@@ -324,28 +324,92 @@ jobs:
             done
           fi
 
-      - name: General Recommendations
-        id: recommendations
+      - name: Dynamic Checklist
+        id: dynamic-checklist
         run: |
           echo "## ✅ Pre-Merge Checklist" >> review.md
           echo "" >> review.md
-          echo "Before merging this PR, ensure:" >> review.md
-          echo "" >> review.md
-          echo "### Required" >> review.md
-          echo "- [ ] All CI checks pass (ci, E2E tests, Node.js CI)" >> review.md
-          echo "- [ ] Code has been reviewed by at least one team member" >> review.md
-          echo "- [ ] No merge conflicts exist" >> review.md
-          echo "- [ ] Branch is up to date with \`main\`" >> review.md
-          echo "" >> review.md
 
-          echo "### Recommended" >> review.md
+          if [ -n "${{ steps.pr-info.outputs.pr_number }}" ]; then
+            # Get PR details
+            PR_DATA=$(gh pr view ${{ steps.pr-info.outputs.pr_number }} --json mergeable,reviewDecision,commits 2>/dev/null || echo '{}')
+
+            # Check workflow status
+            ALL_RUNS=$(gh run list \
+              --repo ${{ github.repository }} \
+              --branch ${{ github.head_ref || github.ref_name }} \
+              --limit 30 \
+              --json conclusion,workflowName,status 2>/dev/null || echo "[]")
+
+            # Check each required workflow
+            CI_STATUS=$(echo "$ALL_RUNS" | jq -r '[.[] | select(.workflowName == "ci")] | .[0].conclusion // "pending"')
+            E2E_STATUS=$(echo "$ALL_RUNS" | jq -r '[.[] | select(.workflowName == "E2E tests")] | .[0].conclusion // "pending"')
+            NODE_STATUS=$(echo "$ALL_RUNS" | jq -r '[.[] | select(.workflowName == "Node.js CI with pnpm")] | .[0].conclusion // "pending"')
+
+            # Check reviews
+            REVIEW_DECISION=$(echo "$PR_DATA" | jq -r '.reviewDecision // "REVIEW_REQUIRED"')
+
+            # Check merge conflicts
+            MERGEABLE=$(echo "$PR_DATA" | jq -r '.mergeable // "UNKNOWN"')
+
+            echo "### Required" >> review.md
+
+            # CI checks
+            if [ "$CI_STATUS" = "success" ] && [ "$E2E_STATUS" = "success" ] && [ "$NODE_STATUS" = "success" ]; then
+              echo "- [x] All CI checks pass (ci, E2E tests, Node.js CI)" >> review.md
+            else
+              echo "- [ ] All CI checks pass (ci: $CI_STATUS, E2E: $E2E_STATUS, Node.js: $NODE_STATUS)" >> review.md
+            fi
+
+            # Code review
+            if [ "$REVIEW_DECISION" = "APPROVED" ]; then
+              echo "- [x] Code has been reviewed and approved" >> review.md
+            else
+              echo "- [ ] Code has been reviewed by at least one team member" >> review.md
+            fi
+
+            # Merge conflicts
+            if [ "$MERGEABLE" = "MERGEABLE" ]; then
+              echo "- [x] No merge conflicts exist" >> review.md
+            elif [ "$MERGEABLE" = "CONFLICTING" ]; then
+              echo "- [ ] ⚠️ **Merge conflicts exist** - resolve before merging" >> review.md
+            else
+              echo "- [ ] No merge conflicts exist" >> review.md
+            fi
+
+            # Branch up to date (check commits behind)
+            BEHIND=$(gh pr view ${{ steps.pr-info.outputs.pr_number }} --json baseRefName,headRefName --jq '.baseRefName' 2>/dev/null | xargs -I {} git rev-list --count HEAD..origin/{} 2>/dev/null || echo "0")
+            if [ "$BEHIND" = "0" ]; then
+              echo "- [x] Branch is up to date with \`main\`" >> review.md
+            else
+              echo "- [ ] Branch is $BEHIND commit(s) behind \`main\` - update before merging" >> review.md
+            fi
+
+            echo "" >> review.md
+            echo "### Recommended" >> review.md
+          else
+            echo "### Required" >> review.md
+            echo "- [ ] All CI checks pass (ci, E2E tests, Node.js CI)" >> review.md
+            echo "- [ ] Code has been reviewed by at least one team member" >> review.md
+            echo "- [ ] No merge conflicts exist" >> review.md
+            echo "- [ ] Branch is up to date with \`main\`" >> review.md
+            echo "" >> review.md
+            echo "### Recommended" >> review.md
+          fi
+
+          # Static recommended items (can't auto-check these)
           echo "- [ ] Tests added/updated for new functionality" >> review.md
           echo "- [ ] Documentation updated if needed" >> review.md
           echo "- [ ] No console.log or debug code left in" >> review.md
           echo "- [ ] Performance impact considered" >> review.md
           echo "- [ ] Accessibility reviewed (if UI changes)" >> review.md
           echo "" >> review.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Add Testing Guide
+        id: testing-guide
+        run: |
           echo "## 🔧 Local Testing Commands" >> review.md
           echo "" >> review.md
           echo "Run these commands locally to catch issues before pushing:" >> review.md
