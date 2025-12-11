@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import _ from 'lodash';
-import { useCommandPaletteStore } from './command-palette.store';
 import type { PaletteOption } from './command-palette.types';
+import _ from 'lodash';
+import { storeToRefs } from 'pinia';
+import { useCommandPaletteStore } from './command-palette.store';
 
 const isModalOpen = ref(false);
 const inputRef = ref();
@@ -134,7 +134,7 @@ function activateOption(option: PaletteOption) {
       <c-input-text ref="inputRef" v-model:value="searchPrompt" raw-text placeholder="Type to search a tool or a command..." autofocus clearable />
 
       <div v-for="(options, category) in filteredSearchResult" :key="category">
-        <div ml-3 mt-3 text-sm font-bold text-primary op-60>
+        <div ml-3 mt-3 text-sm text-primary font-bold op-60>
           {{ category }}
         </div>
         <command-palette-option v-for="option in options" :key="option.name" :option="option" :selected="selectedOptionIndex === getOptionIndex(option)" @activated="activateOption" />

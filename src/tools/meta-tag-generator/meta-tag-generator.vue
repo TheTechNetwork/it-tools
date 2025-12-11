@@ -1,10 +1,10 @@
 <script setup lang="ts">
 // @ts-nocheck
+import type { OGSchemaType, OGSchemaTypeElementSelect } from './OGSchemaType.type';
 import { generateMeta } from '@it-tools/oggen';
 import _ from 'lodash';
-import { image, ogSchemas, twitter, website } from './og-schemas';
-import type { OGSchemaType, OGSchemaTypeElementSelect } from './OGSchemaType.type';
 import TextareaCopyable from '@/components/TextareaCopyable.vue';
+import { image, ogSchemas, twitter, website } from './og-schemas';
 
 // Since type guards do not work in template
 

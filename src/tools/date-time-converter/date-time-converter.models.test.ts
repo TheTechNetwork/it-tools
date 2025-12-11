@@ -9,8 +9,8 @@ import {
   isRFC3339DateString,
   isRFC7231DateString,
   isTimestamp,
-  isUTCDateString,
   isUnixTimestamp,
+  isUTCDateString,
 } from './date-time-converter.models';
 
 describe('date-time-converter models', () => {

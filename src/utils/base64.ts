@@ -1,6 +1,6 @@
 import { Base64 } from 'js-base64';
 
-export { textToBase64, base64ToText, isValidBase64, removePotentialDataAndMimePrefix };
+export { base64ToText, isValidBase64, removePotentialDataAndMimePrefix, textToBase64 };
 
 function textToBase64(str: string, { makeUrlSafe = false }: { makeUrlSafe?: boolean } = {}) {
   const encoded = Base64.encode(str);

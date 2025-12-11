@@ -1,5 +1,5 @@
-import _ from 'lodash';
 import type { Difference, DifferenceStatus } from './json-diff.types';
+import _ from 'lodash';
 
 export { diff };
 

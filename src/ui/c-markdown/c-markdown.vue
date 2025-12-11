@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // @ts-nocheck
-import { marked } from 'marked';
 import DomPurify from 'dompurify';
+import { marked } from 'marked';
 
 const props = withDefaults(defineProps<{ markdown?: string }>(), { markdown: '' });
 const { markdown } = toRefs(props);

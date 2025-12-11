@@ -1,17 +1,17 @@
 import _ from 'lodash';
 
 export {
-  isISO8601DateTimeString,
-  isISO9075DateString,
-  isRFC3339DateString,
-  isRFC7231DateString,
-  isUnixTimestamp,
-  isTimestamp,
-  isUTCDateString,
-  isMongoObjectId,
   dateToExcelFormat,
   excelFormatToDate,
   isExcelFormat,
+  isISO8601DateTimeString,
+  isISO9075DateString,
+  isMongoObjectId,
+  isRFC3339DateString,
+  isRFC7231DateString,
+  isTimestamp,
+  isUnixTimestamp,
+  isUTCDateString,
 };
 
 const ISO8601_REGEX

@@ -29,4 +29,4 @@ function usePartialMacAddressValidation(value: Ref) {
   });
 }
 
-export { macAddressValidation, macAddressValidationRules, usePartialMacAddressValidation, partialMacAddressValidationRules };
+export { macAddressValidation, macAddressValidationRules, partialMacAddressValidationRules, usePartialMacAddressValidation };
