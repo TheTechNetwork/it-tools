@@ -1,8 +1,8 @@
 name: PR Review & Recommendations
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  #pull_request:
+  #  types: [opened, synchronize, reopened]
   workflow_run:
     workflows: ["ci", "E2E tests", "Node.js CI with pnpm"]
     types: [completed]
