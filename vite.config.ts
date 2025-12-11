@@ -45,6 +45,7 @@ export default defineConfig({
       eslintrc: {
         enabled: true,
       },
+      viteOptimizeDeps: false,
     }),
     Icons({ compiler: 'vue3' }),
     vue({
