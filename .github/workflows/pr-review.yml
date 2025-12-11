@@ -35,10 +35,37 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: PR Summary
+        id: pr-summary
+        run: |
+          echo "## 📊 PR Summary" > review.md
+          echo "" >> review.md
+
+          # Get file change statistics
+          FILES_CHANGED=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | wc -l)
+          ADDITIONS=$(git diff --shortstat origin/${{ github.base_ref || 'main' }}...HEAD | grep -oP '\d+(?= insertion)' || echo "0")
+          DELETIONS=$(git diff --shortstat origin/${{ github.base_ref || 'main' }}...HEAD | grep -oP '\d+(?= deletion)' || echo "0")
+
+          echo "**Changes:** $FILES_CHANGED file(s) | **+$ADDITIONS** / **-$DELETIONS** lines" >> review.md
+          echo "" >> review.md
+
+          # Categorize changes
+          SRC_CHANGES=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -E '^src/.*\.(ts|tsx|js|jsx|vue)$' | wc -l || echo "0")
+          TEST_CHANGES=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -E '\.(test|spec)\.(ts|tsx|js|jsx)$' | wc -l || echo "0")
+          CONFIG_CHANGES=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -E '(\.config\.|tsconfig|package\.json|\.eslintrc)' | wc -l || echo "0")
+          WORKFLOW_CHANGES=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -E '\.github/workflows/' | wc -l || echo "0")
+
+          echo "**File Categories:**" >> review.md
+          if [ "$SRC_CHANGES" -gt 0 ]; then echo "- 📝 Source code: $SRC_CHANGES file(s)" >> review.md; fi
+          if [ "$TEST_CHANGES" -gt 0 ]; then echo "- 🧪 Tests: $TEST_CHANGES file(s)" >> review.md; fi
+          if [ "$CONFIG_CHANGES" -gt 0 ]; then echo "- ⚙️ Configuration: $CONFIG_CHANGES file(s)" >> review.md; fi
+          if [ "$WORKFLOW_CHANGES" -gt 0 ]; then echo "- 🔄 Workflows: $WORKFLOW_CHANGES file(s)" >> review.md; fi
+          echo "" >> review.md
+
       - name: Check Workflow Files
         id: workflow-check
         run: |
-          echo "## Workflow Analysis" > review.md
+          echo "## 🔄 Workflow Analysis" >> review.md
           echo "" >> review.md
 
           # Check for workflow file changes
@@ -47,31 +74,56 @@ jobs:
           if [ -n "$WORKFLOW_CHANGES" ]; then
             echo "### ⚙️ Workflow Files Modified" >> review.md
             echo "" >> review.md
-            echo "$WORKFLOW_CHANGES" | while read file; do
-              echo "- \`$file\`" >> review.md
-            done
-            echo "" >> review.md
-
-            # Validate workflow syntax
-            echo "### 🔍 Workflow Validation" >> review.md
-            echo "" >> review.md
 
             for workflow in $WORKFLOW_CHANGES; do
+              echo "#### \`$workflow\`" >> review.md
+              echo "" >> review.md
+
               if [ -f "$workflow" ]; then
-                echo "**Checking \`$workflow\`:**" >> review.md
-
-                # Basic YAML syntax check
-                if command -v yamllint > /dev/null; then
-                  yamllint "$workflow" >> review.md 2>&1 || echo "⚠️ YAML linting issues detected" >> review.md
-                fi
-
                 # Check for common issues
+                ISSUES_FOUND=false
+
                 if grep -q 'uses:.*@master' "$workflow"; then
-                  echo "- ⚠️ **Warning**: Action uses \`@master\` branch. Consider pinning to a specific version or SHA for security." >> review.md
+                  echo "- ⚠️ **Security Warning**: Action uses \`@master\` branch. Pin to a specific SHA for security and reproducibility." >> review.md
+                  ISSUES_FOUND=true
                 fi
 
-                if grep -q '\${{.*secrets\.' "$workflow" | grep -v 'GITHUB_TOKEN'; then
-                  echo "- ℹ️ **Info**: Workflow uses secrets. Ensure they are properly configured in repository settings." >> review.md
+                if grep -q 'uses:.*@main' "$workflow"; then
+                  echo "- ⚠️ **Security Warning**: Action uses \`@main\` branch. Pin to a specific SHA for security and reproducibility." >> review.md
+                  ISSUES_FOUND=true
+                fi
+
+                # Check for action version updates
+                if git diff origin/${{ github.base_ref || 'main' }}...HEAD "$workflow" | grep -E '^\+.*uses:.*@'; then
+                  echo "- ℹ️ **Info**: Action versions updated. Verify compatibility with existing workflow." >> review.md
+                  ISSUES_FOUND=true
+                fi
+
+                # Check for custom secrets
+                CUSTOM_SECRETS=$(grep -oP '\$\{\{\s*secrets\.\K[A-Z_]+(?=\s*\}\})' "$workflow" | grep -v '^GITHUB_TOKEN$' || true)
+                if [ -n "$CUSTOM_SECRETS" ]; then
+                  echo "- 🔐 **Secrets Required**: This workflow uses custom secrets:" >> review.md
+                  echo "$CUSTOM_SECRETS" | while read secret; do
+                    echo "  - \`$secret\`" >> review.md
+                  done
+                  echo "  Ensure these are configured in repository settings." >> review.md
+                  ISSUES_FOUND=true
+                fi
+
+                # Check for workflow permissions
+                if grep -q '^permissions:' "$workflow"; then
+                  echo "- ✅ **Good Practice**: Workflow defines explicit permissions (principle of least privilege)." >> review.md
+                  ISSUES_FOUND=true
+                fi
+
+                # Check for timeout settings
+                if ! grep -q 'timeout-minutes:' "$workflow"; then
+                  echo "- ⚠️ **Recommendation**: Consider adding \`timeout-minutes\` to prevent stuck workflows." >> review.md
+                  ISSUES_FOUND=true
+                fi
+
+                if [ "$ISSUES_FOUND" = false ]; then
+                  echo "- ✅ No issues detected" >> review.md
                 fi
 
                 echo "" >> review.md
@@ -85,31 +137,77 @@ jobs:
       - name: Check Failed Workflows
         id: workflow-status
         run: |
-          echo "### 📊 Workflow Status Check" >> review.md
+          echo "## 🚦 Workflow Status Check" >> review.md
           echo "" >> review.md
 
           # Get workflow runs for this PR
           if [ -n "${{ steps.pr-info.outputs.pr_number }}" ]; then
-            FAILED_WORKFLOWS=$(gh run list \
+            # Get all recent workflow runs
+            ALL_RUNS=$(gh run list \
               --repo ${{ github.repository }} \
               --branch ${{ github.head_ref || github.ref_name }} \
-              --limit 10 \
-              --json conclusion,name,databaseId,url \
-              --jq '.[] | select(.conclusion == "failure") | "- ❌ [\(.name)](\(.url)) (Run #\(.databaseId))"' || true)
+              --limit 20 \
+              --json conclusion,name,databaseId,url,status,createdAt,workflowName 2>/dev/null || echo "[]")
 
-            if [ -n "$FAILED_WORKFLOWS" ]; then
-              echo "**Failed Workflows Detected:**" >> review.md
+            # Count by status
+            FAILED=$(echo "$ALL_RUNS" | jq '[.[] | select(.conclusion == "failure")] | length')
+            SUCCESS=$(echo "$ALL_RUNS" | jq '[.[] | select(.conclusion == "success")] | length')
+            IN_PROGRESS=$(echo "$ALL_RUNS" | jq '[.[] | select(.status == "in_progress")] | length')
+
+            if [ "$FAILED" -gt 0 ] || [ "$IN_PROGRESS" -gt 0 ] || [ "$SUCCESS" -gt 0 ]; then
+              echo "**Status:** ✅ $SUCCESS passed | ❌ $FAILED failed | ⏳ $IN_PROGRESS running" >> review.md
+              echo "" >> review.md
+            fi
+
+            # List failed workflows with details
+            FAILED_WORKFLOWS=$(echo "$ALL_RUNS" | jq -r '.[] | select(.conclusion == "failure") | "- ❌ [\(.workflowName)](\(.url)) - Run #\(.databaseId)"' || true)
+
+            if [ -n "$FAILED_WORKFLOWS" ] && [ "$FAILED_WORKFLOWS" != "" ]; then
+              echo "### ❌ Failed Workflows" >> review.md
               echo "" >> review.md
               echo "$FAILED_WORKFLOWS" >> review.md
               echo "" >> review.md
-              echo "**Recommendations:**" >> review.md
-              echo "- Review the logs for each failed workflow" >> review.md
-              echo "- Check for dependency conflicts or version mismatches" >> review.md
-              echo "- Verify all required secrets and environment variables are configured" >> review.md
-              echo "- Ensure tests pass locally before pushing" >> review.md
+
+              echo "**Common Fixes by Workflow Type:**" >> review.md
+              echo "" >> review.md
+
+              # Check which workflows failed and provide specific guidance
+              if echo "$ALL_RUNS" | jq -e '.[] | select(.conclusion == "failure" and (.workflowName | contains("ci") or contains("CI")))' > /dev/null 2>&1; then
+                echo "**CI Workflow Failed:**" >> review.md
+                echo "- Run \`pnpm lint\` - Fix any linting errors" >> review.md
+                echo "- Run \`pnpm test\` - Ensure all unit tests pass" >> review.md
+                echo "- Run \`pnpm typecheck\` - Fix any TypeScript errors" >> review.md
+                echo "- Run \`pnpm build\` - Ensure the build completes successfully" >> review.md
+                echo "" >> review.md
+              fi
+
+              if echo "$ALL_RUNS" | jq -e '.[] | select(.conclusion == "failure" and (.workflowName | contains("E2E") or contains("e2e")))' > /dev/null 2>&1; then
+                echo "**E2E Tests Failed:**" >> review.md
+                echo "- Run \`pnpm test:e2e\` locally to reproduce" >> review.md
+                echo "- Check for UI regressions or broken user flows" >> review.md
+                echo "- Review Playwright traces in the workflow artifacts" >> review.md
+                echo "- Ensure test data and fixtures are correct" >> review.md
+                echo "" >> review.md
+              fi
+
+              if echo "$ALL_RUNS" | jq -e '.[] | select(.conclusion == "failure" and (.workflowName | contains("Node")))' > /dev/null 2>&1; then
+                echo "**Node.js CI Failed:**" >> review.md
+                echo "- Check for Node version compatibility (testing on 18.x and 20.x)" >> review.md
+                echo "- Verify pnpm dependencies are correctly locked" >> review.md
+                echo "- Review build output for version-specific errors" >> review.md
+                echo "" >> review.md
+              fi
+
+              echo "**General Troubleshooting:**" >> review.md
+              echo "1. Click the ❌ failed workflow link above to view detailed logs" >> review.md
+              echo "2. Look for the first error message in the failed step" >> review.md
+              echo "3. Run the failing command locally to reproduce" >> review.md
+              echo "4. Check if recent commits introduced the failure" >> review.md
               echo "" >> review.md
             else
-              echo "✅ No failed workflows detected for this branch." >> review.md
+              echo "### ✅ All Workflows Passing" >> review.md
+              echo "" >> review.md
+              echo "Great job! All CI checks are passing." >> review.md
               echo "" >> review.md
             fi
           fi
@@ -119,68 +217,164 @@ jobs:
       - name: Code Quality Review
         id: code-review
         run: |
-          echo "### 📝 Code Quality Observations" >> review.md
+          echo "## 📝 Code Quality Analysis" >> review.md
           echo "" >> review.md
 
           # Check for package.json changes
           if git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -q 'package.json'; then
-            echo "**Dependencies Modified:**" >> review.md
-            echo "- \`package.json\` has been updated" >> review.md
-            echo "- ⚠️ **Reminder**: Run \`pnpm install\` to update lockfile if needed" >> review.md
-            echo "- ⚠️ **Reminder**: Check for breaking changes in updated dependencies" >> review.md
+            echo "### 📦 Dependencies" >> review.md
+            echo "" >> review.md
+
+            # Show what changed in package.json
+            DEPS_ADDED=$(git diff origin/${{ github.base_ref || 'main' }}...HEAD -- package.json | grep -E '^\+\s+"[^"]+":' | grep -v '^\+\+\+' || true)
+            DEPS_REMOVED=$(git diff origin/${{ github.base_ref || 'main' }}...HEAD -- package.json | grep -E '^\-\s+"[^"]+":' | grep -v '^\-\-\-' || true)
+            DEPS_MODIFIED=$(git diff origin/${{ github.base_ref || 'main' }}...HEAD -- package.json | grep -E '^\+\s+"[^"]+":' | while read line; do
+              PKG=$(echo "$line" | grep -oP '"\K[^"]+(?=":)')
+              if git diff origin/${{ github.base_ref || 'main' }}...HEAD -- package.json | grep -E "^\-\s+\"$PKG\":" > /dev/null; then
+                echo "$line"
+              fi
+            done || true)
+
+            if [ -n "$DEPS_ADDED" ]; then
+              echo "**Added:**" >> review.md
+              echo "\`\`\`diff" >> review.md
+              echo "$DEPS_ADDED" >> review.md
+              echo "\`\`\`" >> review.md
+            fi
+
+            if [ -n "$DEPS_REMOVED" ]; then
+              echo "**Removed:**" >> review.md
+              echo "\`\`\`diff" >> review.md
+              echo "$DEPS_REMOVED" >> review.md
+              echo "\`\`\`" >> review.md
+            fi
+
+            echo "**Checklist:**" >> review.md
+            echo "- [ ] Run \`pnpm install\` to update lockfile" >> review.md
+            echo "- [ ] Check for breaking changes in updated dependencies" >> review.md
+            echo "- [ ] Test affected functionality" >> review.md
+            echo "- [ ] Review security advisories for new packages" >> review.md
             echo "" >> review.md
           fi
 
           # Check for lock file changes
           if git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -q 'pnpm-lock.yaml'; then
-            echo "**Lock File Updated:**" >> review.md
-            echo "- \`pnpm-lock.yaml\` has been modified" >> review.md
-            echo "- ✅ This is expected when dependencies change" >> review.md
-            echo "" >> review.md
+            if ! git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -q 'package.json'; then
+              echo "### ⚠️ Lock File Changed Without package.json" >> review.md
+              echo "" >> review.md
+              echo "- \`pnpm-lock.yaml\` was modified but \`package.json\` wasn't" >> review.md
+              echo "- This might indicate a dependency resolution change" >> review.md
+              echo "- Verify this was intentional (e.g., from \`pnpm update\`)" >> review.md
+              echo "" >> review.md
+            fi
           fi
 
-          # Check for test file changes
-          TEST_CHANGES=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -E '\.(test|spec)\.(ts|js|tsx|jsx)$' || true)
-          if [ -n "$TEST_CHANGES" ]; then
-            echo "**Tests Modified:**" >> review.md
-            echo "$TEST_CHANGES" | while read file; do
-              echo "- \`$file\`" >> review.md
+          # Check for test coverage
+          SRC_CHANGES=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -E '^src/.*\.(ts|tsx|js|jsx|vue)$' | grep -v '\.(test|spec)\.' || true)
+          TEST_CHANGES=$(git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -E '\.(test|spec)\.(ts|tsx|js|jsx)$' || true)
+
+          if [ -n "$SRC_CHANGES" ]; then
+            SRC_COUNT=$(echo "$SRC_CHANGES" | wc -l)
+            TEST_COUNT=$(echo "$TEST_CHANGES" | wc -l || echo "0")
+
+            echo "### 🧪 Test Coverage" >> review.md
+            echo "" >> review.md
+            echo "- **Source files changed:** $SRC_COUNT" >> review.md
+            echo "- **Test files changed:** $TEST_COUNT" >> review.md
+            echo "" >> review.md
+
+            if [ "$TEST_COUNT" -eq 0 ] && [ "$SRC_COUNT" -gt 0 ]; then
+              echo "⚠️ **Notice:** Source code was modified but no test files were changed." >> review.md
+              echo "- Consider adding tests for new functionality" >> review.md
+              echo "- Update existing tests if behavior changed" >> review.md
+              echo "" >> review.md
+            else
+              echo "✅ Tests were updated alongside source code changes." >> review.md
+              echo "" >> review.md
+            fi
+          fi
+
+          # Check for configuration changes
+          CONFIG_FILES="tsconfig.json|vite.config.ts|vitest.config.ts|playwright.config.ts|.eslintrc"
+          if git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -E "$CONFIG_FILES" > /dev/null; then
+            echo "### ⚙️ Configuration Changes" >> review.md
+            echo "" >> review.md
+
+            git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -E "$CONFIG_FILES" | while read config; do
+              echo "**\`$config\` modified:**" >> review.md
+
+              case "$config" in
+                *tsconfig*)
+                  echo "- Run \`pnpm typecheck\` to validate TypeScript configuration" >> review.md
+                  echo "- Check for breaking changes in compiler options" >> review.md
+                  ;;
+                *vite.config*|*vitest.config*)
+                  echo "- Test build process: \`pnpm build\`" >> review.md
+                  echo "- Verify dev server: \`pnpm dev\`" >> review.md
+                  ;;
+                *playwright.config*)
+                  echo "- Test E2E configuration: \`pnpm test:e2e\`" >> review.md
+                  ;;
+                *eslint*)
+                  echo "- Run \`pnpm lint\` to verify linting configuration" >> review.md
+                  echo "- Check for new linting errors in existing code" >> review.md
+                  ;;
+              esac
+              echo "" >> review.md
             done
-            echo "" >> review.md
-          fi
-
-          # Check for TypeScript config changes
-          if git diff --name-only origin/${{ github.base_ref || 'main' }}...HEAD | grep -q 'tsconfig.json'; then
-            echo "**TypeScript Configuration Changed:**" >> review.md
-            echo "- ⚠️ **Warning**: \`tsconfig.json\` modified. Verify type checking still works correctly." >> review.md
-            echo "- Run \`pnpm typecheck\` locally to validate" >> review.md
-            echo "" >> review.md
           fi
 
       - name: General Recommendations
         id: recommendations
         run: |
-          echo "### 💡 General Recommendations" >> review.md
+          echo "## ✅ Pre-Merge Checklist" >> review.md
           echo "" >> review.md
-          echo "**Before merging, ensure:**" >> review.md
-          echo "- ✅ All CI checks pass (lint, test, typecheck, build)" >> review.md
-          echo "- ✅ E2E tests complete successfully" >> review.md
-          echo "- ✅ Code has been reviewed by at least one team member" >> review.md
-          echo "- ✅ No merge conflicts exist" >> review.md
-          echo "- ✅ Branch is up to date with base branch" >> review.md
+          echo "Before merging this PR, ensure:" >> review.md
           echo "" >> review.md
-          echo "**If workflows are failing:**" >> review.md
-          echo "1. Click on the failed workflow to view detailed logs" >> review.md
-          echo "2. Look for error messages in the step that failed" >> review.md
-          echo "3. Common issues:" >> review.md
-          echo "   - Linting errors: Run \`pnpm lint\` locally and fix issues" >> review.md
-          echo "   - Test failures: Run \`pnpm test\` locally to reproduce" >> review.md
-          echo "   - Type errors: Run \`pnpm typecheck\` to identify type issues" >> review.md
-          echo "   - Build failures: Run \`pnpm build\` to check for build errors" >> review.md
-          echo "   - E2E failures: Run \`pnpm test:e2e\` locally or check for UI regressions" >> review.md
+          echo "### Required" >> review.md
+          echo "- [ ] All CI checks pass (ci, E2E tests, Node.js CI)" >> review.md
+          echo "- [ ] Code has been reviewed by at least one team member" >> review.md
+          echo "- [ ] No merge conflicts exist" >> review.md
+          echo "- [ ] Branch is up to date with \`main\`" >> review.md
           echo "" >> review.md
+
+          echo "### Recommended" >> review.md
+          echo "- [ ] Tests added/updated for new functionality" >> review.md
+          echo "- [ ] Documentation updated if needed" >> review.md
+          echo "- [ ] No console.log or debug code left in" >> review.md
+          echo "- [ ] Performance impact considered" >> review.md
+          echo "- [ ] Accessibility reviewed (if UI changes)" >> review.md
+          echo "" >> review.md
+
+          echo "## 🔧 Local Testing Commands" >> review.md
+          echo "" >> review.md
+          echo "Run these commands locally to catch issues before pushing:" >> review.md
+          echo "" >> review.md
+          echo "\`\`\`bash" >> review.md
+          echo "# Install dependencies" >> review.md
+          echo "pnpm install" >> review.md
+          echo "" >> review.md
+          echo "# Run all checks (recommended before every push)" >> review.md
+          echo "pnpm lint        # Check code style" >> review.md
+          echo "pnpm typecheck   # Check TypeScript types" >> review.md
+          echo "pnpm test        # Run unit tests" >> review.md
+          echo "pnpm build       # Build the application" >> review.md
+          echo "pnpm test:e2e    # Run E2E tests (optional, takes longer)" >> review.md
+          echo "\`\`\`" >> review.md
+          echo "" >> review.md
+
           echo "---" >> review.md
-          echo "*🤖 This review was automatically generated. Please use it as a guide, not a replacement for human review.*" >> review.md
+          echo "" >> review.md
+          echo "*🤖 This automated review provides guidance and recommendations. It does not replace human code review and testing. Always verify changes locally before merging.*" >> review.md
+          echo "" >> review.md
+          echo "<details><summary>💬 Feedback</summary>" >> review.md
+          echo "" >> review.md
+          echo "If this review was helpful or needs improvement, please provide feedback by:" >> review.md
+          echo "- 👍 Reacting to this comment" >> review.md
+          echo "- 💬 Leaving a reply with suggestions" >> review.md
+          echo "- 🐛 Opening an issue if you found a bug in the review logic" >> review.md
+          echo "" >> review.md
+          echo "</details>" >> review.md
 
       - name: Post Review Comment
         if: steps.pr-info.outputs.pr_number != ''
