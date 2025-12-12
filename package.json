@@ -154,7 +154,7 @@
     "vitest": "0.34.6",
     "vm-browserify": "1.1.2",
     "workbox-window": "7.4.0",
-    "zx": "7.2.4"
+    "zx": "8.8.5"
   },
   "packageManager": "pnpm@8.15.9",
   "engines": {
