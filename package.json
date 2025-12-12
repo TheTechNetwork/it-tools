@@ -22,8 +22,8 @@
   ],
   "scripts": {
     "dev": "env -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry vite",
-    "build": "vue-tsc --noEmit && NODE_OPTIONS=--max_old_space_size=4096 vite build",
-    "preview": "vite preview --port 5050",
+    "build": "vue-tsc --noEmit && env -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry NODE_OPTIONS=--max_old_space_size=4096 vite build",
+    "preview": "env -u npm_config_verify_deps_before_run -u npm_config_npm_globalconfig -u npm_config__jsr_registry vite preview --port 5050",
     "test": "npm run test:unit",
     "test:unit": "vitest --environment jsdom --run",
     "test:e2e": "playwright test",
