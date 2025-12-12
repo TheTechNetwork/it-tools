@@ -59,36 +59,25 @@
     },
     {
       "groupName": "Vicons",
-      "matchPackageNames": [
-        "@vicons/material",
-        "@vicons/tabler"
-      ],
+      "matchPackageNames": ["@vicons/material", "@vicons/tabler"],
       "matchUpdateTypes": ["major", "minor", "patch"]
     },
     {
       "groupName": "VueUse",
-      "matchPackageNames": [
-        "@vueuse/core",
-        "@vueuse/head",
-        "@vueuse/router"
-      ],
+      "matchPackageNames": ["@vueuse/core", "@vueuse/head", "@vueuse/router"],
       "matchUpdateTypes": ["major", "minor", "patch"]
     },
     {
       "groupName": "uuid with types",
-      "matchPackageNames": [
-        "uuid",
-        "@types/uuid"
-      ],
+      "matchPackageNames": ["uuid", "@types/uuid"],
       "matchUpdateTypes": ["major", "minor", "patch"]
     },
     {
       "groupName": "Type packages with their dependencies",
-      "matchPackagePatterns": ["^@types/"],
       "matchDepTypes": ["devDependencies"],
-      "excludePackageNames": ["@types/uuid"],
       "groupSlug": "types",
-      "automerge": true
+      "automerge": true,
+      "matchPackageNames": ["/^@types//", "!@types/uuid"]
     }
   ]
 }
