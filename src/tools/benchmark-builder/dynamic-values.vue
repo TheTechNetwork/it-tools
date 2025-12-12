@@ -15,7 +15,7 @@ const values = useVModel(props, 'values', emit);
 async function addValue() {
   values.value.push(null);
   await nextTick();
-  refs.value.at(-1)?.focus();
+  refs.value[refs.value.length - 1]?.focus();
 }
 
 function onInputEnter(index: number) {
@@ -24,7 +24,7 @@ function onInputEnter(index: number) {
     return;
   }
 
-  refs.value.at(index + 1)?.focus();
+  refs.value[index + 1]?.focus();
 }
 </script>
 
