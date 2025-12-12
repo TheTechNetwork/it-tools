@@ -7,5 +7,5 @@ function generateNumeronym(word: string): string {
     return word;
   }
 
-  return `${word.at(0)}${wordLength - 2}${word.at(-1)}`;
+  return `${word[0]}${wordLength - 2}${word[wordLength - 1]}`;
 }
