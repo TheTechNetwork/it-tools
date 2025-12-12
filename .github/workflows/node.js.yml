@@ -15,8 +15,9 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['18.x', '20.x']
+        node-version: ['20.x', '22.x']
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        # Node.js 18 removed - unplugin-icons v22+ requires Node.js 20.12+ (uses styleText from node:util)
 
     steps:
     - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
