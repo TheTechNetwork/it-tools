@@ -36,8 +36,8 @@ importers:
         specifier: ^1.5.8
         version: 1.7.0
       '@types/markdown-it':
-        specifier: ^13.0.7
-        version: 13.0.9
+        specifier: ^14.0.0
+        version: 14.1.2
       '@vicons/material':
         specifier: ^0.13.0
         version: 0.13.0
