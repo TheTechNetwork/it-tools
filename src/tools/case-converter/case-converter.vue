@@ -5,13 +5,13 @@ import {
   capitalCase,
   constantCase,
   dotCase,
-  headerCase,
+  kebabCase,
   noCase,
-  paramCase,
   pascalCase,
   pathCase,
   sentenceCase,
   snakeCase,
+  trainCase,
 } from 'change-case';
 import InputCopyable from '../../components/InputCopyable.vue';
 
@@ -47,16 +47,16 @@ const formats = computed(() => [
     value: dotCase(input.value, baseConfig),
   },
   {
-    label: 'Headercase:',
-    value: headerCase(input.value, baseConfig),
+    label: 'Traincase:',
+    value: trainCase(input.value, baseConfig),
   },
   {
     label: 'Nocase:',
     value: noCase(input.value, baseConfig),
   },
   {
-    label: 'Paramcase:',
-    value: paramCase(input.value, baseConfig),
+    label: 'Kebabcase:',
+    value: kebabCase(input.value, baseConfig),
   },
   {
     label: 'Pascalcase:',
