@@ -38,7 +38,7 @@ function buildColorFormat({
       rules: [
         {
           message: invalidMessage,
-          validator: v => withDefaultOnError(() => {
+          validator: (v: string) => withDefaultOnError(() => {
             if (v === '') {
               return true;
             }
