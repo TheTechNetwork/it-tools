@@ -2,7 +2,7 @@
   "configMigration": true,
   "branchConcurrentLimit": 5,
   "prHourlyLimit": 25,
-//  "recreateWhen": "always",
+  "recreateWhen": "never",
   "prCreation": "immediate",
   "extends": [
     "config:recommended",
