@@ -49,6 +49,8 @@ const secretValidationRules = [
     validator: (value: string) => value !== '',
   },
 ];
+
+const counter = computed(() => getCounterFromTime({ now: now.value, timeStep: 30 }));
 </script>
 
 <template>
@@ -104,7 +106,7 @@ const secretValidationRules = [
     <p>Iteration</p>
 
     <InputCopyable
-      :value="String(getCounterFromTime({ now, timeStep: 30 }))"
+      :value="String(counter)"
       readonly
       label="Count:"
       label-position="left"
@@ -114,7 +116,7 @@ const secretValidationRules = [
     />
 
     <InputCopyable
-      :value="getCounterFromTime({ now, timeStep: 30 }).toString(16).padStart(16, '0')"
+      :value="counter.toString(16).padStart(16, '0')"
       readonly
       placeholder="Iteration count in hex will be displayed here"
       label-position="left"
