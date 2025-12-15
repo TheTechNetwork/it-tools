@@ -107,7 +107,7 @@ jobs:
       - name: Install Playwright system dependencies only
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: pnpm exec playwright install-deps
-        timeout-minutes: 3
+        timeout-minutes: 10
 
       - name: Run Playwright tests
         run: pnpm run test:e2e --shard=${{ matrix.shard }}
