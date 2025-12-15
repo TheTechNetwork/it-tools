@@ -1,4 +1,4 @@
-import type { MaybeRef } from '@vueuse/core';
+import type { MaybeRef } from 'vue';
 import type { Ref } from 'vue';
 import { get } from '@vueuse/core';
 import _ from 'lodash';

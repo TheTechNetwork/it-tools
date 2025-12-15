@@ -1,4 +1,4 @@
-import type { MaybeRef } from '@vueuse/core';
+import type { MaybeRef } from 'vue';
 import type { QRCodeToDataURLOptions } from 'qrcode';
 import { get } from '@vueuse/core';
 import QRCode from 'qrcode';

@@ -1,4 +1,4 @@
-import type { MaybeRef } from '@vueuse/core';
+import type { MaybeRef } from 'vue';
 import type { Ref } from 'vue';
 import type { Tool, ToolCategory, ToolWithCategory } from './tools.types';
 import { get, useStorage } from '@vueuse/core';
