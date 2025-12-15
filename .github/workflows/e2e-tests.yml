@@ -24,16 +24,25 @@ jobs:
 
       - name: Get Playwright version
         id: playwright-version
-        run: echo "PLAYWRIGHT_VERSION=$(jq -r .dependencies.playwright package.json)" >> "$GITHUB_OUTPUT"
+        run: echo "PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
 
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Install Playwright system dependencies
-        run: sudo pnpm exec playwright install-deps
+      - name: Install Playwright browsers and system dependencies
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm exec playwright install --with-deps
 
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install
+      - name: Install Playwright system dependencies only
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps
 
       - name: Build app
         run: pnpm build
