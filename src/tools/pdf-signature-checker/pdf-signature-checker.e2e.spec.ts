@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Tool - Pdf signature checker', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/pdf-signature-checker');
+    await page.goto('/pdf-signature-checker', { waitUntil: 'networkidle' });
   });
 
   test('Has correct title', async ({ page }) => {
