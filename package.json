@@ -62,7 +62,7 @@
     "date-fns": "^4.0.0",
     "dompurify": "^3.0.6",
     "email-normalizer": "^1.0.0",
-    "emojilib": "^3.0.10",
+    "emojilib": "^4.0.0",
     "figlet": "^1.7.0",
     "figue": "^1.2.0",
     "fuse.js": "^7.0.0",
