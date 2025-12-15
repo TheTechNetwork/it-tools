@@ -26,8 +26,8 @@ jobs:
         id: playwright-version
         run: echo "PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")" >> "$GITHUB_OUTPUT"
 
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
+      - name: Restore Playwright browsers cache
+        uses: actions/cache/restore@v4
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
@@ -49,3 +49,10 @@ jobs:
 
       - name: Run Playwright tests
         run: pnpm run test:e2e --shard=${{ matrix.shard }}
+
+      - name: Save Playwright browsers cache
+        if: matrix.shard == '1/3' && steps.playwright-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
