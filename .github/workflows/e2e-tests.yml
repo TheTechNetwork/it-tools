@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   test:
-    timeout-minutes: 10
+    timeout-minutes: 15
     runs-on: ubuntu-24.04
 #    runs-on: self-hosted 
     strategy:
@@ -49,7 +49,7 @@ jobs:
           key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install
 
       - name: Install Playwright browsers and system dependencies
         if: steps.playwright-cache.outputs.cache-hit != 'true'
