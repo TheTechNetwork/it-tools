@@ -84,7 +84,7 @@ jobs:
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+          key: playwright-${{ runner.os }}-22.04-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
 
       - name: Install dependencies
         run: pnpm install
@@ -113,4 +113,4 @@ jobs:
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+          key: playwright-${{ runner.os }}-22.04-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
