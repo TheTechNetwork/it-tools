@@ -1,5 +1,5 @@
-import type { MaybeRef } from 'vue';
 import type { IFuseOptions } from 'fuse.js';
+import type { MaybeRef } from 'vue';
 import { get } from '@vueuse/core';
 import Fuse from 'fuse.js';
 import { computed } from 'vue';
