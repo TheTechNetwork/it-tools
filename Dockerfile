@@ -1,12 +1,23 @@
 # build stage
 FROM node:lts-alpine@sha256:7e0bd0460b26eb3854ea5b99b887a6a14d665d14cae694b78ae2936d14b2befb AS build-stage
 # Set environment variables for non-interactive npm installs
-ENV NPM_CONFIG_LOGLEVEL warn
-ENV CI true
+ENV NPM_CONFIG_LOGLEVEL=warn
+ENV CI=true
 WORKDIR /app
+
+# Enable corepack for pnpm
+RUN corepack enable
+
+# Copy only dependency files first for better layer caching
 COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm && pnpm i --frozen-lockfile
+
+# Install dependencies (cached if lockfile doesn't change)
+RUN pnpm i --frozen-lockfile
+
+# Copy source code (changes frequently, placed after deps install)
 COPY . .
+
+# Build the application
 RUN pnpm build
 
 # production stage

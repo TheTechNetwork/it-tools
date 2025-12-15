@@ -1,9 +1,24 @@
 name: E2E tests
 on:
   pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - '.gitignore'
   push:
     branches:
       - main
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - '.gitignore'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     timeout-minutes: 10
@@ -43,6 +58,18 @@ jobs:
       - name: Install Playwright system dependencies only
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: pnpm exec playwright install-deps
+
+      - name: Cache Vite build
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            node_modules/.vite
+            .vite
+            dist
+          key: ${{ runner.os }}-vite-e2e-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          restore-keys: |
+            ${{ runner.os }}-vite-e2e-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-vite-e2e-
 
       - name: Build app
         run: pnpm build

@@ -6,8 +6,22 @@ name: Node.js CI with pnpm
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - '.gitignore'
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - '.gitignore'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -36,7 +50,26 @@ jobs:
           ${{ runner.os }}-pnpm-
     - name: Install dependencies
       run: pnpm install
+    - name: Cache Vite build
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+      with:
+        path: |
+          node_modules/.vite
+          .vite
+        key: ${{ runner.os }}-vite-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+        restore-keys: |
+          ${{ runner.os }}-vite-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
+          ${{ runner.os }}-vite-${{ matrix.node-version }}-
     - name: Build
       run: pnpm build
+    - name: Cache Vitest
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+      with:
+        path: |
+          node_modules/.vitest
+        key: ${{ runner.os }}-vitest-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.test.ts', '**/*.spec.ts', '**/*.test.tsx', '**/*.spec.tsx') }}
+        restore-keys: |
+          ${{ runner.os }}-vitest-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
+          ${{ runner.os }}-vitest-${{ matrix.node-version }}-
     - name: Test
       run: pnpm test
