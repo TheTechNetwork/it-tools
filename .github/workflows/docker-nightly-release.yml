@@ -38,6 +38,17 @@ jobs:
       - name: Install dependencies
         run: pnpm i
 
+      - name: Cache Vite build
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            node_modules/.vite
+            .vite
+          key: ${{ runner.os }}-vite-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          restore-keys: |
+            ${{ runner.os }}-vite-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-vite-nightly-
+
       - name: Run linters
         run: pnpm lint
 
@@ -82,6 +93,8 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: |
             thetechnetwork/it-tools:nightly
             ghcr.io/thetechnetwork/it-tools:nightly
