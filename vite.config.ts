@@ -99,6 +99,7 @@ export default defineConfig({
       extensions: ['vue', 'md'],
       include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
       resolvers: [NaiveUiResolver(), IconsResolver({ prefix: 'icon' })],
+      dtsTsx: false,
     }),
     Unocss(),
   ],
