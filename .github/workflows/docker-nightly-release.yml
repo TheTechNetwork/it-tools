@@ -5,6 +5,10 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   check_date:
     runs-on: ubuntu-latest
@@ -49,8 +53,27 @@ jobs:
             ${{ runner.os }}-vite-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-
             ${{ runner.os }}-vite-nightly-
 
+      - name: Cache ESLint
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .eslintcache
+          key: ${{ runner.os }}-eslint-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', 'eslint.config.*') }}
+          restore-keys: |
+            ${{ runner.os }}-eslint-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-eslint-nightly-
+
       - name: Run linters
-        run: pnpm lint
+        run: pnpm lint --cache --cache-location .eslintcache
+
+      - name: Cache Vitest
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: |
+            node_modules/.vitest
+          key: ${{ runner.os }}-vitest-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.test.ts', '**/*.spec.ts', '**/*.test.tsx', '**/*.spec.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-vitest-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-vitest-nightly-
 
       - name: Run unit test
         run: pnpm test
