@@ -93,8 +93,8 @@ importers:
         specifier: ^1.7.0
         version: 1.9.4
       figue:
-        specifier: ^1.2.0
-        version: 1.2.0
+        specifier: ^3.0.0
+        version: 3.1.1
       fuse.js:
         specifier: ^7.0.0
         version: 7.1.0
@@ -1450,6 +1450,9 @@ packages:
   '@sindresorhus/transliterate@2.2.0':
     resolution: {integrity: sha512-aLtANYAx3qvFilasPhZke27+Cm7WawGGuGiOd2EAp0lg1NdWKfulslcql/Qi7lNQ9odkPjwRbwk9c4CYsTh+Rg==}
     engines: {node: '>=20'}
+
+  '@standard-schema/spec@1.0.0':
+    resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
 
   '@stylistic/eslint-plugin@5.6.1':
     resolution: {integrity: sha512-JCs+MqoXfXrRPGbGmho/zGS/jMcn3ieKl/A8YImqib76C8kjgZwq5uUFzc30lJkMvcchuRn6/v8IApLxli3Jyw==}
@@ -3010,8 +3013,8 @@ packages:
     engines: {node: '>= 17.0.0'}
     hasBin: true
 
-  figue@1.2.0:
-    resolution: {integrity: sha512-CXKr12kiNWjKtUK3X+YHeXKepn80s9Rg6pgZXoLQYEybgwaGJ9uGW4DrBrVK30ZWZf1mcvTbXF56AcovG7gLVw==}
+  figue@3.1.1:
+    resolution: {integrity: sha512-LYqDGKztWh0tU5eCTzW5nK3MAp4K5ihEsnyWiNwU6jW0yVle9DqQCiMra5lMTXE21d9x882ZoOK4SitMXvaQ3Q==}
 
   file-entry-cache@8.0.0:
     resolution: {integrity: sha512-XXTUwCvisa5oacNGRP9SfNtYBNAMi+RPwBFmblZEF7N7swHYQS6/Zfk7SRwx4D5j3CH211YNRco1DEMNVfZCnQ==}
@@ -6706,6 +6709,8 @@ snapshots:
 
   '@sindresorhus/transliterate@2.2.0': {}
 
+  '@standard-schema/spec@1.0.0': {}
+
   '@stylistic/eslint-plugin@5.6.1(eslint@9.39.2(jiti@2.6.1))':
     dependencies:
       '@eslint-community/eslint-utils': 4.9.0(eslint@9.39.2(jiti@2.6.1))
@@ -8678,9 +8683,9 @@ snapshots:
     dependencies:
       commander: 14.0.2
 
-  figue@1.2.0:
+  figue@3.1.1:
     dependencies:
-      lodash: 4.17.21
+      '@standard-schema/spec': 1.0.0
 
   file-entry-cache@8.0.0:
     dependencies:
