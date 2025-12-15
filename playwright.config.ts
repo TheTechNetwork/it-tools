@@ -16,8 +16,8 @@ export default defineConfig({
   forbidOnly: isCI,
   /* Retry on CI only */
   retries: isCI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: isCI ? 1 : undefined,
+  /* Run tests in parallel on CI with 2 workers per shard */
+  workers: isCI ? 2 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
