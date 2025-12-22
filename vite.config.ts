@@ -127,6 +127,7 @@ export default defineConfig({
   },
   test: {
     exclude: [...configDefaults.exclude, '**/*.e2e.spec.ts'],
+    setupFiles: ['./vitest.setup.ts'],
   },
   build: {
     target: 'esnext',
