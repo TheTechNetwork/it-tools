@@ -1,6 +1,6 @@
 import type { MaybeRef } from 'vue';
-import { toValue } from 'vue';
 import JSON5 from 'json5';
+import { toValue } from 'vue';
 
 export { formatJson, sortObjectKeys };
 
