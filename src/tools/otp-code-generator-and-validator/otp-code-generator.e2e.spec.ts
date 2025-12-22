@@ -5,7 +5,7 @@ test.describe('Tool - OTP code generator', () => {
     await page.addInitScript(() => {
       Date.now = () => 1609477200000; // Jan 1, 2021
     });
-    await page.goto('/otp-generator');
+    await page.goto('/otp-generator', { waitUntil: 'networkidle' });
   });
 
   test('Has title', async ({ page }) => {
