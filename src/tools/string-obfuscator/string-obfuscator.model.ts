@@ -1,5 +1,4 @@
 import type { MaybeRef } from 'vue';
-import { get } from '@vueuse/core';
 import { computed } from 'vue';
 
 export { obfuscateString, useObfuscateString };
@@ -26,12 +25,12 @@ function useObfuscateString(
 
 ) {
   return computed(() => obfuscateString(
-    get(str),
+    toValue(str),
     {
-      replacementChar: get(config.replacementChar),
-      keepFirst: get(config.keepFirst),
-      keepLast: get(config.keepLast),
-      keepSpace: get(config.keepSpace),
+      replacementChar: toValue(config.replacementChar),
+      keepFirst: toValue(config.keepFirst),
+      keepLast: toValue(config.keepLast),
+      keepSpace: toValue(config.keepSpace),
     },
   ));
 }
