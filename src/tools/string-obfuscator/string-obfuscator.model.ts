@@ -1,5 +1,5 @@
 import type { MaybeRef } from 'vue';
-import { computed } from 'vue';
+import { computed, toValue } from 'vue';
 
 export { obfuscateString, useObfuscateString };
 
