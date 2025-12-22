@@ -1,6 +1,6 @@
 import type { MaybeRef } from 'vue';
+import { get } from '@vueuse/core';
 import JSON5 from 'json5';
-import { toValue } from 'vue';
 
 export { formatJson, sortObjectKeys };
 
@@ -30,7 +30,7 @@ function formatJson({
   sortKeys?: MaybeRef<boolean>;
   indentSize?: MaybeRef<number>;
 }) {
-  const parsedObject = JSON5.parse(toValue(rawJson));
+  const parsedObject = JSON5.parse(get(rawJson));
 
-  return JSON.stringify(toValue(sortKeys) ? sortObjectKeys(parsedObject) : parsedObject, null, toValue(indentSize));
+  return JSON.stringify(get(sortKeys) ? sortObjectKeys(parsedObject) : parsedObject, null, get(indentSize));
 }

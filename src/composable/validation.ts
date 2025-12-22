@@ -1,6 +1,7 @@
 import type { MaybeRef, Ref } from 'vue';
+import { get } from '@vueuse/core';
 import _ from 'lodash';
-import { reactive, toValue, watch } from 'vue';
+import { reactive, watch } from 'vue';
 
 type ValidatorReturnType = unknown;
 type GetErrorMessageReturnType = string;
@@ -70,7 +71,7 @@ export function useValidation<T>({
       state.message = '';
       state.status = undefined;
 
-      for (const rule of toValue(rules)) {
+      for (const rule of get(rules)) {
         if (isFalsyOrHasThrown(() => rule.validator(source.value))) {
           if (rule.getErrorMessage) {
             const getErrorMessage = rule.getErrorMessage;
