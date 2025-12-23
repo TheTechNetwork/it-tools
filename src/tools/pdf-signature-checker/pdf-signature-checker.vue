@@ -2,6 +2,7 @@
 import type { SignatureInfo } from './pdf-signature-checker.types';
 import verifyPDF from 'pdf-signature-reader';
 import { formatBytes } from '@/utils/convert';
+import PdfSignatureDetails from './components/pdf-signature-details.vue';
 
 const signatures = ref<SignatureInfo[]>([]);
 const status = ref<'idle' | 'parsed' | 'error' | 'loading'>('idle');
