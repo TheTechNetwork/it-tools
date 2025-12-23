@@ -114,13 +114,11 @@ export default defineConfig({
       'path': 'path-browserify',
       'vm': 'vm-browserify',
     },
-    conditions: ['browser', 'module', 'import', 'default'],
   },
   define: {
     'import.meta.env.PACKAGE_VERSION': JSON.stringify(process.env.npm_package_version),
   },
   optimizeDeps: {
-    include: ['ulid'],
     esbuildOptions: {
       define: {
         global: 'globalThis',
