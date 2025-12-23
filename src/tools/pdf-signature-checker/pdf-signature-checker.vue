@@ -54,7 +54,7 @@ async function onVerifyClicked(uploadedFile: File) {
         Signature {{ index + 1 }} certificates :
       </div>
 
-      <pdf-signature-details :signature="signature" />
+      <PdfSignatureDetails :signature="signature" />
     </div>
   </div>
 </template>
