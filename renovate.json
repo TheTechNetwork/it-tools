@@ -17,9 +17,6 @@
   "lockFileMaintenance": {
     "enabled": true
   },
-  "vulnerabilityAlerts": {
-    "labels": ["security"]
-  },
   "packageRules": [
     {
       "description": "Add labels to major updates for easier identification",
