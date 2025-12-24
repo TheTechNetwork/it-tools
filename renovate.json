@@ -6,13 +6,28 @@
   "prCreation": "immediate",
   "stabilityDays": 3,
   "prNotPendingHours": 1,
+  "dependencyDashboard": true,
+  "platformAutomerge": false,
+  "labels": ["dependencies"],
+  "semanticCommits": "enabled",
   "extends": [
     "config:recommended",
     "docker:pinDigests",
     "helpers:pinGitHubActionDigests",
     ":pinAllDependencies"
   ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "vulnerabilityAlerts": {
+    "labels": ["security"]
+  },
   "packageRules": [
+    {
+      "description": "Add labels to major updates for easier identification",
+      "matchUpdateTypes": ["major"],
+      "labels": ["major-update"]
+    },
     {
       "groupName": "TypeScript toolchain",
       "matchPackageNames": ["typescript", "vue-tsc"],
