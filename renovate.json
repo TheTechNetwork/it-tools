@@ -4,6 +4,8 @@
   "prHourlyLimit": 25,
   "recreateWhen": "never",
   "prCreation": "immediate",
+  "stabilityDays": 3,
+  "prNotPendingHours": 1,
   "extends": [
     "config:recommended",
     "docker:pinDigests",
