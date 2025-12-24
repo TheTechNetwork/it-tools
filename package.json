@@ -156,6 +156,6 @@
   },
   "packageManager": "pnpm@10.26.2",
   "engines": {
-    "node": ">=20.12.0"
+    "node": "v25.2.1"
   }
 }
