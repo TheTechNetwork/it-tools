@@ -9,7 +9,6 @@
   "lockFileMaintenance": {
     "enabled": true
   },
-  "ignoreDeps": ["node"],
   "packageRules": [
     {
       "description": "Label major updates",
