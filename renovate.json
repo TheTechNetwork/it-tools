@@ -1,27 +1,19 @@
 {
-  "configMigration": true,
-  "branchConcurrentLimit": 5,
-  "prHourlyLimit": 25,
-  "recreateWhen": "never",
-  "prCreation": "immediate",
-  "stabilityDays": 3,
-  "dependencyDashboard": true,
-  "labels": ["dependencies"],
-  "semanticCommits": "enabled",
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "docker:pinDigests",
-    "helpers:pinGitHubActionDigests",
     ":pinAllDependencies"
   ],
+  "stabilityDays": 3,
+  "labels": ["dependencies"],
   "lockFileMaintenance": {
     "enabled": true
   },
   "packageRules": [
     {
-      "description": "Add labels to major updates for easier identification",
+      "description": "Label major updates",
       "matchUpdateTypes": ["major"],
-      "labels": ["major-update"]
+      "addLabels": ["major-update"]
     },
     {
       "groupName": "TypeScript toolchain",
@@ -85,11 +77,10 @@
       "matchUpdateTypes": ["major", "minor", "patch"]
     },
     {
-      "groupName": "Type packages with their dependencies",
+      "groupName": "Type packages",
       "matchDepTypes": ["devDependencies"],
-      "groupSlug": "types",
-      "automerge": true,
-      "matchPackageNames": ["/^@types//", "!@types/uuid"]
+      "matchPackagePatterns": ["^@types/"],
+      "excludePackageNames": ["@types/uuid"]
     }
   ]
 }
