@@ -1,75 +1,77 @@
-import { figue } from 'figue';
+import { defineConfig } from 'figue';
+import * as v from 'valibot';
 
-export const config = figue({
-  app: {
-    version: {
-      doc: 'Application current version',
-      format: 'string',
-      default: '0.0.0',
-      env: 'PACKAGE_VERSION',
+export const { config } = defineConfig(
+  {
+    app: {
+      version: {
+        doc: 'Application current version',
+        schema: v.string(),
+        default: '0.0.0',
+        env: 'PACKAGE_VERSION',
+      },
+      lastCommitSha: {
+        doc: 'Application last commit SHA version',
+        schema: v.string(),
+        default: '',
+        env: 'VITE_VERCEL_GIT_COMMIT_SHA',
+      },
+      baseUrl: {
+        doc: 'Application base url',
+        schema: v.string(),
+        default: '/',
+        env: 'BASE_URL',
+      },
+      env: {
+        doc: 'Application current env',
+        schema: v.picklist(['production', 'development', 'preview', 'test']),
+        default: 'development',
+        env: 'VITE_VERCEL_ENV',
+      },
     },
-    lastCommitSha: {
-      doc: 'Application last commit SHA version',
-      format: 'string',
-      default: '',
-      env: 'VITE_VERCEL_GIT_COMMIT_SHA',
+    plausible: {
+      isTrackerEnabled: {
+        doc: 'Is the tracker enabled',
+        schema: v.boolean(),
+        default: false,
+        env: 'VITE_TRACKER_ENABLED',
+      },
+      domain: {
+        doc: 'Plausible current domain',
+        schema: v.string(),
+        default: '',
+        env: 'VITE_PLAUSIBLE_DOMAIN',
+      },
+      apiHost: {
+        doc: 'Plausible remote api host',
+        schema: v.string(),
+        default: '',
+        env: 'VITE_PLAUSIBLE_API_HOST',
+      },
+      trackLocalhost: {
+        doc: 'Enable or disable localhost tracking by plausible',
+        schema: v.boolean(),
+        default: false,
+      },
     },
-    baseUrl: {
-      doc: 'Application base url',
-      format: 'string',
-      default: '/',
-      env: 'BASE_URL',
-    },
-    env: {
-      doc: 'Application current env',
-      format: 'enum',
-      values: ['production', 'development', 'preview', 'test'],
-      default: 'development',
-      env: 'VITE_VERCEL_ENV',
-    },
-  },
-  plausible: {
-    isTrackerEnabled: {
-      doc: 'Is the tracker enabled',
-      format: 'boolean',
+    showBanner: {
+      doc: 'Show the banner',
+      schema: v.boolean(),
       default: false,
-      env: 'VITE_TRACKER_ENABLED',
+      env: 'VITE_SHOW_BANNER',
     },
-    domain: {
-      doc: 'Plausible current domain',
-      format: 'string',
-      default: '',
-      env: 'VITE_PLAUSIBLE_DOMAIN',
-    },
-    apiHost: {
-      doc: 'Plausible remote api host',
-      format: 'string',
-      default: '',
-      env: 'VITE_PLAUSIBLE_API_HOST',
-    },
-    trackLocalhost: {
-      doc: 'Enable or disable localhost tracking by plausible',
-      format: 'boolean',
+    showSponsorBanner: {
+      doc: 'Show the sponsor banner',
+      schema: v.boolean(),
       default: false,
+      env: 'VITE_SHOW_SPONSOR_BANNER',
     },
   },
-  showBanner: {
-    doc: 'Show the banner',
-    format: 'boolean',
-    default: false,
-    env: 'VITE_SHOW_BANNER',
+  {
+    envSource: {
+      ...import.meta.env,
+      // Because the string 'import.meta.env.PACKAGE_VERSION' is statically replaced during build time (see 'define' in vite.config.ts)
+      PACKAGE_VERSION: import.meta.env.PACKAGE_VERSION,
+    },
   },
-  showSponsorBanner: {
-    doc: 'Show the sponsor banner',
-    format: 'boolean',
-    default: false,
-    env: 'VITE_SHOW_SPONSOR_BANNER',
-  },
-})
-  .loadEnv({
-    ...import.meta.env,
-    // Because the string 'import.meta.env.PACKAGE_VERSION' is statically replaced during build time (see 'define' in vite.config.ts)
-    PACKAGE_VERSION: import.meta.env.PACKAGE_VERSION,
-  })
-  .validate()
-  .getConfig();
+);

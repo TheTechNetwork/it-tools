@@ -94,6 +94,7 @@
     "unicode-emoji-json": "^0.8.0",
     "unplugin-auto-import": "^20.0.0",
     "uuid": "^13.0.0",
+    "valibot": "^1.2.0",
     "vue": "^3.3.4",
     "vue-i18n": "^11.0.0",
     "vue-router": "^4.1.6",
