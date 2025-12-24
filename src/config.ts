@@ -1,6 +1,6 @@
-import { figue } from 'figue';
+import { defineConfig } from 'figue';
 
-export const config = figue({
+export const config = defineConfig({
   app: {
     version: {
       doc: 'Application current version',
