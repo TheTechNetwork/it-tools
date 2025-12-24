@@ -1,7 +1,7 @@
 import type { App } from 'vue';
 
-import { noop } from 'lodash';
 import { init, track } from '@plausible-analytics/tracker';
+import { noop } from 'lodash';
 import { config } from '@/config';
 
 interface PlausibleInstance {
