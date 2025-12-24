@@ -104,9 +104,9 @@ jobs:
         run: pnpm exec playwright install --with-deps
         timeout-minutes: 5
 
-      - name: Install Playwright system dependencies only
+      - name: Install Playwright system dependencies and browsers
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm exec playwright install-deps
+        run: pnpm exec playwright install-deps && pnpm exec playwright install
         timeout-minutes: 10
 
       - name: Run Playwright tests
