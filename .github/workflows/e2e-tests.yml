@@ -26,7 +26,7 @@ permissions:
 jobs:
   build:
     timeout-minutes: 10
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
@@ -64,7 +64,7 @@ jobs:
   test:
     needs: build
     timeout-minutes: 10
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 #    runs-on: self-hosted
     strategy:
       matrix:
@@ -88,7 +88,7 @@ jobs:
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-22.04-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+          key: playwright-${{ runner.os }}-24.04-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
 
       - name: Install dependencies
         run: pnpm install
@@ -104,9 +104,9 @@ jobs:
         run: pnpm exec playwright install --with-deps
         timeout-minutes: 5
 
-      - name: Install Playwright system dependencies and browsers
+      - name: Install Playwright system dependencies only
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm exec playwright install-deps && pnpm exec playwright install
+        run: pnpm exec playwright install-deps
         timeout-minutes: 10
 
       - name: Run Playwright tests
@@ -117,4 +117,4 @@ jobs:
         uses: actions/cache/save@9255dc7a253b0ccc959486e2bca901246202afeb # v5
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-22.04-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+          key: playwright-${{ runner.os }}-24.04-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
