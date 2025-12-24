@@ -9,22 +9,22 @@ importers:
   .:
     dependencies:
       '@it-tools/bip39':
-        specifier: ^0.0.4
+        specifier: 0.0.4
         version: 0.0.4
       '@it-tools/oggen':
-        specifier: ^1.3.0
+        specifier: 1.3.0
         version: 1.3.0
       '@plausible-analytics/tracker':
-        specifier: ^0.4.4
+        specifier: 0.4.4
         version: 0.4.4
       '@regexper/render':
-        specifier: ^1.0.0
+        specifier: 1.0.0
         version: 1.0.0
       '@sindresorhus/slugify':
-        specifier: ^3.0.0
+        specifier: 3.0.0
         version: 3.0.0
       '@tabler/icons-vue':
-        specifier: ^3.20.0
+        specifier: 3.36.0
         version: 3.36.0(vue@3.5.26(typescript@5.9.3))
       '@tiptap/pm':
         specifier: 3.14.0
@@ -36,181 +36,181 @@ importers:
         specifier: 3.14.0
         version: 3.14.0(@floating-ui/dom@1.7.4)(@tiptap/core@3.14.0(@tiptap/pm@3.14.0))(@tiptap/pm@3.14.0)(vue@3.5.26(typescript@5.9.3))
       '@types/figlet':
-        specifier: ^1.5.8
+        specifier: 1.7.0
         version: 1.7.0
       '@types/markdown-it':
-        specifier: ^14.0.0
+        specifier: 14.1.2
         version: 14.1.2
       '@vicons/material':
-        specifier: ^0.13.0
+        specifier: 0.13.0
         version: 0.13.0
       '@vicons/tabler':
-        specifier: ^0.13.0
+        specifier: 0.13.0
         version: 0.13.0
       '@vueuse/core':
-        specifier: ^14.0.0
+        specifier: 14.1.0
         version: 14.1.0(vue@3.5.26(typescript@5.9.3))
       '@vueuse/head':
-        specifier: ^2.0.0
+        specifier: 2.0.0
         version: 2.0.0(vue@3.5.26(typescript@5.9.3))
       '@vueuse/router':
-        specifier: ^14.0.0
+        specifier: 14.1.0
         version: 14.1.0(vue-router@4.6.4(vue@3.5.26(typescript@5.9.3)))(vue@3.5.26(typescript@5.9.3))
       bcryptjs:
-        specifier: ^3.0.0
+        specifier: 3.0.3
         version: 3.0.3
       change-case:
-        specifier: ^5.4.4
+        specifier: 5.4.4
         version: 5.4.4
       colord:
-        specifier: ^2.9.3
+        specifier: 2.9.3
         version: 2.9.3
       composerize-ts:
-        specifier: ^0.6.2
+        specifier: 0.6.2
         version: 0.6.2
       country-code-lookup:
-        specifier: ^0.1.0
+        specifier: 0.1.3
         version: 0.1.3
       cron-validator:
-        specifier: ^1.3.1
+        specifier: 1.4.0
         version: 1.4.0
       cronstrue:
-        specifier: ^3.0.0
+        specifier: 3.9.0
         version: 3.9.0
       crypto-js:
-        specifier: ^4.1.1
+        specifier: 4.2.0
         version: 4.2.0
       date-fns:
-        specifier: ^4.0.0
+        specifier: 4.1.0
         version: 4.1.0
       dompurify:
-        specifier: ^3.0.6
+        specifier: 3.3.1
         version: 3.3.1
       email-normalizer:
-        specifier: ^1.0.0
+        specifier: 1.0.0
         version: 1.0.0
       emojilib:
-        specifier: ^4.0.0
+        specifier: 4.0.2
         version: 4.0.2
       figlet:
-        specifier: ^1.7.0
+        specifier: 1.9.4
         version: 1.9.4
       figue:
-        specifier: ^3.0.0
+        specifier: 3.1.1
         version: 3.1.1
       fuse.js:
-        specifier: ^7.0.0
+        specifier: 7.1.0
         version: 7.1.0
       highlight.js:
-        specifier: ^11.7.0
+        specifier: 11.11.1
         version: 11.11.1
       iarna-toml-esm:
-        specifier: ^3.0.5
+        specifier: 3.0.5
         version: 3.0.5
       ibantools:
-        specifier: ^4.3.3
+        specifier: 4.5.1
         version: 4.5.1
       js-base64:
-        specifier: ^3.7.6
+        specifier: 3.7.8
         version: 3.7.8
       json5:
-        specifier: ^2.2.3
+        specifier: 2.2.3
         version: 2.2.3
       jwt-decode:
-        specifier: ^4.0.0
+        specifier: 4.0.0
         version: 4.0.0
       libphonenumber-js:
-        specifier: ^1.10.28
+        specifier: 1.12.33
         version: 1.12.33
       lodash:
-        specifier: ^4.17.21
+        specifier: 4.17.21
         version: 4.17.21
       markdown-it:
-        specifier: ^14.0.0
+        specifier: 14.1.0
         version: 14.1.0
       marked:
-        specifier: ^17.0.0
+        specifier: 17.0.1
         version: 17.0.1
       mathjs:
-        specifier: ^15.0.0
+        specifier: 15.1.0
         version: 15.1.0
       mime-types:
-        specifier: ^3.0.0
+        specifier: 3.0.2
         version: 3.0.2
       monaco-editor:
-        specifier: ^0.55.0
+        specifier: 0.55.1
         version: 0.55.1
       naive-ui:
-        specifier: ^2.35.0
+        specifier: 2.43.2
         version: 2.43.2(vue@3.5.26(typescript@5.9.3))
       netmask:
-        specifier: ^2.0.2
+        specifier: 2.0.2
         version: 2.0.2
       node-forge:
-        specifier: ^1.3.1
+        specifier: 1.3.3
         version: 1.3.3
       oui-data:
-        specifier: ^1.0.10
+        specifier: 1.1.476
         version: 1.1.476
       pdf-signature-reader:
-        specifier: ^1.4.3
+        specifier: 1.4.3
         version: 1.4.3
       pinia:
-        specifier: ^3.0.0
+        specifier: 3.0.4
         version: 3.0.4(typescript@5.9.3)(vue@3.5.26(typescript@5.9.3))
       qrcode:
-        specifier: ^1.5.1
+        specifier: 1.5.4
         version: 1.5.4
       randexp:
-        specifier: ^0.5.3
+        specifier: 0.5.3
         version: 0.5.3
       sql-formatter:
-        specifier: ^15.0.0
+        specifier: 15.6.12
         version: 15.6.12
       ua-parser-js:
-        specifier: ^2.0.0
+        specifier: 2.0.7
         version: 2.0.7
       ulid:
-        specifier: ^3.0.0
+        specifier: 3.0.2
         version: 3.0.2
       unicode-emoji-json:
-        specifier: ^0.8.0
+        specifier: 0.8.0
         version: 0.8.0
       unplugin-auto-import:
-        specifier: ^20.0.0
+        specifier: 20.3.0
         version: 20.3.0(@vueuse/core@14.1.0(vue@3.5.26(typescript@5.9.3)))
       uuid:
-        specifier: ^13.0.0
+        specifier: 13.0.0
         version: 13.0.0
       valibot:
-        specifier: ^1.2.0
+        specifier: 1.2.0
         version: 1.2.0(typescript@5.9.3)
       vue:
-        specifier: ^3.3.4
+        specifier: 3.5.26
         version: 3.5.26(typescript@5.9.3)
       vue-i18n:
-        specifier: ^11.0.0
+        specifier: 11.2.7
         version: 11.2.7(vue@3.5.26(typescript@5.9.3))
       vue-router:
-        specifier: ^4.1.6
+        specifier: 4.6.4
         version: 4.6.4(vue@3.5.26(typescript@5.9.3))
       vue-shadow-dom:
-        specifier: ^4.2.0
+        specifier: 4.2.0
         version: 4.2.0
       vue-tsc:
-        specifier: ^3.0.0
+        specifier: 3.2.1
         version: 3.2.1(typescript@5.9.3)
       vuedraggable:
-        specifier: ^4.1.0
+        specifier: 4.1.0
         version: 4.1.0(vue@3.5.26(typescript@5.9.3))
       xml-formatter:
-        specifier: ^3.3.2
+        specifier: 3.6.7
         version: 3.6.7
       xml-js:
-        specifier: ^1.6.11
+        specifier: 1.6.11
         version: 1.6.11
       yaml:
-        specifier: ^2.2.1
+        specifier: 2.8.2
         version: 2.8.2
     devDependencies:
       '@antfu/eslint-config':
