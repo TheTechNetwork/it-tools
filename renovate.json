@@ -1,9 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
-    ":pinAllDependencies"
+    "config:recommended"
   ],
+  "rangeStrategy": "pin",
   "minimumReleaseAge": "3 days",
   "labels": ["dependencies"],
   "lockFileMaintenance": {
