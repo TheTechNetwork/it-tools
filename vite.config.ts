@@ -58,7 +58,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       strategies: 'generateSW',
       workbox: {
-        maximumFileSizeToCacheInBytes: 8 * 1024 * 1024, // 8 MB
+        maximumFileSizeToCacheInBytes: 8388608, // 8 MB
       },
       manifest: {
         name: 'IT Tools',
