@@ -1,5 +1,6 @@
 import antfu from '@antfu/eslint-config'
 import { FlatCompat } from '@eslint/eslintrc'
+import unocss from '@unocss/eslint-config/flat'
 
 const compat = new FlatCompat()
 
@@ -13,10 +14,13 @@ export default antfu(
     },
   },
 
-  // Legacy config for auto-import and unocss
+  // Legacy config for auto-import
   ...compat.config({
-    extends: ['./.eslintrc-auto-import.json', '@unocss'],
+    extends: ['./.eslintrc-auto-import.json'],
   }),
+
+  // UnoCSS flat config
+  unocss,
 
   // Custom rules
   {
