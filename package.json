@@ -135,7 +135,7 @@
     "eslint": "9.39.2",
     "events": "3.3.0",
     "hygen": "6.2.11",
-    "jsdom": "27.3.0",
+    "jsdom": "27.4.0",
     "less": "4.5.1",
     "path-browserify": "1.0.1",
     "prettier": "3.7.4",
