@@ -36,7 +36,7 @@ jobs:
         run: pnpm i
 
       - name: Cache Vite build
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
         with:
           path: |
             node_modules/.vite
@@ -47,7 +47,7 @@ jobs:
             ${{ runner.os }}-vite-
 
       - name: Cache ESLint
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
         with:
           path: .eslintcache
           key: ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', 'eslint.config.*') }}
@@ -59,7 +59,7 @@ jobs:
         run: pnpm lint --cache --cache-location .eslintcache
 
       - name: Cache Vitest
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
         with:
           path: |
             node_modules/.vitest
@@ -72,7 +72,7 @@ jobs:
         run: pnpm test
 
       - name: Cache TypeScript build info
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+        uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
         with:
           path: |
             **/*.tsbuildinfo

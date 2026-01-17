@@ -42,7 +42,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
     - name: Cache pnpm dependencies
-      uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+      uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
       with:
         path: ~/.pnpm-store
         key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -51,7 +51,7 @@ jobs:
     - name: Install dependencies
       run: pnpm install
     - name: Cache Vite build
-      uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+      uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
       with:
         path: |
           node_modules/.vite
@@ -63,7 +63,7 @@ jobs:
     - name: Build
       run: pnpm build
     - name: Cache Vitest
-      uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5
+      uses: actions/cache@8b402f58fbc84540c8b491a91e594a4576fec3d7 # v5
       with:
         path: |
           node_modules/.vitest
