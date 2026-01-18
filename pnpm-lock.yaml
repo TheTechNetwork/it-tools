@@ -165,8 +165,8 @@ importers:
         specifier: 0.5.3
         version: 0.5.3
       sql-formatter:
-        specifier: 15.6.12
-        version: 15.6.12
+        specifier: 15.7.0
+        version: 15.7.0
       ua-parser-js:
         specifier: 2.0.8
         version: 2.0.8
@@ -5016,8 +5016,8 @@ packages:
   sprintf-js@1.1.2:
     resolution: {integrity: sha512-VE0SOVEHCk7Qc8ulkWw3ntAzXuqf7S2lvwQaDLRnUeIEaKNQJzV6BwmLKhOqT61aGhfUMrXeaBk+oDGCzvhcug==}
 
-  sql-formatter@15.6.12:
-    resolution: {integrity: sha512-mkpF+RG402P66VMsnQkWewTRzDBWfu9iLbOfxaW/nAKOS/2A9MheQmcU5cmX0D0At9azrorZwpvcBRNNBozACQ==}
+  sql-formatter@15.7.0:
+    resolution: {integrity: sha512-o2yiy7fYXK1HvzA8P6wwj8QSuwG3e/XcpWht/jIxkQX99c0SVPw0OXdLSV9fHASPiYB09HLA0uq8hokGydi/QA==}
     hasBin: true
 
   stackback@0.0.2:
@@ -11153,7 +11153,7 @@ snapshots:
 
   sprintf-js@1.1.2: {}
 
-  sql-formatter@15.6.12:
+  sql-formatter@15.7.0:
     dependencies:
       argparse: 2.0.1
       nearley: 2.20.1
