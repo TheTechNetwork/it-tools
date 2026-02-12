@@ -138,7 +138,7 @@
     "jsdom": "27.4.0",
     "less": "4.5.1",
     "path-browserify": "1.0.1",
-    "prettier": "3.8.0",
+    "prettier": "3.8.1",
     "stream-browserify": "3.0.0",
     "typescript": "5.9.3",
     "unocss": "66.6.0",
