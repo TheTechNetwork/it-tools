@@ -73,7 +73,7 @@
     "json5": "2.2.3",
     "jwt-decode": "4.0.0",
     "libphonenumber-js": "1.12.34",
-    "lodash": "4.17.21",
+    "lodash": "4.17.23",
     "markdown-it": "14.1.0",
     "marked": "17.0.1",
     "mathjs": "15.1.0",
