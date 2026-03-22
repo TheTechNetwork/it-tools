@@ -52,10 +52,7 @@ jobs:
       uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
       with:
         path: .eslintcache
-        key: ${{ runner.os }}-eslint-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', 'eslint.config.*') }}
-        restore-keys: |
-          ${{ runner.os }}-eslint-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
-          ${{ runner.os }}-eslint-${{ matrix.node-version }}-
+        key: ${{ runner.os }}-eslint-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
     - name: Run linters
       run: pnpm lint --cache --cache-location .eslintcache
@@ -65,10 +62,7 @@ jobs:
       with:
         path: |
           **/*.tsbuildinfo
-        key: ${{ runner.os }}-tsbuildinfo-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.vue', 'tsconfig*.json') }}
-        restore-keys: |
-          ${{ runner.os }}-tsbuildinfo-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
-          ${{ runner.os }}-tsbuildinfo-${{ matrix.node-version }}-
+        key: ${{ runner.os }}-tsbuildinfo-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
     - name: Type check
       run: pnpm typecheck
@@ -79,10 +73,7 @@ jobs:
         path: |
           node_modules/.vite
           .vite
-        key: ${{ runner.os }}-vite-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
-        restore-keys: |
-          ${{ runner.os }}-vite-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
-          ${{ runner.os }}-vite-${{ matrix.node-version }}-
+        key: ${{ runner.os }}-vite-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
     - name: Build
       run: pnpm build
@@ -92,10 +83,7 @@ jobs:
       with:
         path: |
           node_modules/.vitest
-        key: ${{ runner.os }}-vitest-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.test.ts', '**/*.spec.ts', '**/*.test.tsx', '**/*.spec.tsx') }}
-        restore-keys: |
-          ${{ runner.os }}-vitest-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
-          ${{ runner.os }}-vitest-${{ matrix.node-version }}-
+        key: ${{ runner.os }}-vitest-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
     - name: Test
       run: pnpm test

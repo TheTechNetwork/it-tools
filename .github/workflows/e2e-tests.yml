@@ -40,17 +40,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Cache Vite build
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
-        with:
-          path: |
-            node_modules/.vite
-            .vite
-          key: ${{ runner.os }}-vite-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
-          restore-keys: |
-            ${{ runner.os }}-vite-${{ hashFiles('**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-vite-
-
       - name: Build app
         run: pnpm build
 
