@@ -5,9 +5,14 @@ on:
     tags:
       - 'v*.*.*'
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Get release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
@@ -31,10 +36,10 @@ jobs:
           path: |
             node_modules/.vite
             .vite
-          key: ${{ runner.os }}-vite-release-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          key: ${{ runner.os }}-vite-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
           restore-keys: |
-            ${{ runner.os }}-vite-release-${{ hashFiles('**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-vite-release-
+            ${{ runner.os }}-vite-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-vite-
 
       - name: Build the app
         run: pnpm build
@@ -46,8 +51,10 @@ jobs:
           path: dist/
           retention-days: 1
 
+
   docker-release:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Get release version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
@@ -91,6 +98,7 @@ jobs:
 
   github-release:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: [build, docker-release]
     steps:
       - name: Get release version

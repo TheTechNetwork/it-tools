@@ -9,9 +9,14 @@ concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   check_date:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     name: Check latest commit
     outputs:
       should_run: ${{ steps.should_run.outputs.should_run }}
@@ -28,6 +33,7 @@ jobs:
 
   ci:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: check_date
     if: ${{ needs.check_date.outputs.should_run != 'false' }}
 
@@ -48,19 +54,19 @@ jobs:
           path: |
             node_modules/.vite
             .vite
-          key: ${{ runner.os }}-vite-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          key: ${{ runner.os }}-vite-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
           restore-keys: |
-            ${{ runner.os }}-vite-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-vite-nightly-
+            ${{ runner.os }}-vite-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-vite-
 
       - name: Cache ESLint
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
         with:
           path: .eslintcache
-          key: ${{ runner.os }}-eslint-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', 'eslint.config.*') }}
+          key: ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', 'eslint.config.*') }}
           restore-keys: |
-            ${{ runner.os }}-eslint-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-eslint-nightly-
+            ${{ runner.os }}-eslint-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-eslint-
 
       - name: Run linters
         run: pnpm lint --cache --cache-location .eslintcache
@@ -70,19 +76,23 @@ jobs:
         with:
           path: |
             node_modules/.vitest
-          key: ${{ runner.os }}-vitest-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.test.ts', '**/*.spec.ts', '**/*.test.tsx', '**/*.spec.tsx') }}
+          key: ${{ runner.os }}-vitest-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.test.ts', '**/*.spec.ts', '**/*.test.tsx', '**/*.spec.tsx') }}
           restore-keys: |
-            ${{ runner.os }}-vitest-nightly-${{ hashFiles('**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-vitest-nightly-
+            ${{ runner.os }}-vitest-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-vitest-
 
       - name: Run unit test
         run: pnpm test
+
+      - name: Type check
+        run: pnpm typecheck
 
       - name: Build the app
         run: pnpm build
 
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs:
       - ci
 

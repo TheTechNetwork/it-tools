@@ -1,7 +1,7 @@
-# This workflow will do a clean installation of pnpm dependencies, cache/restore them, build the source code, and run tests across different versions of node
+# Runs lint, typecheck, build, and tests across multiple Node.js versions
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Node.js CI with pnpm
+name: ci
 
 on:
   push:
@@ -12,7 +12,6 @@ on:
       - 'LICENSE'
       - '.gitignore'
   pull_request:
-    branches: [ "main" ]
     paths-ignore:
       - '**.md'
       - 'docs/**'
@@ -23,9 +22,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     strategy:
       matrix:
@@ -41,15 +44,35 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
-    - name: Cache pnpm dependencies
-      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
-      with:
-        path: ~/.pnpm-store
-        key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-pnpm-
+
     - name: Install dependencies
       run: pnpm install
+
+    - name: Cache ESLint
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
+      with:
+        path: .eslintcache
+        key: ${{ runner.os }}-eslint-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', 'eslint.config.*') }}
+        restore-keys: |
+          ${{ runner.os }}-eslint-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
+          ${{ runner.os }}-eslint-${{ matrix.node-version }}-
+
+    - name: Run linters
+      run: pnpm lint --cache --cache-location .eslintcache
+
+    - name: Cache TypeScript build info
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
+      with:
+        path: |
+          **/*.tsbuildinfo
+        key: ${{ runner.os }}-tsbuildinfo-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.vue', 'tsconfig*.json') }}
+        restore-keys: |
+          ${{ runner.os }}-tsbuildinfo-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
+          ${{ runner.os }}-tsbuildinfo-${{ matrix.node-version }}-
+
+    - name: Type check
+      run: pnpm typecheck
+
     - name: Cache Vite build
       uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
       with:
@@ -60,8 +83,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-vite-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
           ${{ runner.os }}-vite-${{ matrix.node-version }}-
+
     - name: Build
       run: pnpm build
+
     - name: Cache Vitest
       uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
       with:
@@ -71,5 +96,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-vitest-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
           ${{ runner.os }}-vitest-${{ matrix.node-version }}-
+
     - name: Test
       run: pnpm test
