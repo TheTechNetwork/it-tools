@@ -129,8 +129,8 @@ importers:
         specifier: 14.1.1
         version: 14.1.1
       marked:
-        specifier: 17.0.1
-        version: 17.0.1
+        specifier: 17.0.4
+        version: 17.0.4
       mathjs:
         specifier: 15.1.1
         version: 15.1.1
@@ -4255,8 +4255,8 @@ packages:
     engines: {node: '>= 18'}
     hasBin: true
 
-  marked@17.0.1:
-    resolution: {integrity: sha512-boeBdiS0ghpWcSwoNm/jJBwdpFaMnZWRzjA6SkUMYb40SVaN1x7mmfGKp0jvexGcx+7y2La5zRZsYFZI6Qpypg==}
+  marked@17.0.4:
+    resolution: {integrity: sha512-NOmVMM+KAokHMvjWmC5N/ZOvgmSWuqJB8FoYI019j4ogb/PeRMKoKIjReZ2w3376kkA8dSJIP8uD993Kxc0iRQ==}
     engines: {node: '>= 20'}
     hasBin: true
 
@@ -10236,7 +10236,7 @@ snapshots:
 
   marked@14.0.0: {}
 
-  marked@17.0.1: {}
+  marked@17.0.4: {}
 
   math-intrinsics@1.1.0: {}
 
