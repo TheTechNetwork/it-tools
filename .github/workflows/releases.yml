@@ -36,10 +36,10 @@ jobs:
           path: |
             node_modules/.vite
             .vite
-          key: ${{ runner.os }}-vite-release-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          key: ${{ runner.os }}-vite-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.vue', '**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
           restore-keys: |
-            ${{ runner.os }}-vite-release-${{ hashFiles('**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-vite-release-
+            ${{ runner.os }}-vite-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-vite-
 
       - name: Build the app
         run: pnpm build
