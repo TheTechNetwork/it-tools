@@ -103,7 +103,7 @@
     "vuedraggable": "4.1.0",
     "xml-formatter": "3.7.0",
     "xml-js": "1.6.11",
-    "yaml": "2.8.2"
+    "yaml": "2.8.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "7.0.1",
