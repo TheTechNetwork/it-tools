@@ -85,7 +85,7 @@
     "oui-data": "1.1.571",
     "pdf-signature-reader": "1.4.3",
     "pinia": "3.0.4",
-    "@plausible-analytics/tracker": "0.4.4",
+    "@plausible-analytics/tracker": "0.4.5",
     "qrcode": "1.5.4",
     "randexp": "0.5.3",
     "sql-formatter": "15.7.2",
