@@ -88,7 +88,7 @@
     "@plausible-analytics/tracker": "0.4.5",
     "qrcode": "1.5.4",
     "randexp": "0.5.3",
-    "sql-formatter": "15.7.2",
+    "sql-formatter": "15.8.2",
     "ua-parser-js": "2.0.9",
     "ulid": "3.0.2",
     "unicode-emoji-json": "0.8.0",
