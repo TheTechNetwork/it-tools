@@ -144,8 +144,8 @@ importers:
         specifier: 2.44.1
         version: 2.44.1(vue@3.5.39(typescript@5.9.3))
       netmask:
-        specifier: 2.0.2
-        version: 2.0.2
+        specifier: 2.1.1
+        version: 2.1.1
       node-forge:
         specifier: 1.4.0
         version: 1.4.0
@@ -4523,8 +4523,8 @@ packages:
     engines: {node: '>= 4.4.x'}
     hasBin: true
 
-  netmask@2.0.2:
-    resolution: {integrity: sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg==}
+  netmask@2.1.1:
+    resolution: {integrity: sha512-eonl3sLUha+S1GzTPxychyhnUzKyeQkZ7jLjKrBagJgPla13F+uQ71HgpFefyHgqrjEbCPkDArxYsjY8/+gLKA==}
     engines: {node: '>= 0.4.0'}
 
   no-case@2.3.2:
@@ -10786,7 +10786,7 @@ snapshots:
       sax: 1.6.0
     optional: true
 
-  netmask@2.0.2: {}
+  netmask@2.1.1: {}
 
   no-case@2.3.2:
     dependencies:
