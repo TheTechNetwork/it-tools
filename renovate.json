@@ -11,6 +11,11 @@
   },
   "packageRules": [
     {
+      "description": "Never pin engines - .npmrc engine-strict and Vercel require a version range",
+      "matchDepTypes": ["engines"],
+      "rangeStrategy": "replace"
+    },
+    {
       "description": "Label major updates",
       "matchUpdateTypes": ["major"],
       "addLabels": ["major-update"]
