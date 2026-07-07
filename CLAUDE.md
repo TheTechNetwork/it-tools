@@ -26,8 +26,8 @@ This document provides comprehensive guidance for AI assistants working with the
 
 - **Primary Language**: TypeScript
 - **Framework**: Vue 3 (Composition API)
-- **Package Manager**: pnpm (v10.26.0)
-- **Node Version**: >= 20.12.0
+- **Package Manager**: pnpm (v11)
+- **Node Version**: >= 22.18.0
 - **License**: GNU GPLv3
 
 ---

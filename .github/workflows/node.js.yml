@@ -32,9 +32,10 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['20.x', '22.x', '24.x', '25.x', '26.x']
+        node-version: ['22.x', '24.x', '25.x', '26.x']
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        # Node.js 18 removed - unplugin-icons v22+ requires Node.js 20.12+ (uses styleText from node:util)
+        # Node.js 20 removed - pnpm 11, vue-i18n 11.4.3+, vue-router 5.1 (@babel/generator 8),
+        # @antfu/eslint-config 9, and unplugin-vue-markdown 32 all require Node.js 22.13+
 
     steps:
     - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
