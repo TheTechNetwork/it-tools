@@ -154,7 +154,7 @@
     "workbox-window": "7.4.1",
     "zx": "8.8.5"
   },
-  "packageManager": "pnpm@10.32.1",
+  "packageManager": "pnpm@10.34.4",
   "engines": {
     "node": ">=20.12.0"
   }
