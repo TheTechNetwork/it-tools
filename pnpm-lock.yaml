@@ -7,6 +7,7 @@ settings:
 overrides:
   '@intlify/shared': 11.4.2
   '@intlify/message-compiler': 11.4.2
+  eslint-flat-config-utils: 3.0.2
 
 importers:
 
@@ -3289,8 +3290,8 @@ packages:
     peerDependencies:
       eslint: ^9.5.0 || ^10.0.0
 
-  eslint-flat-config-utils@3.2.0:
-    resolution: {integrity: sha512-PHgo1X5uqIorJONLVD9BIaOSdoYFD3z/AeJljdqDPlWVRpeCYkDbK9k0AXoYVqqNJr6FEYIEr5Rm2TSktLQcHw==}
+  eslint-flat-config-utils@3.0.2:
+    resolution: {integrity: sha512-mPvevWSDQFwgABvyCurwIu6ZdKxGI5NW22/BGDwA1T49NO6bXuxbV9VfJK/tkQoNyPogT6Yu1d57iM0jnZVWmg==}
 
   eslint-json-compat-utils@0.2.3:
     resolution: {integrity: sha512-RbBmDFyu7FqnjE8F0ZxPNzx5UaptdeS9Uu50r7A+D7s/+FCX+ybiyViYEgFUaFIFqSWJgZRTpL5d8Kanxxl2lQ==}
@@ -6129,7 +6130,7 @@ snapshots:
       cac: 7.0.0
       eslint: 10.6.0(jiti@2.6.1)
       eslint-config-flat-gitignore: 2.3.0(eslint@10.6.0(jiti@2.6.1))
-      eslint-flat-config-utils: 3.2.0
+      eslint-flat-config-utils: 3.0.2
       eslint-merge-processors: 2.0.0(eslint@10.6.0(jiti@2.6.1))
       eslint-plugin-antfu: 3.2.3(eslint@10.6.0(jiti@2.6.1))
       eslint-plugin-command: 3.5.2(@typescript-eslint/rule-tester@8.57.1(eslint@10.6.0(jiti@2.6.1))(typescript@5.9.3))(@typescript-eslint/typescript-estree@8.63.0(typescript@5.9.3))(@typescript-eslint/utils@8.63.0(eslint@10.6.0(jiti@2.6.1))(typescript@5.9.3))(eslint@10.6.0(jiti@2.6.1))
@@ -9401,7 +9402,7 @@ snapshots:
       '@eslint/compat': 2.0.3(eslint@10.6.0(jiti@2.6.1))
       eslint: 10.6.0(jiti@2.6.1)
 
-  eslint-flat-config-utils@3.2.0:
+  eslint-flat-config-utils@3.0.2:
     dependencies:
       '@eslint/config-helpers': 0.5.5
       pathe: 2.0.3
