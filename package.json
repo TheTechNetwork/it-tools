@@ -59,7 +59,7 @@
     "cron-validator": "1.4.0",
     "cronstrue": "3.14.0",
     "crypto-js": "4.2.0",
-    "date-fns": "4.1.0",
+    "date-fns": "4.4.0",
     "dompurify": "3.3.3",
     "email-normalizer": "1.0.0",
     "emojilib": "4.0.3",
