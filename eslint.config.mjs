@@ -27,7 +27,6 @@ export default antfu(
     rules: {
       'curly': ['error', 'all'],
       '@typescript-eslint/no-use-before-define': ['error', { allowNamedExports: true, functions: false }],
-      'vue/no-empty-component-block': ['error'],
       'no-restricted-imports': ['error', {
         paths: [{
           name: '@vueuse/core',
@@ -41,6 +40,20 @@ export default antfu(
       'regexp/no-dupe-characters-character-class': 'off',
       'unicorn/prefer-dom-node-text-content': 'off',
       'ts/ban-ts-comment': 'off',
+      // e18e perf rules introduced by @antfu/eslint-config 7.7.x flag many pre-existing patterns
+      'e18e/prefer-static-regex': 'off',
+      'e18e/prefer-regex-test': 'off',
+      'e18e/prefer-array-at': 'off',
+      'e18e/prefer-array-some': 'off',
+      'e18e/prefer-date-now': 'off',
+    },
+  },
+
+  // Vue-specific rules, scoped to .vue files so they don't crash on markdown files
+  {
+    files: ['**/*.vue'],
+    rules: {
+      'vue/no-empty-component-block': ['error'],
     },
   },
 )
