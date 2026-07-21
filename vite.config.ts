@@ -128,6 +128,20 @@ export default defineConfig({
   test: {
     exclude: [...configDefaults.exclude, '**/*.e2e.spec.ts'],
     setupFiles: ['./vitest.setup.ts'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'lcov', 'json-summary'],
+      include: ['src/**/*.ts', 'src/**/*.vue'],
+      exclude: [
+        'src/**/*.test.ts',
+        'src/**/*.e2e.spec.ts',
+        'src/**/*.types.ts',
+        'src/**/*.d.ts',
+        // App wiring, not meaningfully unit-testable
+        'src/main.ts',
+        'src/plugins/**',
+      ],
+    },
   },
   build: {
     target: 'esnext',
