@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import type { UseValidationRule } from '@/composable/validation';
-import convert from 'xml-js';
 import { withDefaultOnError } from '@/utils/defaults';
 import { isValidXML } from '../xml-formatter/xml-formatter.service';
+import { convertXmlToJson } from './xml-to-json.service';
 
 const defaultValue = '<a x="1.234" y="It\'s"/>';
 function transformer(value: string) {
-  return withDefaultOnError(() => {
-    return JSON.stringify(convert.xml2js(value, { compact: true }), null, 2);
-  }, '');
+  return withDefaultOnError(() => convertXmlToJson(value), '');
 }
 
 const rules: UseValidationRule<string>[] = [

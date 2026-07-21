@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import type { UseValidationRule } from '@/composable/validation';
-import { stringify as stringifyToml } from 'iarna-toml-esm';
 import JSON5 from 'json5';
 import { withDefaultOnError } from '../../utils/defaults';
-
-const convertJsonToToml = (value: string) => [stringifyToml(JSON5.parse(value))].flat().join('\n').trim();
+import { convertJsonToToml } from './json-to-toml.service';
 
 const transformer = (value: string) => value.trim() === '' ? '' : withDefaultOnError(() => convertJsonToToml(value), '');
 

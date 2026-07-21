@@ -1,23 +1,15 @@
 <script setup lang="ts">
-import { useFuzzySearch } from '@/composable/fuzzySearch';
 import { codesByCategories } from './http-status-codes.constants';
+import { searchHttpStatusCodes } from './http-status-codes.service';
 
 const search = ref('');
-
-const { searchResult } = useFuzzySearch({
-  search,
-  data: codesByCategories.flatMap(({ codes, category }) => codes.map(code => ({ ...code, category }))),
-  options: {
-    keys: [{ name: 'code', weight: 3 }, { name: 'name', weight: 2 }, 'description', 'category'],
-  },
-});
 
 const codesByCategoryFiltered = computed(() => {
   if (!search.value) {
     return codesByCategories;
   }
 
-  return [{ category: 'Search results', codes: searchResult.value }];
+  return [{ category: 'Search results', codes: searchHttpStatusCodes(search.value) }];
 });
 </script>
 

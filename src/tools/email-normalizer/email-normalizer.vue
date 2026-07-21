@@ -1,21 +1,9 @@
 <script setup lang="ts">
-import { normalizeEmail } from 'email-normalizer';
 import { useCopy } from '@/composable/copy';
-import { withDefaultOnError } from '@/utils/defaults';
+import { normalizeEmails } from './email-normalizer.service';
 
 const emails = ref('');
-const normalizedEmails = computed(() => {
-  if (!emails.value) {
-    return '';
-  }
-
-  return emails.value
-    .split('\n')
-    .map((email) => {
-      return withDefaultOnError(() => normalizeEmail({ email }), `Unable to parse email: ${email}`);
-    })
-    .join('\n');
-});
+const normalizedEmails = computed(() => normalizeEmails(emails.value));
 
 const { copy } = useCopy({ source: normalizedEmails, text: 'Normalized emails copied to the clipboard', createToast: true });
 </script>

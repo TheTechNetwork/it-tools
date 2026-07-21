@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { escape, unescape } from 'lodash';
-
 import { useCopy } from '@/composable/copy';
+import { escapeHtmlEntities, unescapeHtmlEntities } from './html-entities.service';
 
 const escapeInput = ref('<title>IT Tool</title>');
-const escapeOutput = computed(() => escape(escapeInput.value));
+const escapeOutput = computed(() => escapeHtmlEntities(escapeInput.value));
 const { copy: copyEscaped } = useCopy({ source: escapeOutput });
 
 const unescapeInput = ref('&lt;title&gt;IT Tool&lt;/title&gt;');
-const unescapeOutput = computed(() => unescape(unescapeInput.value));
+const unescapeOutput = computed(() => unescapeHtmlEntities(unescapeInput.value));
 const { copy: copyUnescaped } = useCopy({ source: unescapeOutput });
 </script>
 

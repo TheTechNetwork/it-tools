@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { compareSync, hashSync } from 'bcryptjs';
 import { useThemeVars } from 'naive-ui';
 import { useCopy } from '@/composable/copy';
+import { compareStringWithHash, hashString } from './bcrypt.service';
 
 const themeVars = useThemeVars();
 
 const input = ref('');
 const saltCount = ref(10);
-const hashed = computed(() => hashSync(input.value, saltCount.value));
+const hashed = computed(() => hashString({ string: input.value, saltCount: saltCount.value }));
 const { copy } = useCopy({ source: hashed, text: 'Hashed string copied to the clipboard' });
 
 const compareString = ref('');
 const compareHash = ref('');
-const compareMatch = computed(() => compareSync(compareString.value, compareHash.value));
+const compareMatch = computed(() => compareStringWithHash({ string: compareString.value, hash: compareHash.value }));
 </script>
 
 <template>

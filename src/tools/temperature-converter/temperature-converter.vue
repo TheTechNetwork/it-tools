@@ -15,7 +15,7 @@ import {
   convertRankineToKelvin,
   convertReaumurToKelvin,
   convertRomerToKelvin,
-} from './temperature-converter.models';
+} from './temperature-converter.service';
 
 type TemperatureScale = 'kelvin' | 'celsius' | 'fahrenheit' | 'rankine' | 'delisle' | 'newton' | 'reaumur' | 'romer';
 

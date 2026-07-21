@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { useCopy } from '@/composable/copy';
-import { textToBase64 } from '@/utils/base64';
+import { getBasicAuthHeader } from './basic-auth-generator.service';
 
 const username = ref('');
 const password = ref('');
-const header = computed(() => `Authorization: Basic ${textToBase64(`${username.value}:${password.value}`)}`);
+const header = computed(() => getBasicAuthHeader({ username: username.value, password: password.value }));
 
 const { copy } = useCopy({ source: header, text: 'Header copied to the clipboard' });
 </script>

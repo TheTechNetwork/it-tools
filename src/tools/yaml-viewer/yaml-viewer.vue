@@ -4,7 +4,7 @@ import yaml from 'yaml';
 import TextareaCopyable from '@/components/TextareaCopyable.vue';
 import { useValidation } from '@/composable/validation';
 import { withDefaultOnError } from '@/utils/defaults';
-import { formatYaml } from './yaml-models';
+import { formatYaml } from './yaml-viewer.service';
 
 const inputElement = ref<HTMLElement>();
 
@@ -12,7 +12,9 @@ const rawYaml = useStorage('yaml-prettify:raw-yaml', '');
 const indentSize = useStorage('yaml-prettify:indent-size', 2);
 const sortKeys = useStorage('yaml-prettify:sort-keys', false);
 
-const cleanYaml = computed(() => withDefaultOnError(() => formatYaml({ rawYaml, indentSize, sortKeys }), ''));
+const cleanYaml = computed(() =>
+  withDefaultOnError(() => formatYaml({ rawYaml: rawYaml.value, indentSize: indentSize.value, sortKeys: sortKeys.value }), ''),
+);
 
 const rawYamlValidation = useValidation({
   source: rawYaml,

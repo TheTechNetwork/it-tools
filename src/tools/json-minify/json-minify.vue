@@ -2,9 +2,10 @@
 import type { UseValidationRule } from '@/composable/validation';
 import JSON5 from 'json5';
 import { withDefaultOnError } from '@/utils/defaults';
+import { minifyJson } from './json-minify.service';
 
 const defaultValue = '{\n\t"hello": [\n\t\t"world"\n\t]\n}';
-const transformer = (value: string) => withDefaultOnError(() => JSON.stringify(JSON5.parse(value), null, 0), '');
+const transformer = (value: string) => withDefaultOnError(() => minifyJson(value), '');
 
 const rules: UseValidationRule<string>[] = [
   {

@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { AES, enc, Rabbit, RC4, TripleDES } from 'crypto-js';
 import { computedCatch } from '@/composable/computed/catchedComputed';
-
-const algos = { AES, TripleDES, Rabbit, RC4 };
+import { algos, decryptText, encryptText } from './encryption.service';
 
 const cypherInput = ref('Lorem ipsum dolor sit amet');
 const cypherAlgo = ref<keyof typeof algos>('AES');
 const cypherSecret = ref('my secret key');
-const cypherOutput = computed(() => algos[cypherAlgo.value].encrypt(cypherInput.value, cypherSecret.value).toString());
+const cypherOutput = computed(() =>
+  encryptText({ text: cypherInput.value, secret: cypherSecret.value, algo: cypherAlgo.value }),
+);
 
 const decryptInput = ref('U2FsdGVkX1/EC3+6P5dbbkZ3e1kQ5o2yzuU0NHTjmrKnLBEwreV489Kr0DIB+uBs');
 const decryptAlgo = ref<keyof typeof algos>('AES');
 const decryptSecret = ref('my secret key');
-const [decryptOutput, decryptError] = computedCatch(() => algos[decryptAlgo.value].decrypt(decryptInput.value, decryptSecret.value).toString(enc.Utf8), {
+const [decryptOutput, decryptError] = computedCatch(() => decryptText({ text: decryptInput.value, secret: decryptSecret.value, algo: decryptAlgo.value }), {
   defaultValue: '',
   defaultErrorMessage: 'Unable to decrypt your text',
 });

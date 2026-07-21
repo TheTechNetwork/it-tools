@@ -1,8 +1,8 @@
 import type { QRCodeErrorCorrectionLevel, QRCodeToDataURLOptions } from 'qrcode';
 import type { MaybeRef } from 'vue';
 import { get } from '@vueuse/core';
-import QRCode from 'qrcode';
 import { isRef, ref, watch } from 'vue';
+import { createQRCodeDataUrl } from './qr-code-generator.service';
 
 export function useQRCode({
   text,
@@ -21,14 +21,12 @@ export function useQRCode({
     [text, background, foreground, errorCorrectionLevel].filter(isRef),
     async () => {
       if (get(text)) {
-        qrcode.value = await QRCode.toDataURL(get(text).trim(), {
-          color: {
-            dark: get(foreground),
-            light: get(background),
-            ...options?.color,
-          },
-          errorCorrectionLevel: get(errorCorrectionLevel) ?? 'M',
-          ...options,
+        qrcode.value = await createQRCodeDataUrl({
+          text: get(text),
+          foreground: get(foreground),
+          background: get(background),
+          errorCorrectionLevel: get(errorCorrectionLevel),
+          options,
         });
       }
     },

@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import db from 'oui-data';
 import { useCopy } from '@/composable/copy';
 import { macAddressValidationRules } from '@/utils/macAddress';
-
-const getVendorValue = (address: string) => address.trim().replace(/[.:-]/g, '').toUpperCase().substring(0, 6);
+import { lookupMacAddressVendor } from './mac-address-lookup.service';
 
 const macAddress = ref('20:37:06:12:34:56');
-const details = computed<string | undefined>(() => (db as Record<string, string>)[getVendorValue(macAddress.value)]);
+const details = computed<string | undefined>(() => lookupMacAddressVendor(macAddress.value));
 
 const { copy } = useCopy({ source: () => details.value ?? '', text: 'Vendor info copied to the clipboard' });
 </script>

@@ -3,15 +3,16 @@ import { useCopy } from '@/composable/copy';
 import { useValidation } from '@/composable/validation';
 import { isNotThrowing } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
+import { decodeUrlString, encodeUrlString } from './url-encoder.service';
 
 const encodeInput = ref('Hello world :)');
-const encodeOutput = computed(() => withDefaultOnError(() => encodeURIComponent(encodeInput.value), ''));
+const encodeOutput = computed(() => withDefaultOnError(() => encodeUrlString(encodeInput.value), ''));
 
 const encodedValidation = useValidation({
   source: encodeInput,
   rules: [
     {
-      validator: (value: string) => isNotThrowing(() => encodeURIComponent(value)),
+      validator: (value: string) => isNotThrowing(() => encodeUrlString(value)),
       message: 'Impossible to parse this string',
     },
   ],
@@ -20,13 +21,13 @@ const encodedValidation = useValidation({
 const { copy: copyEncoded } = useCopy({ source: encodeOutput, text: 'Encoded string copied to the clipboard' });
 
 const decodeInput = ref('Hello%20world%20%3A)');
-const decodeOutput = computed(() => withDefaultOnError(() => decodeURIComponent(decodeInput.value), ''));
+const decodeOutput = computed(() => withDefaultOnError(() => decodeUrlString(decodeInput.value), ''));
 
 const decodeValidation = useValidation({
   source: decodeInput,
   rules: [
     {
-      validator: (value: string) => isNotThrowing(() => decodeURIComponent(value)),
+      validator: (value: string) => isNotThrowing(() => decodeUrlString(value)),
       message: 'Impossible to parse this string',
     },
   ],
