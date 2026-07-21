@@ -8,10 +8,11 @@ if (typeof window !== 'undefined' && typeof global !== 'undefined') {
   }
 }
 
-// Node 25+ defines an experimental localStorage/sessionStorage global that is
-// non-functional without --localstorage-file and shadows jsdom's implementation
-// (vitest does not override pre-existing Node globals). Replace any Storage
-// global that lacks a working API with an in-memory implementation.
+// Node 25+ defines experimental localStorage/sessionStorage global accessors
+// that yield undefined (or a non-functional stub) without --localstorage-file,
+// and they shadow jsdom's implementation because vitest does not override
+// pre-existing Node globals. Replace any Storage global that lacks a working
+// API with an in-memory implementation.
 function createMemoryStorage(): Storage {
   const store = new Map<string, string>();
   return {
@@ -34,7 +35,8 @@ function createMemoryStorage(): Storage {
 
 for (const name of ['localStorage', 'sessionStorage'] as const) {
   const storage = (globalThis as any)[name];
-  if (storage !== undefined && typeof storage.clear !== 'function') {
+  const hasWorkingStorage = storage !== undefined && storage !== null && typeof storage.clear === 'function';
+  if (name in globalThis && !hasWorkingStorage) {
     const replacement = createMemoryStorage();
     Object.defineProperty(globalThis, name, { value: replacement, configurable: true, writable: true });
     if (typeof window !== 'undefined' && (window as any)[name] !== replacement) {
