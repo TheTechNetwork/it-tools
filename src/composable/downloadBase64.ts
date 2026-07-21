@@ -1,6 +1,6 @@
 import type { Ref } from 'vue';
 import _ from 'lodash';
-import { extension as getExtensionFromMimeType, extension as getMimeTypeFromExtension } from 'mime-types';
+import { extension as getExtensionFromMimeType, lookup as getMimeTypeFromExtension } from 'mime-types';
 
 export {
   getExtensionFromMimeType,
@@ -59,7 +59,7 @@ function downloadFromBase64({ sourceValue, filename, extension, fileMimeType }:
   const { mimeType } = getMimeTypeFromBase64({ base64String: sourceValue });
   let base64String = sourceValue;
   if (!mimeType) {
-    const targetMimeType = fileMimeType ?? getMimeTypeFromExtension(defaultExtension);
+    const targetMimeType = fileMimeType ?? (getMimeTypeFromExtension(defaultExtension) || 'application/octet-stream');
     base64String = `data:${targetMimeType};base64,${sourceValue}`;
   }
 
