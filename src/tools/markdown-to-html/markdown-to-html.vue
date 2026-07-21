@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import markdownit from 'markdown-it';
 import TextareaCopyable from '@/components/TextareaCopyable.vue';
+import { convertMarkdownToHtml } from './markdown-to-html.service';
 
 const inputMarkdown = ref('');
-const outputHtml = computed(() => {
-  const md = markdownit();
-  return md.render(inputMarkdown.value);
-});
+const outputHtml = computed(() => convertMarkdownToHtml(inputMarkdown.value));
 
 function printHtml() {
   const w = window.open();

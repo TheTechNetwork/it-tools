@@ -2,13 +2,15 @@
 import { isNotThrowing } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
 import InputCopyable from '../../components/InputCopyable.vue';
+import { getUrlSearchParamsEntries, parseUrl } from './url-parser.service';
 
 const urlToParse = ref('https://me:pwd@it-tools.tech:3000/url-parser?key1=value&key2=value2#the-hash');
 
-const urlParsed = computed(() => withDefaultOnError(() => new URL(urlToParse.value), undefined));
+const urlParsed = computed(() => withDefaultOnError(() => parseUrl(urlToParse.value), undefined));
+const urlSearchParams = computed(() => getUrlSearchParamsEntries(urlParsed.value));
 const urlValidationRules = [
   {
-    validator: (value: string) => isNotThrowing(() => new URL(value)),
+    validator: (value: string) => isNotThrowing(() => parseUrl(value)),
     message: 'Invalid url',
   },
 ];
@@ -49,7 +51,7 @@ const properties: { title: string; key: keyof URL }[] = [
     />
 
     <div
-      v-for="[k, v] in Object.entries(Object.fromEntries(urlParsed?.searchParams.entries() ?? []))"
+      v-for="[k, v] in urlSearchParams"
       :key="k"
       mb-2
       w-full

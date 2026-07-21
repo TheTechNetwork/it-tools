@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { FormatOptionsWithLanguage } from 'sql-formatter';
-import { format as formatSQL } from 'sql-formatter';
 import TextareaCopyable from '@/components/TextareaCopyable.vue';
 import { useStyleStore } from '@/stores/style.store';
+import { formatSql } from './sql-prettify.service';
 
 const inputElement = ref<HTMLElement>();
 const styleStore = useStyleStore();
@@ -14,7 +14,7 @@ const config = reactive<FormatOptionsWithLanguage>({
 });
 
 const rawSQL = ref('select field1,field2,field3 from my_table where my_condition;');
-const prettySQL = computed(() => formatSQL(rawSQL.value, config));
+const prettySQL = computed(() => formatSql(rawSQL.value, config));
 </script>
 
 <template>
