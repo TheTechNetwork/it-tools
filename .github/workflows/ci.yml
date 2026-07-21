@@ -8,8 +8,9 @@
 #   instead of each workflow rebuilding.
 # - PRs run E2E on Chromium only (3 shards); pushes to main run the full
 #   Chromium + Firefox + WebKit matrix.
-# - Node compatibility (22/25/26 build + test) runs on pushes to main and on
-#   manual dispatch, keeping it off the PR critical path.
+# - Node compatibility (22/25/26 build + test) gates PRs only when they touch
+#   dependencies, build tooling or workflows; it always runs on pushes to main
+#   and on manual dispatch. Ordinary tool-code PRs stay off that critical path.
 
 name: ci
 
@@ -219,11 +220,43 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-24.04-${{ matrix.project }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
 
+  # Detect whether a PR touches anything that could affect Node-version
+  # compatibility (dependencies, build tooling, workflow definitions).
+  # Ordinary tool-code changes cannot break other Node versions if they pass
+  # on the primary one, so only toolchain changes need the compat matrix
+  # before merge.
+  toolchain-changes:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      changed: ${{ steps.filter.outputs.changed }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          filter: blob:none
+
+      - name: Check for Node-toolchain-sensitive changes
+        id: filter
+        run: |
+          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" \
+            | grep -qE '^(package\.json|pnpm-lock\.yaml|\.npmrc|vite\.config\.ts|vitest\.setup\.ts|tsconfig[^/]*\.json|\.github/workflows/)'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
   # Node compatibility: build + unit tests across other supported Node
-  # versions. Kept off the PR critical path - runs on pushes to main and on
-  # manual dispatch. The primary version (24.x) is already covered above.
+  # versions. The primary version (24.x) is already covered above. Runs on
+  # pushes to main and manual dispatch, and gates PRs only when they touch
+  # dependencies, build tooling or workflows - the only changes that can
+  # realistically break other Node versions.
   node-compat:
-    if: github.event_name != 'pull_request'
+    needs: toolchain-changes
+    if: >-
+      always() &&
+      (github.event_name != 'pull_request' || needs.toolchain-changes.outputs.changed == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
