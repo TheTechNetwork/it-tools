@@ -103,11 +103,11 @@ describe('useQueryParam', () => {
 
 describe('useQueryParamOrStorage', () => {
   beforeEach(() => {
-    localStorage.clear();
+    window.localStorage.clear();
   });
 
   afterEach(() => {
-    localStorage.clear();
+    window.localStorage.clear();
   });
 
   it('returns the default value when neither query nor storage is set', async () => {
@@ -120,7 +120,7 @@ describe('useQueryParamOrStorage', () => {
   });
 
   it('prefers the query param over the stored value', async () => {
-    localStorage.setItem('test-storage-b', 'from-storage');
+    window.localStorage.setItem('test-storage-b', 'from-storage');
 
     const { result, wrapper } = await withSetup(
       () => useQueryParamOrStorage({ name: 'p', storageName: 'test-storage-b', defaultValue: 'fallback' }),
@@ -132,7 +132,7 @@ describe('useQueryParamOrStorage', () => {
   });
 
   it('falls back to the stored value when the query param is absent', async () => {
-    localStorage.setItem('test-storage-c', 'from-storage');
+    window.localStorage.setItem('test-storage-c', 'from-storage');
 
     const { result, wrapper } = await withSetup(
       () => useQueryParamOrStorage({ name: 'p', storageName: 'test-storage-c', defaultValue: 'fallback' }),
@@ -150,7 +150,7 @@ describe('useQueryParamOrStorage', () => {
     result.value = 9;
     await flushRouteWrites();
 
-    expect(localStorage.getItem('test-storage-d')).toBe('9');
+    expect(window.localStorage.getItem('test-storage-d')).toBe('9');
     expect(router.currentRoute.value.query.n).toBe('9');
     wrapper.unmount();
   });
