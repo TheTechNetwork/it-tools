@@ -82,7 +82,7 @@ const inputLabelAlignmentConfig = {
   labelPosition: 'left',
   labelWidth: '120px',
   labelAlign: 'right',
-};
+} as const;
 </script>
 
 <template>

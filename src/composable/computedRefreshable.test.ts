@@ -120,7 +120,7 @@ describe('computedRefreshable', () => {
       }, 0);
 
       await flushPromises();
-      const first = value.value;
+      const first = value.value ?? 0;
       expect(first).toBeGreaterThan(0);
 
       refresh();
