@@ -689,35 +689,32 @@ Located in `.github/workflows/`:
 
 #### 1. **ci.yml** - Continuous Integration
 
-Runs on: PR and push to main (except markdown files)
+Runs on: PR and push to main (except markdown files), plus manual dispatch
 
-Steps:
-1. **Setup**: Node 24, pnpm cache
-2. **Install**: Dependencies
-3. **Lint**: ESLint with caching
-4. **Test**: Unit tests (Vitest)
-5. **Type check**: vue-tsc
-6. **Build**: Production build
+Jobs:
+1. **checks**: Lint (ESLint with caching), type check (vue-tsc), unit tests
+   with coverage (Vitest + @vitest/coverage-v8). Coverage is added to the job
+   summary and uploaded as an artifact. Runs once on the primary Node version.
+2. **build**: Production build, uploads `dist/` as an artifact.
+3. **e2e**: Playwright tests reusing the `dist/` artifact from **build**.
+   PRs run Chromium only (3 shards); pushes to main run the full
+   Chromium + Firefox + WebKit matrix.
+4. **node-compat**: Build + unit tests across other supported Node versions
+   (22/25/26). Runs on pushes to main and manual dispatch only, keeping it
+   off the PR critical path.
 
 **Caches**:
 - Vite build cache
 - ESLint cache
 - Vitest cache
 - TypeScript build info
+- Playwright browsers (per browser project)
 
-#### 2. **e2e-tests.yml** - End-to-End Tests
-
-Runs Playwright tests across browsers.
-
-#### 3. **node.js.yml** - Node.js Matrix Testing
-
-Tests across Node versions.
-
-#### 4. **releases.yml** - Release Automation
+#### 2. **releases.yml** - Release Automation
 
 Automated releases and changelog generation.
 
-#### 5. **docker-nightly-release.yml** - Docker Publishing
+#### 3. **docker-nightly-release.yml** - Docker Publishing
 
 Builds and publishes Docker images.
 
