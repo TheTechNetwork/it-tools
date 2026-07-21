@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import { types as extensionToMimeType, extensions as mimeTypeToExtension } from 'mime-types';
+import {
+  getExtensionsFromMimeType,
+  getExtensionToMimeTypeOptions,
+  getMimeInfos,
+  getMimeTypeFromExtension,
+  getMimeTypeToExtensionOptions,
+} from './mime-types.service';
 
-const mimeInfos = Object.entries(mimeTypeToExtension).map(([mimeType, extensions]) => ({ mimeType, extensions }));
+const mimeInfos = getMimeInfos();
 
-const mimeToExtensionsOptions = Object.keys(mimeTypeToExtension).map(label => ({ label, value: label }));
+const mimeToExtensionsOptions = getMimeTypeToExtensionOptions();
 const selectedMimeType = ref(undefined);
 
-const extensionsFound = computed(() => (selectedMimeType.value ? (mimeTypeToExtension[selectedMimeType.value] ?? []) : []));
+const extensionsFound = computed(() => (selectedMimeType.value ? getExtensionsFromMimeType(selectedMimeType.value) : []));
 
-const extensionToMimeTypeOptions = Object.keys(extensionToMimeType).map((label) => {
-  const extension = `.${label}`;
-
-  return { label: extension, value: label };
-});
+const extensionToMimeTypeOptions = getExtensionToMimeTypeOptions();
 const selectedExtension = ref(undefined);
 
-const mimeTypeFound = computed(() => (selectedExtension.value ? extensionToMimeType[selectedExtension.value] : []));
+const mimeTypeFound = computed(() => (selectedExtension.value ? getMimeTypeFromExtension(selectedExtension.value) : []));
 </script>
 
 <template>
