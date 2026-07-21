@@ -700,8 +700,9 @@ Jobs:
    PRs run Chromium only (3 shards); pushes to main run the full
    Chromium + Firefox + WebKit matrix.
 4. **node-compat**: Build + unit tests across other supported Node versions
-   (22/25/26). Runs on pushes to main and manual dispatch only, keeping it
-   off the PR critical path.
+   (22/25/26). Gates PRs only when they touch dependencies, build tooling or
+   workflows (detected by the **toolchain-changes** job); always runs on
+   pushes to main and manual dispatch. Ordinary tool-code PRs skip it.
 
 **Caches**:
 - Vite build cache
