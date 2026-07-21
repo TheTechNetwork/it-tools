@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import type { UseValidationRule } from '@/composable/validation';
-import { parse as parseToml } from 'iarna-toml-esm';
-import { stringify as stringifyToYaml } from 'yaml';
 import { withDefaultOnError } from '../../utils/defaults';
-import { isValidToml } from '../toml-to-json/toml.services';
+import { isValidToml } from '../toml-to-json/toml-to-json.service';
+import { convertTomlToYaml } from './toml-to-yaml.service';
 
-const transformer = (value: string) => value.trim() === '' ? '' : withDefaultOnError(() => stringifyToYaml(parseToml(value)), '');
+const transformer = (value: string) => value.trim() === '' ? '' : withDefaultOnError(() => convertTomlToYaml(value), '');
 
 const rules: UseValidationRule<string>[] = [
   {

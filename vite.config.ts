@@ -128,6 +128,13 @@ export default defineConfig({
   test: {
     exclude: [...configDefaults.exclude, '**/*.e2e.spec.ts'],
     setupFiles: ['./vitest.setup.ts'],
+    server: {
+      deps: {
+        // iarna-toml-esm ships ESM files in a CommonJS package, Node cannot
+        // load it directly so it must be processed by vite.
+        inline: ['iarna-toml-esm'],
+      },
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov', 'json-summary'],

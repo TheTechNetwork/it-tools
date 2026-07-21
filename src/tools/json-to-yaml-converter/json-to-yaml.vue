@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import type { UseValidationRule } from '@/composable/validation';
-import JSON5 from 'json5';
-import { stringify } from 'yaml';
 import { isNotThrowing } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
+import { convertJsonToYaml } from './json-to-yaml.service';
 
-const transformer = (value: string) => withDefaultOnError(() => stringify(JSON5.parse(value)), '');
+const transformer = (value: string) => withDefaultOnError(() => convertJsonToYaml(value), '');
 
 const rules: UseValidationRule<string>[] = [
   {
-    validator: (value: string) => value === '' || isNotThrowing(() => stringify(JSON5.parse(value))),
+    validator: (value: string) => value === '' || isNotThrowing(() => convertJsonToYaml(value)),
     message: 'Provided JSON is not valid.',
   },
 ];
