@@ -1,20 +1,12 @@
 <script setup lang="ts">
 import type { UserAgentResultSection } from './user-agent-parser.types';
 import { Adjustments, Browser, Cpu, Devices, Engine } from '@vicons/tabler';
-import { UAParser } from 'ua-parser-js';
 import { withDefaultOnError } from '@/utils/defaults';
+import { getUserAgentInfo } from './user-agent-parser.service';
 import UserAgentResultCards from './user-agent-result-cards.vue';
 
 const ua = ref(navigator.userAgent as string);
 
-// If not input in the ua field is present return an empty object of type UAParser.IResult because otherwise
-// UAParser returns the values for the current Browser. This is confusing because results are shown for an empty
-// UA field value.
-function getUserAgentInfo(userAgent: string) {
-  return userAgent.trim().length > 0
-    ? UAParser(userAgent.trim())
-    : ({ ua: '', browser: {}, cpu: {}, device: {}, engine: {}, os: {} } as UAParser.IResult);
-}
 const userAgentInfo = computed(() => withDefaultOnError(() => getUserAgentInfo(ua.value), undefined));
 
 const sections: UserAgentResultSection[] = [

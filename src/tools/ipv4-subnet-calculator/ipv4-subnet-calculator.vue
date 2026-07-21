@@ -1,15 +1,14 @@
 <script setup lang="ts">
+import type { Netmask } from 'netmask';
 import { ArrowLeft, ArrowRight } from '@vicons/tabler';
 import { useStorage } from '@vueuse/core';
-import { Netmask } from 'netmask';
 import SpanCopyable from '@/components/SpanCopyable.vue';
 import { isNotThrowing } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
 import { getIPClass } from './ipv4-subnet-calculator.models';
+import { getNetworkInfo, getNetworkMaskInBinary } from './ipv4-subnet-calculator.service';
 
 const ip = useStorage('ipv4-subnet-calculator:ip', '192.168.0.1/24');
-
-const getNetworkInfo = (address: string) => new Netmask(address.trim());
 
 const networkInfo = computed(() => withDefaultOnError(() => getNetworkInfo(ip.value), undefined));
 
@@ -39,7 +38,7 @@ const sections: {
   },
   {
     label: 'Network mask in binary',
-    getValue: ({ bitmask }) => ('1'.repeat(bitmask) + '0'.repeat(32 - bitmask)).match(/.{8}/g)?.join('.') ?? '',
+    getValue: ({ bitmask }) => getNetworkMaskInBinary({ bitmask }),
   },
   {
     label: 'CIDR notation',
