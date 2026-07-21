@@ -1,9 +1,8 @@
 <script setup lang="ts">
 // @ts-nocheck
 import type { OGSchemaType, OGSchemaTypeElementSelect } from './OGSchemaType.type';
-import { generateMeta } from '@it-tools/oggen';
-import _ from 'lodash';
 import TextareaCopyable from '@/components/TextareaCopyable.vue';
+import { generateMetaTags } from './meta-tag-generator.service';
 import { image, ogSchemas, twitter, website } from './og-schemas';
 
 // Since type guards do not work in template
@@ -39,16 +38,7 @@ const sections = computed(() => {
   return secs;
 });
 
-const metaTags = computed(() => {
-  const twitterMeta = _.chain(metadata.value)
-    .pickBy((_value, k) => k.startsWith('twitter:'))
-    .mapKeys((_value, k) => k.replace(/^twitter:/, ''))
-    .value();
-
-  const otherMeta = _.pickBy(metadata.value, (_value, k) => !k.startsWith('twitter:'));
-
-  return generateMeta({ ...otherMeta, twitter: twitterMeta }, { generateTwitterCompatibleMeta: true });
-});
+const metaTags = computed(() => generateMetaTags(metadata.value));
 </script>
 
 <template>

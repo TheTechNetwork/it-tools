@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import lookup from 'country-code-lookup';
-import { getCountries, getCountryCallingCode, parsePhoneNumber } from 'libphonenumber-js/max';
+import { getCountries, getCountryCallingCode } from 'libphonenumber-js/max';
 import { useValidation } from '@/composable/validation';
-import { booleanToHumanReadable } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
 import {
-  formatTypeToHumanReadable,
   getDefaultCountryCode,
-  getFullCountryName,
-} from './phone-parser-and-formatter.models';
+  parsePhoneNumberDetails,
+} from './phone-parser-and-formatter.service';
 
 const rawPhone = ref('');
 const defaultCountryCode = ref(getDefaultCountryCode());
@@ -27,54 +25,10 @@ const parsedDetails = computed(() => {
     return undefined;
   }
 
-  const parsed = withDefaultOnError(() => parsePhoneNumber(rawPhone.value, defaultCountryCode.value), undefined);
-
-  if (!parsed) {
-    return undefined;
-  }
-
-  return [
-    {
-      label: 'Country',
-      value: parsed.country,
-    },
-    {
-      label: 'Country',
-      value: getFullCountryName(parsed.country),
-    },
-    {
-      label: 'Country calling code',
-      value: parsed.countryCallingCode,
-    },
-    {
-      label: 'Is valid?',
-      value: booleanToHumanReadable(parsed.isValid()),
-    },
-    {
-      label: 'Is possible?',
-      value: booleanToHumanReadable(parsed.isPossible()),
-    },
-    {
-      label: 'Type',
-      value: formatTypeToHumanReadable(parsed.getType()),
-    },
-    {
-      label: 'International format',
-      value: parsed.formatInternational(),
-    },
-    {
-      label: 'National format',
-      value: parsed.formatNational(),
-    },
-    {
-      label: 'E.164 format',
-      value: parsed.format('E.164'),
-    },
-    {
-      label: 'RFC3966 format',
-      value: parsed.format('RFC3966'),
-    },
-  ];
+  return withDefaultOnError(
+    () => parsePhoneNumberDetails({ phoneNumber: rawPhone.value, defaultCountryCode: defaultCountryCode.value }),
+    undefined,
+  );
 });
 
 const countriesOptions = getCountries().map(code => ({

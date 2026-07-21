@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import { isValidCron } from 'cron-validator';
-import cronstrue from 'cronstrue';
 import { useStyleStore } from '@/stores/style.store';
-
-function isCronValid(v: string) {
-  return isValidCron(v, { allowBlankDay: true, alias: true, seconds: true });
-}
+import { getCronDescription, isCronValid } from './crontab-generator.service';
 
 const styleStore = useStyleStore();
 
@@ -92,12 +87,7 @@ const helpers = [
   },
 ];
 
-const cronString = computed(() => {
-  if (isCronValid(cron.value)) {
-    return cronstrue.toString(cron.value, cronstrueConfig);
-  }
-  return ' ';
-});
+const cronString = computed(() => getCronDescription(cron.value, cronstrueConfig));
 
 const cronValidationRules = [
   {
