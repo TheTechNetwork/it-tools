@@ -714,11 +714,13 @@ Jobs:
    Gates PRs only when they touch dependencies, build tooling or workflows
    (detected by the **toolchain-changes** job); always runs on pushes to main
    and manual dispatch. Ordinary tool-code PRs skip it.
-5. **docker-image**: Builds the real production Docker image, waits for its
-   HEALTHCHECK to report healthy, then asserts nginx serves with the expected
-   security headers, gzip, asset caching and SPA fallback. Gated to
-   Docker/nginx changes (also via **toolchain-changes**); always runs on pushes
-   to main.
+5. **docker-image**: Builds each production image variant (standard nginx,
+   rootless nginx-unprivileged, distroless static-web-server; multi-target
+   `Dockerfile`) and verifies them in a matrix: the container serves, nginx
+   variants reach a healthy HEALTHCHECK, and all three serve the same contract
+   (security headers, gzip, asset caching, SPA fallback). Also scans each image
+   with Trivy (report-only). Gated to Docker changes (`Dockerfile`, `docker/`,
+   `.dockerignore`) via **toolchain-changes**; always runs on pushes to main.
 
 **Caches**:
 - Vite build cache
@@ -883,9 +885,11 @@ const value = useVModel(props, 'value', emit);
 - **No sensitive operations**: All tools run client-side
 - **Input sanitization**: Validate and sanitize user input
 - **XSS prevention**: Use DOMPurify for HTML sanitization
-- **Response headers**: The Vercel/Netlify deploy configs and the Docker
-  nginx image set `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`
-  and a `Permissions-Policy`. A Content-Security-Policy is **not** configured -
+- **Response headers**: The Vercel/Netlify deploy configs and all three Docker
+  image variants (nginx config in `docker/nginx.conf.template`, static-web-server
+  config in `docker/sws.toml`) set `X-Content-Type-Options`, `X-Frame-Options`,
+  `Referrer-Policy` and a `Permissions-Policy`. A Content-Security-Policy is
+  **not** configured -
   a strict CSP still needs validating against Monaco, web workers and any
   `eval`/wasm the tools use.
 

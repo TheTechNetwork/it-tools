@@ -220,7 +220,7 @@ jobs:
 
   # Detect whether a PR touches anything that could affect Node-version
   # compatibility (dependencies, build tooling, workflow definitions) or the
-  # Docker image (Dockerfile, nginx.conf, .dockerignore). Ordinary tool-code
+  # Docker image (Dockerfile, docker/, .dockerignore). Ordinary tool-code
   # changes cannot break either if they pass on the primary Node version, so the
   # compat matrix and the Docker image test only run when their inputs change.
   toolchain-changes:
@@ -245,7 +245,7 @@ jobs:
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
-          if grep -qE '^(Dockerfile|\.dockerignore|nginx\.conf|\.github/workflows/ci\.yml)' <<<"$changed_files"; then
+          if grep -qE '^(Dockerfile|\.dockerignore|docker/|\.github/workflows/ci\.yml)' <<<"$changed_files"; then
             echo "docker=true" >> "$GITHUB_OUTPUT"
           else
             echo "docker=false" >> "$GITHUB_OUTPUT"
@@ -289,11 +289,12 @@ jobs:
       - name: Test
         run: pnpm test
 
-  # Build the real production Docker image and verify it end to end: the
-  # HEALTHCHECK reaches "healthy", and nginx serves with the expected security
-  # headers, gzip, asset caching and SPA fallback. Gated to Docker/nginx changes
-  # (via toolchain-changes) so ordinary PRs skip the image build; always runs on
-  # pushes to main and manual dispatch.
+  # Build each production Docker image variant and verify it end to end: the
+  # container serves, nginx variants reach a healthy HEALTHCHECK, and all three
+  # serve identically (security headers, gzip, asset caching, SPA fallback) -
+  # the shared serving contract that keeps the variants in lockstep. Also scans
+  # each image with Trivy (report-only for now). Gated to Docker changes (via
+  # toolchain-changes) so ordinary PRs skip the image builds; always on main.
   docker-image:
     needs: toolchain-changes
     if: >-
@@ -301,29 +302,57 @@ jobs:
       (github.event_name != 'pull_request' || needs.toolchain-changes.outputs.docker == 'true')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # standard: nginx (root) on port 80, has a HEALTHCHECK
+          - target: standard
+            port: 80
+            healthcheck: true
+          # rootless: nginx-unprivileged on port 8080, has a HEALTHCHECK
+          - target: rootless
+            port: 8080
+            healthcheck: true
+          # distroless: static-web-server on port 8080, no shell -> no HEALTHCHECK
+          - target: distroless
+            port: 8080
+            healthcheck: false
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
 
-      - name: Build image
+      - name: Build image (${{ matrix.target }})
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: .
+          target: ${{ matrix.target }}
           load: true
-          tags: it-tools:ci
-          cache-from: type=gha,scope=docker-image-ci
-          cache-to: type=gha,mode=max,scope=docker-image-ci
+          tags: it-tools:${{ matrix.target }}
+          cache-from: type=gha,scope=docker-image-${{ matrix.target }}
+          cache-to: type=gha,mode=max,scope=docker-image-${{ matrix.target }}
 
-      - name: Run container (fast health-check cadence)
+      - name: Run container (${{ matrix.target }})
         run: |
-          docker run -d --name it-tools-ci -p 8080:80 \
+          # Map host 8080 -> container ${{ matrix.port }}. Health-cadence flags
+          # are harmless on the distroless image (it has no HEALTHCHECK).
+          docker run -d --name it-tools-ci -p 8080:${{ matrix.port }} \
             --health-start-period=2s --health-interval=2s \
             --health-timeout=3s --health-retries=5 \
-            it-tools:ci
+            it-tools:${{ matrix.target }}
 
-      - name: Wait for HEALTHCHECK to report healthy
+      - name: Wait until it serves
+        run: |
+          for _ in {1..30}; do
+            if curl -fsS -o /dev/null http://localhost:8080/; then echo "serving"; exit 0; fi
+            sleep 2
+          done
+          echo "timed out waiting for the server"; docker logs it-tools-ci; exit 1
+
+      - name: Verify HEALTHCHECK reports healthy
+        if: ${{ matrix.healthcheck }}
         run: |
           for _ in {1..30}; do
             status=$(docker inspect -f '{{.State.Health.Status}}' it-tools-ci)
@@ -334,10 +363,10 @@ jobs:
           done
           echo "timed out waiting for healthy"; docker logs it-tools-ci; exit 1
 
-      - name: Assert serving (headers, gzip, caching, SPA fallback)
+      - name: Assert serving contract (headers, gzip, caching, SPA fallback)
         run: |
           set -eu
-          fail() { echo "ASSERT FAILED: $1"; docker logs it-tools-ci || true; exit 1; }
+          fail() { echo "ASSERT FAILED [${{ matrix.target }}]: $1"; docker logs it-tools-ci || true; exit 1; }
 
           shell_headers=$(curl -sS -D - -o /dev/null http://localhost:8080/)
           grep -qi '^x-content-type-options: nosniff' <<<"$shell_headers" || fail "X-Content-Type-Options"
@@ -367,8 +396,17 @@ jobs:
           code=$(curl -sS -o /dev/null -w '%{http_code}' http://localhost:8080/deep/spa/route)
           [ "$code" = "200" ] || fail "SPA fallback should return 200 (got $code)"
 
-          echo "docker image serving assertions passed."
+          echo "serving contract holds for ${{ matrix.target }}."
 
       - name: Stop container
         if: always()
         run: docker rm -f it-tools-ci || true
+
+      - name: Scan image with Trivy (report-only)
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        with:
+          image-ref: it-tools:${{ matrix.target }}
+          severity: 'HIGH,CRITICAL'
+          ignore-unfixed: true
+          format: table
+          exit-code: '0'

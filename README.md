@@ -32,6 +32,38 @@ docker run -d --name it-tools --restart unless-stopped -p 8080:80 corentinth/it-
 docker run -d --name it-tools --restart unless-stopped -p 8080:80 ghcr.io/corentinth/it-tools:latest
 ```
 
+### Image variants
+
+This fork publishes three image variants to both `thetechnetwork/it-tools`
+(Docker Hub) and `ghcr.io/thetechnetwork/it-tools`, each tagged `:latest` and
+`:<version>`. All three serve the same app identically (gzip, security headers,
+immutable asset caching, SPA fallback):
+
+| Variant | Tag suffix | Base | User | Port |
+| --- | --- | --- | --- | --- |
+| **standard** | *(none)* — `:latest` | `nginx:stable-alpine` | root | 80 |
+| **rootless** | `:latest-rootless` | `nginx-unprivileged` | non-root (101) | 8080 |
+| **distroless** | `:latest-distroless` | `static-web-server` (scratch) | non-root | 8080 |
+
+```sh
+# standard (unchanged)
+docker run -d --name it-tools -p 8080:80 thetechnetwork/it-tools:latest
+
+# rootless / distroless serve on 8080 inside the container
+docker run -d --name it-tools -p 8080:8080 thetechnetwork/it-tools:latest-rootless
+```
+
+The **rootless** and **distroless** variants pair well with a hardened runtime.
+The distroless image has no shell, so use an orchestrator HTTP probe against
+`/` instead of a Docker `HEALTHCHECK`. Example (rootless):
+
+```sh
+docker run -d --name it-tools -p 8080:8080 \
+  --read-only --tmpfs /tmp \
+  --cap-drop ALL --security-opt no-new-privileges \
+  thetechnetwork/it-tools:latest-rootless
+```
+
 **Other solutions:**
 
 - [Cloudron](https://www.cloudron.io/store/tech.ittools.cloudron.html)
