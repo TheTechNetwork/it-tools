@@ -137,7 +137,7 @@
     "events": "3.3.0",
     "hygen": "6.2.11",
     "jsdom": "29.1.1",
-    "less": "4.6.7",
+    "less": "4.7.0",
     "path-browserify": "1.0.1",
     "prettier": "3.9.5",
     "stream-browserify": "3.0.0",
