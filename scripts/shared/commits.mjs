@@ -17,13 +17,14 @@ const commitScopesToHumanReadable = {
 
 const commitTypesOrder = ['feat', 'fix', 'perf', 'refactor', 'test', 'build', 'ci', 'chore', 'other'];
 
-const getCommitTypeSortIndex = (type) =>
-  commitTypesOrder.includes(type) ? commitTypesOrder.indexOf(type) : commitTypesOrder.length;
+function getCommitTypeSortIndex(type) {
+  return commitTypesOrder.includes(type) ? commitTypesOrder.indexOf(type) : commitTypesOrder.length;
+}
 
 function parseCommitLine(commit) {
   const [sha, ...splittedRawMessage] = commit.trim().split(' ');
   const rawMessage = splittedRawMessage.join(' ');
-  const { type, scope, subject } = /^(?<type>.*?)(\((?<scope>.*)\))?: ?(?<subject>.+)$/.exec(rawMessage)?.groups ?? {};
+  const { type, scope, subject } = /^(?<type>[^(:]*)(?:\((?<scope>[^)]*)\))?: ?(?<subject>.+)$/.exec(rawMessage)?.groups ?? {};
 
   return {
     sha: sha.slice(0, 7),

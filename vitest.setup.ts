@@ -1,11 +1,11 @@
 // Vitest setup file to initialize test environment globals
+import { Buffer as NodeBuffer } from 'node:buffer';
 
-// jsdom should already have atob/btoa, but ensure they're properly configured
-if (typeof window !== 'undefined' && typeof global !== 'undefined') {
-  // Ensure Buffer is available if needed
-  if (typeof Buffer === 'undefined') {
-    (global as any).Buffer = require('buffer').Buffer;
-  }
+// jsdom should already have atob/btoa, but ensure a Buffer global is available.
+// Assign onto globalThis through a typed alias so the polyfill is applied.
+const globalScope = globalThis as unknown as { Buffer?: unknown };
+if (typeof window !== 'undefined' && globalScope.Buffer === undefined) {
+  globalScope.Buffer = NodeBuffer;
 }
 
 // Node 25+ defines experimental localStorage/sessionStorage global accessors

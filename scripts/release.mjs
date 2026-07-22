@@ -1,7 +1,8 @@
-import { $, argv } from 'zx';
+import process from 'node:process';
 import { consola } from 'consola';
-import { rawCommitsToMarkdown } from './shared/commits.mjs';
+import { $, argv } from 'zx';
 import { addToChangelog } from './shared/changelog.mjs';
+import { rawCommitsToMarkdown } from './shared/commits.mjs';
 
 $.verbose = false;
 
@@ -50,7 +51,8 @@ try {
   consola.info('Creating version and tag');
   await $`npm version ${version} -m "chore(version): release ${version}"`;
   consola.info('Npm version released with tag');
-} catch (error) {
+}
+catch (error) {
   consola.error(error);
   consola.info('Aborting');
   process.exit(1);
