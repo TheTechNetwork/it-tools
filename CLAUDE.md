@@ -719,8 +719,10 @@ Jobs:
    `Dockerfile`) and verifies them in a matrix: the container serves, nginx
    variants reach a healthy HEALTHCHECK, and all three serve the same contract
    (security headers, gzip, asset caching, SPA fallback). Also scans each image
-   with Trivy (report-only). Gated to Docker changes (`Dockerfile`, `docker/`,
-   `.dockerignore`) via **toolchain-changes**; always runs on pushes to main.
+   with Trivy, which **fails the job on a fixable HIGH/CRITICAL**
+   (`ignore-unfixed` keeps un-actionable base-image CVEs from blocking). Gated
+   to Docker changes (`Dockerfile`, `docker/`, `.dockerignore`) via
+   **toolchain-changes**; always runs on pushes to main.
 
 **Caches**:
 - Vite build cache
@@ -746,11 +748,18 @@ Marks and closes inactive issues on a schedule (`actions/stale`).
 
 #### 5. **releases.yml** - Release Automation
 
-Automated releases and changelog generation.
+Tag-triggered (`v*.*.*`): builds the app, publishes all three Docker image
+variants (Docker Hub + GHCR, multi-arch), and drafts a GitHub release with the
+changelog. Each pushed image carries a build SBOM (`sbom: true`) and SLSA
+provenance (`provenance: mode=max`) attestation and is **signed with cosign**
+keyless (Sigstore/OIDC - `id-token: write`, no stored keys). See "Supply chain"
+below for verification.
 
 #### 6. **docker-nightly-release.yml** - Docker Publishing
 
-Builds and publishes Docker images.
+Nightly (and manual) build+publish of the three `:nightly*` image variants, with
+the same SBOM + provenance attestations and keyless cosign signing as the
+release workflow.
 
 > Static analysis (SAST) runs via GitHub code-scanning **default setup**
 > (configured in repo settings), not a workflow file in this repo.
@@ -892,6 +901,15 @@ const value = useVModel(props, 'value', emit);
   **not** configured -
   a strict CSP still needs validating against Monaco, web workers and any
   `eval`/wasm the tools use.
+- **Supply chain**: published images (release + nightly, all variants, both
+  registries) ship a build SBOM and SLSA provenance attestation and are signed
+  with **cosign keyless** (Sigstore/OIDC; identity = the GitHub Actions workflow,
+  recorded in the public transparency log). Verify with `cosign verify
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com
+  --certificate-identity-regexp '(?i)^https://github.com/thetechnetwork/it-tools/'
+  thetechnetwork/it-tools:latest` (see README "Verify image signatures"). CI's
+  Trivy scan of each image variant is a **blocking** gate on fixable
+  HIGH/CRITICAL vulnerabilities.
 
 ### Performance
 
