@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Get release version
@@ -53,7 +53,7 @@ jobs:
 
 
   docker-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - name: Get release version
@@ -97,7 +97,7 @@ jobs:
             ghcr.io/thetechnetwork/it-tools:${{ env.RELEASE_VERSION}}
 
   github-release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     needs: [build, docker-release]
     steps:
