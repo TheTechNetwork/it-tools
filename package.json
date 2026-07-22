@@ -85,7 +85,7 @@
     "node-forge": "1.4.0",
     "oui-data": "1.1.571",
     "pdf-signature-reader": "1.4.3",
-    "pinia": "3.0.4",
+    "pinia": "4.0.2",
     "qrcode": "1.5.4",
     "randexp": "0.5.3",
     "sql-formatter": "15.8.2",
