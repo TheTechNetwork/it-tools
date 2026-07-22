@@ -7,13 +7,20 @@
   "minimumReleaseAge": "3 days",
   "labels": ["dependencies"],
   "lockFileMaintenance": {
-    "enabled": true
+    "enabled": true,
+    "automerge": true
   },
   "packageRules": [
     {
       "description": "Never pin engines - .npmrc engine-strict and Vercel require a version range",
       "matchDepTypes": ["engines"],
       "rangeStrategy": "replace"
+    },
+    {
+      "description": "Automerge low-risk devDependency updates once CI passes",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     },
     {
       "description": "Label major updates",
