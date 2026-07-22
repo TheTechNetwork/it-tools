@@ -139,7 +139,11 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov', 'json-summary'],
-      include: ['src/**/*.ts', 'src/**/*.vue'],
+      // Unit coverage tracks the logic layer (services, composables, utils).
+      // Vue SFCs are exercised by the Playwright e2e suite rather than unit
+      // tests, so including them would drown this metric in ~0%-covered UI and
+      // make it meaningless. They stay out here.
+      include: ['src/**/*.ts'],
       exclude: [
         'src/**/*.test.ts',
         'src/**/*.e2e.spec.ts',
@@ -149,6 +153,15 @@ export default defineConfig({
         'src/main.ts',
         'src/plugins/**',
       ],
+      // No-regression floor for the logic layer (currently ~62% lines / 73%
+      // branches). Fails CI if coverage drops below this; ratchet upward as
+      // more services gain tests.
+      thresholds: {
+        lines: 58,
+        statements: 58,
+        functions: 58,
+        branches: 58,
+      },
     },
   },
   build: {
