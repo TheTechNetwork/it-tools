@@ -1,7 +1,7 @@
 import type { OuiData } from './mac-address-lookup.service';
 import db from 'oui-data';
-import { describe, expect, it } from 'vitest';
-import { getVendorValue, lookupMacAddressVendor } from './mac-address-lookup.service';
+import { describe, expect, it, vi } from 'vitest';
+import { getVendorValue, loadOuiData, lookupMacAddressVendor } from './mac-address-lookup.service';
 
 const ouiData = db as OuiData;
 
@@ -49,6 +49,23 @@ describe('mac-address-lookup', () => {
     it('returns undefined for empty or invalid input', () => {
       expect(lookupMacAddressVendor(ouiData, '')).toBeUndefined();
       expect(lookupMacAddressVendor(ouiData, 'not a mac address')).toBeUndefined();
+    });
+  });
+
+  describe('loadOuiData', () => {
+    it('fetches and parses the database once, memoising the result', async () => {
+      const fakeDb: OuiData = { 203706: 'Cisco Systems, Inc' };
+      const fetchMock = vi.fn().mockResolvedValue({ json: () => Promise.resolve(fakeDb) });
+      vi.stubGlobal('fetch', fetchMock);
+
+      const first = await loadOuiData();
+      const second = await loadOuiData();
+
+      expect(first).toBe(fakeDb);
+      expect(second).toBe(first);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      vi.unstubAllGlobals();
     });
   });
 });
