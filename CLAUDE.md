@@ -27,7 +27,7 @@ This document provides comprehensive guidance for AI assistants working with the
 - **Primary Language**: TypeScript
 - **Framework**: Vue 3 (Composition API)
 - **Package Manager**: pnpm (v11)
-- **Node Version**: >= 22.18.0
+- **Node Version**: >= 22.18.0 (dev/CI use the version pinned in `.nvmrc`)
 - **License**: GNU GPLv3
 
 ---
@@ -470,7 +470,10 @@ test.describe('Tool - Tool Name', () => {
 ### Testing Best Practices
 
 1. **Separation**: Keep business logic in `.service.ts` files for easy unit testing
-2. **Coverage**: Aim for high coverage on service files
+2. **Coverage**: Unit coverage tracks the logic layer only (`src/**/*.ts` -
+   services, composables, utils); `.vue` files are excluded and covered by e2e.
+   A no-regression threshold in `vite.config.ts` fails CI on a drop and
+   auto-ratchets upward, so new/edited services should ship with tests
 3. **E2E Focus**: Test critical user flows and edge cases
 4. **Test IDs**: Use `data-test-id` attribute for stable selectors
 5. **Locale**: Tests run with `locale: 'en-GB'` and `timezoneId: 'Europe/Paris'`
@@ -691,18 +694,31 @@ Located in `.github/workflows/`:
 
 Runs on: PR and push to main (except markdown files), plus manual dispatch
 
+The primary Node version comes from `.nvmrc` (via `setup-node`'s
+`node-version-file`); it is the single source of truth. All `pnpm install`
+steps use `--frozen-lockfile`.
+
 Jobs:
-1. **checks**: Lint (ESLint with caching), type check (vue-tsc), unit tests
-   with coverage (Vitest + @vitest/coverage-v8). Coverage is added to the job
-   summary and uploaded as an artifact. Runs once on the primary Node version.
+1. **checks**: Lint (ESLint with caching, over `src`, `scripts` and the root
+   config files), type check (vue-tsc), unit tests with coverage (Vitest +
+   @vitest/coverage-v8). Coverage is scoped to the logic layer (`.vue` files
+   are excluded - they are covered by e2e) and enforced by a no-regression
+   threshold that auto-ratchets upward. Coverage is added to the job summary
+   and uploaded as an artifact. Runs once on the primary Node version.
 2. **build**: Production build, uploads `dist/` as an artifact.
 3. **e2e**: Playwright tests reusing the `dist/` artifact from **build**.
    PRs run Chromium only (3 shards); pushes to main run the full
    Chromium + Firefox + WebKit matrix.
-4. **node-compat**: Build + unit tests across other supported Node versions
-   (22/25/26). Gates PRs only when they touch dependencies, build tooling or
-   workflows (detected by the **toolchain-changes** job); always runs on
-   pushes to main and manual dispatch. Ordinary tool-code PRs skip it.
+4. **node-compat**: Build + unit tests across the other supported Node versions
+   (22/25/26; the primary version from `.nvmrc` is already covered above).
+   Gates PRs only when they touch dependencies, build tooling or workflows
+   (detected by the **toolchain-changes** job); always runs on pushes to main
+   and manual dispatch. Ordinary tool-code PRs skip it.
+5. **docker-image**: Builds the real production Docker image, waits for its
+   HEALTHCHECK to report healthy, then asserts nginx serves with the expected
+   security headers, gzip, asset caching and SPA fallback. Gated to
+   Docker/nginx changes (also via **toolchain-changes**); always runs on pushes
+   to main.
 
 **Caches**:
 - Vite build cache
@@ -710,14 +726,32 @@ Jobs:
 - Vitest cache
 - TypeScript build info
 - Playwright browsers (per browser project)
+- Docker layer cache (`type=gha`) for the docker-image job
 
-#### 2. **releases.yml** - Release Automation
+#### 2. **actionlint.yml** - Workflow Linting
+
+Lints the workflow files (syntax, expressions, shellcheck on `run:` steps) when
+any `.github/workflows/**` file changes.
+
+#### 3. **pr-title.yml** - PR Title Validation
+
+Checks that pull request titles follow Conventional Commits, keeping the
+changelog input clean.
+
+#### 4. **stale.yml** - Stale Issue Management
+
+Marks and closes inactive issues on a schedule (`actions/stale`).
+
+#### 5. **releases.yml** - Release Automation
 
 Automated releases and changelog generation.
 
-#### 3. **docker-nightly-release.yml** - Docker Publishing
+#### 6. **docker-nightly-release.yml** - Docker Publishing
 
 Builds and publishes Docker images.
+
+> Static analysis (SAST) runs via GitHub code-scanning **default setup**
+> (configured in repo settings), not a workflow file in this repo.
 
 ### Concurrency
 
@@ -849,7 +883,11 @@ const value = useVModel(props, 'value', emit);
 - **No sensitive operations**: All tools run client-side
 - **Input sanitization**: Validate and sanitize user input
 - **XSS prevention**: Use DOMPurify for HTML sanitization
-- **CSP**: Content Security Policy configured
+- **Response headers**: The Vercel/Netlify deploy configs and the Docker
+  nginx image set `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`
+  and a `Permissions-Policy`. A Content-Security-Policy is **not** configured -
+  a strict CSP still needs validating against Monaco, web workers and any
+  `eval`/wasm the tools use.
 
 ### Performance
 
