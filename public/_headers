@@ -1,5 +1,13 @@
-# Cloudflare Pages headers for PWA support
+# Cloudflare Pages headers (also honoured by Netlify). Cloudflare does not read
+# vercel.json / netlify.toml, so the security headers must live here too.
 # See: https://github.com/vite-pwa/vite-plugin-pwa/pull/353
+
+# Security headers on every response (matches vercel.json and netlify.toml).
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
 
 # Root - no cache
 /
