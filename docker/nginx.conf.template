@@ -1,5 +1,8 @@
+# Shared by the standard and rootless nginx image variants. The listen port is
+# templated (${NGINX_PORT}) and substituted by the nginx entrypoint's envsubst:
+# 80 for the standard image, 8080 for the rootless (non-root can't bind <1024).
 server {
-    listen 80;
+    listen ${NGINX_PORT};
     server_name localhost;
     root /usr/share/nginx/html;
     index index.html;

@@ -18,19 +18,58 @@ You have an idea of a tool? Submit a [feature request](https://github.com/Corent
 
 ## Self host
 
-Self host solutions for your homelab
+Self host solutions for your homelab. Images are published from this fork
+(`thetechnetwork/it-tools`, the actively maintained source) to Docker Hub and
+GitHub packages.
 
-**From docker hub:**
+**From Docker Hub:**
+
+```sh
+docker run -d --name it-tools --restart unless-stopped -p 8080:8080 thetechnetwork/it-tools:latest
+```
+
+**From GitHub packages:**
+
+```sh
+docker run -d --name it-tools --restart unless-stopped -p 8080:8080 ghcr.io/thetechnetwork/it-tools:latest
+```
+
+### Image variants
+
+Three image variants are published to both `thetechnetwork/it-tools` (Docker
+Hub) and `ghcr.io/thetechnetwork/it-tools`, each tagged `:latest` and
+`:<version>`. All three **listen on port 8080** and serve the same app
+identically (gzip, security headers, immutable asset caching, SPA fallback):
+
+| Variant | Tag suffix | Base | User |
+| --- | --- | --- | --- |
+| **standard** | *(none)* — `:latest` | `nginx:stable-alpine` | root |
+| **rootless** | `:latest-rootless` | `nginx-unprivileged` | non-root (101) |
+| **distroless** | `:latest-distroless` | `static-web-server` (scratch) | non-root |
+
+The **rootless** and **distroless** variants pair well with a hardened runtime.
+The distroless image has no shell, so use an orchestrator HTTP probe against
+`/` instead of a Docker `HEALTHCHECK`. Example (rootless):
+
+```sh
+docker run -d --name it-tools -p 8080:8080 \
+  --read-only --tmpfs /tmp \
+  --cap-drop ALL --security-opt no-new-privileges \
+  thetechnetwork/it-tools:latest-rootless
+```
+
+<details>
+<summary>Upstream images (<code>CorentinTh/it-tools</code>)</summary>
+
+The original upstream project is no longer actively maintained. Its images
+listened on port 80 and are kept here for reference:
 
 ```sh
 docker run -d --name it-tools --restart unless-stopped -p 8080:80 corentinth/it-tools:latest
-```
-
-**From github packages:**
-
-```sh
 docker run -d --name it-tools --restart unless-stopped -p 8080:80 ghcr.io/corentinth/it-tools:latest
 ```
+
+</details>
 
 **Other solutions:**
 

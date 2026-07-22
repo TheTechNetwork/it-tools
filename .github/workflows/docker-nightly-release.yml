@@ -95,6 +95,16 @@ jobs:
     timeout-minutes: 30
     needs:
       - ci
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: standard
+            suffix: ''
+          - target: rootless
+            suffix: '-rootless'
+          - target: distroless
+            suffix: '-distroless'
 
     steps:
       - name: Checkout
@@ -119,15 +129,18 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
 
-      - name: Build and push
+      - name: Build and push (${{ matrix.target }})
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: .
           file: ./Dockerfile
+          target: ${{ matrix.target }}
           platforms: linux/amd64,linux/arm64
           push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          provenance: mode=max
+          sbom: true
+          cache-from: type=gha,scope=nightly-${{ matrix.target }}
+          cache-to: type=gha,mode=max,scope=nightly-${{ matrix.target }}
           tags: |
-            thetechnetwork/it-tools:nightly
-            ghcr.io/thetechnetwork/it-tools:nightly
+            thetechnetwork/it-tools:nightly${{ matrix.suffix }}
+            ghcr.io/thetechnetwork/it-tools:nightly${{ matrix.suffix }}

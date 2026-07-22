@@ -55,10 +55,18 @@ jobs:
   docker-release:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # standard keeps the unsuffixed tags (:latest, :X.Y.Z) for compat
+          - target: standard
+            suffix: ''
+          - target: rootless
+            suffix: '-rootless'
+          - target: distroless
+            suffix: '-distroless'
     steps:
-      - name: Get release version
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_ENV"
-
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
@@ -81,20 +89,34 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
 
-      - name: Build and push
+      - name: Docker metadata (${{ matrix.target }})
+        id: meta
+        uses: docker/metadata-action@318604b99e75e41977312d83839a89be02ca4893 # v5.9.0
+        with:
+          images: |
+            thetechnetwork/it-tools
+            ghcr.io/thetechnetwork/it-tools
+          flavor: |
+            latest=false
+            suffix=${{ matrix.suffix }}
+          tags: |
+            type=raw,value=latest
+            type=semver,pattern={{version}}
+
+      - name: Build and push (${{ matrix.target }})
         uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: .
           file: ./Dockerfile
+          target: ${{ matrix.target }}
           platforms: linux/amd64,linux/arm64
           push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: |
-            thetechnetwork/it-tools:latest
-            thetechnetwork/it-tools:${{ env.RELEASE_VERSION }}
-            ghcr.io/thetechnetwork/it-tools:latest
-            ghcr.io/thetechnetwork/it-tools:${{ env.RELEASE_VERSION}}
+          provenance: mode=max
+          sbom: true
+          cache-from: type=gha,scope=release-${{ matrix.target }}
+          cache-to: type=gha,mode=max,scope=release-${{ matrix.target }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   github-release:
     runs-on: ubuntu-24.04
@@ -147,12 +169,13 @@ jobs:
           body: |
             ## Docker images
 
-            - Docker Hub
-              - `thetechnetwork/it-tools:latest`
-              - `thetechnetwork/it-tools:${{ env.RELEASE_VERSION }}`
-            - GitHub Container Registry
-              - `ghcr.io/thetechnetwork/it-tools:latest`
-              - `ghcr.io/thetechnetwork/it-tools:${{ env.RELEASE_VERSION}}`
+            Three variants are published (Docker Hub `thetechnetwork/it-tools`
+            and GHCR `ghcr.io/thetechnetwork/it-tools`), each as `:latest` and
+            `:${{ env.RELEASE_VERSION }}`:
+
+            - **standard** (default, nginx): `:latest`, `:${{ env.RELEASE_VERSION }}`
+            - **rootless** (nginx-unprivileged, non-root, port 8080): `:latest-rootless`, `:${{ env.RELEASE_VERSION }}-rootless`
+            - **distroless** (static-web-server, non-root, port 8080): `:latest-distroless`, `:${{ env.RELEASE_VERSION }}-distroless`
 
             ## Changelog
 
