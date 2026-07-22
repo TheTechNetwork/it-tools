@@ -1,10 +1,20 @@
 <script setup lang="ts">
+import type { OuiData } from './mac-address-lookup.service';
 import { useCopy } from '@/composable/copy';
 import { macAddressValidationRules } from '@/utils/macAddress';
-import { lookupMacAddressVendor } from './mac-address-lookup.service';
+import { loadOuiData, lookupMacAddressVendor } from './mac-address-lookup.service';
 
 const macAddress = ref('20:37:06:12:34:56');
-const details = computed<string | undefined>(() => lookupMacAddressVendor(macAddress.value));
+
+const ouiData = ref<OuiData>();
+loadOuiData().then((db) => {
+  ouiData.value = db;
+});
+
+const loading = computed(() => ouiData.value === undefined);
+const details = computed<string | undefined>(() =>
+  ouiData.value ? lookupMacAddressVendor(ouiData.value, macAddress.value) : undefined,
+);
 
 const { copy } = useCopy({ source: () => details.value ?? '', text: 'Vendor info copied to the clipboard' });
 </script>
@@ -29,7 +39,10 @@ const { copy } = useCopy({ source: () => details.value ?? '', text: 'Vendor info
       Vendor info:
     </div>
     <c-card mb-5>
-      <div v-if="details">
+      <div v-if="loading" italic op-60>
+        Loading vendor database…
+      </div>
+      <div v-else-if="details">
         <div v-for="(detail, index) of details.split('\n')" :key="index">
           {{ detail }}
         </div>

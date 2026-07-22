@@ -1,5 +1,9 @@
-import { describe, expect, it } from 'vitest';
-import { getVendorValue, lookupMacAddressVendor } from './mac-address-lookup.service';
+import type { OuiData } from './mac-address-lookup.service';
+import db from 'oui-data';
+import { describe, expect, it, vi } from 'vitest';
+import { getVendorValue, loadOuiData, lookupMacAddressVendor } from './mac-address-lookup.service';
+
+const ouiData = db as OuiData;
 
 describe('mac-address-lookup', () => {
   describe('getVendorValue', () => {
@@ -28,23 +32,40 @@ describe('mac-address-lookup', () => {
 
   describe('lookupMacAddressVendor', () => {
     it('finds the vendor of a known OUI', () => {
-      expect(lookupMacAddressVendor('20:37:06:12:34:56')).toContain('Cisco Systems');
-      expect(lookupMacAddressVendor('00:00:0C:11:22:33')).toContain('Cisco Systems');
-      expect(lookupMacAddressVendor('00:00:00:00:00:00')).toContain('XEROX CORPORATION');
+      expect(lookupMacAddressVendor(ouiData, '20:37:06:12:34:56')).toContain('Cisco Systems');
+      expect(lookupMacAddressVendor(ouiData, '00:00:0C:11:22:33')).toContain('Cisco Systems');
+      expect(lookupMacAddressVendor(ouiData, '00:00:00:00:00:00')).toContain('XEROX CORPORATION');
     });
 
     it('is case and separator insensitive', () => {
-      expect(lookupMacAddressVendor('20-37-06-ab-cd-ef')).toContain('Cisco Systems');
-      expect(lookupMacAddressVendor('0000.0c11.2233')).toContain('Cisco Systems');
+      expect(lookupMacAddressVendor(ouiData, '20-37-06-ab-cd-ef')).toContain('Cisco Systems');
+      expect(lookupMacAddressVendor(ouiData, '0000.0c11.2233')).toContain('Cisco Systems');
     });
 
     it('returns undefined for an unknown OUI', () => {
-      expect(lookupMacAddressVendor('FF:FF:FF:FF:FF:FF')).toBeUndefined();
+      expect(lookupMacAddressVendor(ouiData, 'FF:FF:FF:FF:FF:FF')).toBeUndefined();
     });
 
     it('returns undefined for empty or invalid input', () => {
-      expect(lookupMacAddressVendor('')).toBeUndefined();
-      expect(lookupMacAddressVendor('not a mac address')).toBeUndefined();
+      expect(lookupMacAddressVendor(ouiData, '')).toBeUndefined();
+      expect(lookupMacAddressVendor(ouiData, 'not a mac address')).toBeUndefined();
+    });
+  });
+
+  describe('loadOuiData', () => {
+    it('fetches and parses the database once, memoising the result', async () => {
+      const fakeDb: OuiData = { 203706: 'Cisco Systems, Inc' };
+      const fetchMock = vi.fn().mockResolvedValue({ json: () => Promise.resolve(fakeDb) });
+      vi.stubGlobal('fetch', fetchMock);
+
+      const first = await loadOuiData();
+      const second = await loadOuiData();
+
+      expect(first).toBe(fakeDb);
+      expect(second).toBe(first);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      vi.unstubAllGlobals();
     });
   });
 });
