@@ -8,8 +8,10 @@ WORKDIR /app
 # Enable corepack for pnpm
 RUN corepack enable
 
-# Copy only dependency files first for better layer caching
-COPY package.json pnpm-lock.yaml ./
+# Copy only dependency files first for better layer caching.
+# pnpm-workspace.yaml carries the build-script approvals (allowBuilds) and
+# .npmrc the pnpm settings, both needed for a clean --frozen-lockfile install.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 
 # Install dependencies (cached if lockfile doesn't change)
 RUN pnpm i --frozen-lockfile
