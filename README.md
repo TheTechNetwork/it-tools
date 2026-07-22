@@ -58,6 +58,25 @@ docker run -d --name it-tools -p 8080:8080 \
   thetechnetwork/it-tools:latest-rootless
 ```
 
+### Verify image signatures
+
+Every published image (all variants, both registries) is signed with
+[cosign](https://docs.sigstore.dev/) using keyless
+[Sigstore](https://www.sigstore.dev/) signing — no long-lived keys, the
+signer's identity is the GitHub Actions workflow that built it, recorded in the
+public transparency log. Verify before pulling:
+
+```sh
+cosign verify \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  --certificate-identity-regexp '(?i)^https://github.com/thetechnetwork/it-tools/' \
+  thetechnetwork/it-tools:latest
+```
+
+Images also ship a build [SBOM](https://docs.docker.com/build/metadata/attestations/sla-sbom/)
+and [SLSA provenance](https://docs.docker.com/build/metadata/attestations/slsa-provenance/)
+attestation; inspect them with `docker buildx imagetools inspect thetechnetwork/it-tools:latest`.
+
 <details>
 <summary>Upstream images (<code>CorentinTh/it-tools</code>)</summary>
 

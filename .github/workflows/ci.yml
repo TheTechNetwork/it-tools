@@ -293,8 +293,10 @@ jobs:
   # container serves, nginx variants reach a healthy HEALTHCHECK, and all three
   # serve identically (security headers, gzip, asset caching, SPA fallback) -
   # the shared serving contract that keeps the variants in lockstep. Also scans
-  # each image with Trivy (report-only for now). Gated to Docker changes (via
-  # toolchain-changes) so ordinary PRs skip the image builds; always on main.
+  # each image with Trivy, which fails the job on a fixable HIGH/CRITICAL
+  # (ignore-unfixed keeps un-actionable base-image CVEs from blocking). Gated to
+  # Docker changes (via toolchain-changes) so ordinary PRs skip the image
+  # builds; always on main.
   docker-image:
     needs: toolchain-changes
     if: >-
@@ -398,11 +400,11 @@ jobs:
         if: always()
         run: docker rm -f it-tools-ci || true
 
-      - name: Scan image with Trivy (report-only)
+      - name: Scan image with Trivy (fails on fixable HIGH/CRITICAL)
         uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
         with:
           image-ref: it-tools:${{ matrix.target }}
           severity: 'HIGH,CRITICAL'
           ignore-unfixed: true
           format: table
-          exit-code: '0'
+          exit-code: '1'
