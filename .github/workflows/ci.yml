@@ -37,9 +37,6 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  PRIMARY_NODE_VERSION: '24.x'
-
 jobs:
   # Lint, typecheck and unit tests (with coverage) - run once on the primary
   # Node version since their results are Node-version independent.
@@ -53,7 +50,7 @@ jobs:
 
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
-          node-version: ${{ env.PRIMARY_NODE_VERSION }}
+          node-version-file: .nvmrc
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -128,7 +125,7 @@ jobs:
 
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
-          node-version: ${{ env.PRIMARY_NODE_VERSION }}
+          node-version-file: .nvmrc
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -170,7 +167,7 @@ jobs:
 
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
-          node-version: ${{ env.PRIMARY_NODE_VERSION }}
+          node-version-file: .nvmrc
           cache: 'pnpm'
 
       - name: Get Playwright version
@@ -249,7 +246,7 @@ jobs:
           fi
 
   # Node compatibility: build + unit tests across other supported Node
-  # versions. The primary version (24.x) is already covered above. Runs on
+  # versions. The primary version (from .nvmrc) is already covered above. Runs on
   # pushes to main and manual dispatch, and gates PRs only when they touch
   # dependencies, build tooling or workflows - the only changes that can
   # realistically break other Node versions.

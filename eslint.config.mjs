@@ -1,11 +1,13 @@
-import antfu from '@antfu/eslint-config'
-import { FlatCompat } from '@eslint/eslintrc'
-import unocss from '@unocss/eslint-config/flat'
+import antfu from '@antfu/eslint-config';
+import { FlatCompat } from '@eslint/eslintrc';
+import unocss from '@unocss/eslint-config/flat';
 
-const compat = new FlatCompat()
+const compat = new FlatCompat();
 
 export default antfu(
   {
+    // Generated declaration files are not hand-authored source.
+    ignores: ['**/*.d.ts'],
     vue: true,
     typescript: true,
     jsonc: true,
@@ -56,4 +58,13 @@ export default antfu(
       'vue/no-empty-component-block': ['error'],
     },
   },
-)
+
+  // Test setup polyfills a Buffer global; the rule's suggested fix
+  // (require('buffer')) conflicts with the project's no-require-imports rule.
+  {
+    files: ['vitest.setup.ts'],
+    rules: {
+      'node/prefer-global/buffer': 'off',
+    },
+  },
+);
