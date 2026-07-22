@@ -153,14 +153,17 @@ export default defineConfig({
         'src/main.ts',
         'src/plugins/**',
       ],
-      // No-regression floor for the logic layer (currently ~62% lines / 73%
-      // branches). Fails CI if coverage drops below this; ratchet upward as
-      // more services gain tests.
+      // No-regression floor for the logic layer. Fails CI if coverage drops
+      // below these values. autoUpdate ratchets them upward automatically: when
+      // a local `pnpm coverage` run measures higher coverage, Vitest rewrites
+      // these numbers to the new level (it never lowers them), so improvements
+      // get locked in as the new floor. Commit the bumped values.
       thresholds: {
-        lines: 58,
-        statements: 58,
-        functions: 58,
-        branches: 58,
+        autoUpdate: true,
+        lines: 61.62,
+        statements: 62.31,
+        functions: 63.26,
+        branches: 72.56,
       },
     },
   },
