@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   check_date:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     name: Check latest commit
     outputs:
@@ -32,7 +32,7 @@ jobs:
         run: test -z "$(git rev-list --after='24 hours' ${{ github.sha }})" && echo "should_run=false" >> "$GITHUB_OUTPUT"
 
   ci:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     needs: check_date
     if: ${{ needs.check_date.outputs.should_run != 'false' }}
@@ -91,7 +91,7 @@ jobs:
         run: pnpm build
 
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     needs:
       - ci
