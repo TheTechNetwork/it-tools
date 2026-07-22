@@ -219,30 +219,36 @@ jobs:
           key: playwright-${{ runner.os }}-24.04-${{ matrix.project }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
 
   # Detect whether a PR touches anything that could affect Node-version
-  # compatibility (dependencies, build tooling, workflow definitions).
-  # Ordinary tool-code changes cannot break other Node versions if they pass
-  # on the primary one, so only toolchain changes need the compat matrix
-  # before merge.
+  # compatibility (dependencies, build tooling, workflow definitions) or the
+  # Docker image (Dockerfile, nginx.conf, .dockerignore). Ordinary tool-code
+  # changes cannot break either if they pass on the primary Node version, so the
+  # compat matrix and the Docker image test only run when their inputs change.
   toolchain-changes:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
       changed: ${{ steps.filter.outputs.changed }}
+      docker: ${{ steps.filter.outputs.docker }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
           filter: blob:none
 
-      - name: Check for Node-toolchain-sensitive changes
+      - name: Detect toolchain- and docker-sensitive changes
         id: filter
         run: |
-          if git diff --name-only "origin/${{ github.base_ref }}...HEAD" \
-            | grep -qE '^(package\.json|pnpm-lock\.yaml|\.npmrc|vite\.config\.ts|vitest\.setup\.ts|tsconfig[^/]*\.json|\.github/workflows/)'; then
+          changed_files=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          if grep -qE '^(package\.json|pnpm-lock\.yaml|\.npmrc|vite\.config\.ts|vitest\.setup\.ts|tsconfig[^/]*\.json|\.github/workflows/)' <<<"$changed_files"; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+          if grep -qE '^(Dockerfile|\.dockerignore|nginx\.conf|\.github/workflows/ci\.yml)' <<<"$changed_files"; then
+            echo "docker=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "docker=false" >> "$GITHUB_OUTPUT"
           fi
 
   # Node compatibility: build + unit tests across other supported Node
@@ -282,3 +288,78 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+  # Build the real production Docker image and verify it end to end: the
+  # HEALTHCHECK reaches "healthy", and nginx serves with the expected security
+  # headers, gzip, asset caching and SPA fallback. Gated to Docker/nginx changes
+  # (via toolchain-changes) so ordinary PRs skip the image build; always runs on
+  # pushes to main and manual dispatch.
+  docker-image:
+    needs: toolchain-changes
+    if: >-
+      always() &&
+      (github.event_name != 'pull_request' || needs.toolchain-changes.outputs.docker == 'true')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Build image
+        run: docker build -t it-tools:ci .
+
+      - name: Run container (fast health-check cadence)
+        run: |
+          docker run -d --name it-tools-ci -p 8080:80 \
+            --health-start-period=2s --health-interval=2s \
+            --health-timeout=3s --health-retries=5 \
+            it-tools:ci
+
+      - name: Wait for HEALTHCHECK to report healthy
+        run: |
+          for _ in {1..30}; do
+            status=$(docker inspect -f '{{.State.Health.Status}}' it-tools-ci)
+            echo "health: $status"
+            if [ "$status" = "healthy" ]; then exit 0; fi
+            if [ "$status" = "unhealthy" ]; then docker logs it-tools-ci; exit 1; fi
+            sleep 2
+          done
+          echo "timed out waiting for healthy"; docker logs it-tools-ci; exit 1
+
+      - name: Assert serving (headers, gzip, caching, SPA fallback)
+        run: |
+          set -eu
+          fail() { echo "ASSERT FAILED: $1"; docker logs it-tools-ci || true; exit 1; }
+
+          shell_headers=$(curl -sS -D - -o /dev/null http://localhost:8080/)
+          grep -qi '^x-content-type-options: nosniff' <<<"$shell_headers" || fail "X-Content-Type-Options"
+          grep -qi '^x-frame-options: SAMEORIGIN' <<<"$shell_headers" || fail "X-Frame-Options"
+          grep -qi '^referrer-policy: strict-origin-when-cross-origin' <<<"$shell_headers" || fail "Referrer-Policy"
+          grep -qi '^permissions-policy:' <<<"$shell_headers" || fail "Permissions-Policy"
+          grep -qi '^cache-control: no-cache' <<<"$shell_headers" || fail "index.html should be no-cache"
+
+          # Asset references come from the served shell; at least one (the entry
+          # JS or the stylesheet) is above gzip_min_length and must be gzipped.
+          assets=$(curl -sS http://localhost:8080/ | grep -oE '/assets/[^"]+\.(js|css)' | sort -u)
+          [ -n "$assets" ] || fail "no /assets references found in index.html"
+
+          gzipped=0
+          while IFS= read -r a; do
+            [ -n "$a" ] || continue
+            if curl -sS -H 'Accept-Encoding: gzip' -D - -o /dev/null "http://localhost:8080$a" \
+              | grep -qi '^content-encoding: gzip'; then gzipped=1; break; fi
+          done <<<"$assets"
+          [ "$gzipped" = 1 ] || fail "no asset was served gzipped"
+
+          first_asset=$(head -1 <<<"$assets")
+          grep -qi 'max-age=31536000' \
+            <<<"$(curl -sS -D - -o /dev/null "http://localhost:8080$first_asset")" \
+            || fail "asset should be long-cached"
+
+          code=$(curl -sS -o /dev/null -w '%{http_code}' http://localhost:8080/deep/spa/route)
+          [ "$code" = "200" ] || fail "SPA fallback should return 200 (got $code)"
+
+          echo "docker image serving assertions passed."
+
+      - name: Stop container
+        if: always()
+        run: docker rm -f it-tools-ci || true
