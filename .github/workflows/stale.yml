@@ -1,0 +1,41 @@
+# Marks and closes inactive issues.
+#
+# Replaces the deprecated Probot "Stale" GitHub App (previously configured via
+# .github/stale.yml). Behaviour mirrors that config: issues go stale after 60
+# days of inactivity and close 7 days later, unless labelled `pinned` or
+# `security`. Pull requests are intentionally left untouched so contributor PRs
+# are never auto-closed.
+
+name: Close stale issues
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  stale:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/stale@5bef64f19d7facfb25b37b414482c7164d639639 # v9.1.0
+        with:
+          days-before-stale: 60
+          days-before-close: 7
+          stale-issue-label: wontfix
+          exempt-issue-labels: pinned,security
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has not
+            had recent activity. It will be closed if no further activity
+            occurs. Thank you for your contributions.
+          close-issue-message: ''
+          # Leave pull requests alone (Probot Stale was issues-only here too).
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
