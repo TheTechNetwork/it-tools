@@ -218,6 +218,66 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-24.04-${{ matrix.project }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
 
+  # Smoke-test the production nginx config (security headers, gzip, immutable
+  # asset caching, SPA fallback) against the built app, using the same base
+  # image the Dockerfile ships. Reuses the dist/ artifact - no image rebuild.
+  nginx-smoke:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist
+
+      - name: Validate nginx config
+        run: |
+          docker run --rm \
+            -v "$PWD/nginx.conf:/etc/nginx/conf.d/default.conf:ro" \
+            nginx:stable-alpine nginx -t
+
+      - name: Start nginx with the built app
+        run: |
+          docker run -d --name it-tools-nginx -p 8080:80 \
+            -v "$PWD/nginx.conf:/etc/nginx/conf.d/default.conf:ro" \
+            -v "$PWD/dist:/usr/share/nginx/html:ro" \
+            nginx:stable-alpine
+          for _ in {1..20}; do
+            if curl -fsS -o /dev/null http://localhost:8080/; then break; fi
+            sleep 0.5
+          done
+
+      - name: Assert hardening (headers, gzip, caching, SPA fallback)
+        run: |
+          set -eu
+          fail() { echo "ASSERT FAILED: $1"; docker logs it-tools-nginx || true; exit 1; }
+
+          shell_headers=$(curl -sS -D - -o /dev/null http://localhost:8080/)
+          grep -qi '^x-content-type-options: nosniff' <<<"$shell_headers" || fail "X-Content-Type-Options"
+          grep -qi '^x-frame-options: SAMEORIGIN' <<<"$shell_headers" || fail "X-Frame-Options"
+          grep -qi '^referrer-policy: strict-origin-when-cross-origin' <<<"$shell_headers" || fail "Referrer-Policy"
+          grep -qi '^permissions-policy:' <<<"$shell_headers" || fail "Permissions-Policy"
+          grep -qi '^cache-control: no-cache' <<<"$shell_headers" || fail "index.html should be no-cache"
+
+          # Largest hashed asset is guaranteed above gzip_min_length.
+          asset=$(find dist/assets -maxdepth 1 -name '*.js' -printf '%s %f\n' | sort -rn | head -1 | cut -d' ' -f2)
+          asset_headers=$(curl -sS -H 'Accept-Encoding: gzip' -D - -o /dev/null "http://localhost:8080/assets/$asset")
+          grep -qi '^content-encoding: gzip' <<<"$asset_headers" || fail "asset should be gzipped"
+          grep -qi 'max-age=31536000' <<<"$asset_headers" || fail "asset should be long-cached"
+
+          code=$(curl -sS -o /dev/null -w '%{http_code}' http://localhost:8080/deep/spa/route)
+          [ "$code" = "200" ] || fail "SPA fallback should return 200 (got $code)"
+
+          echo "nginx hardening assertions passed."
+
+      - name: Stop nginx
+        if: always()
+        run: docker rm -f it-tools-nginx || true
+
   # Detect whether a PR touches anything that could affect Node-version
   # compatibility (dependencies, build tooling, workflow definitions).
   # Ordinary tool-code changes cannot break other Node versions if they pass
