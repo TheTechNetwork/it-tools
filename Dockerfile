@@ -55,13 +55,13 @@ EXPOSE 8080
 CMD ["-w", "/etc/sws.toml"]
 
 # ---------------------------------------------------------------------------
-# standard (default target): stock nginx, runs as root, listens on 80. Kept as
-# the default so existing `docker build .` / `:latest` users are unaffected.
+# standard (default target): stock nginx, runs as root. Listens on 8080 like
+# the other variants so every image uses the same container port.
 # ---------------------------------------------------------------------------
 FROM nginx:stable-alpine@sha256:97d490c12ba55b4946b01546d1c3ed324e8d41ab1c9fcb2a616aa470620e5b46 AS standard
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
-ENV NGINX_PORT=80
-EXPOSE 80
+ENV NGINX_PORT=8080
+EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-  CMD wget -q --spider http://127.0.0.1:80/ || exit 1
+  CMD wget -q --spider http://127.0.0.1:8080/ || exit 1

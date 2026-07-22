@@ -36,22 +36,21 @@ docker run -d --name it-tools --restart unless-stopped -p 8080:80 ghcr.io/corent
 
 This fork publishes three image variants to both `thetechnetwork/it-tools`
 (Docker Hub) and `ghcr.io/thetechnetwork/it-tools`, each tagged `:latest` and
-`:<version>`. All three serve the same app identically (gzip, security headers,
-immutable asset caching, SPA fallback):
+`:<version>`. All three **listen on port 8080** and serve the same app
+identically (gzip, security headers, immutable asset caching, SPA fallback):
 
-| Variant | Tag suffix | Base | User | Port |
-| --- | --- | --- | --- | --- |
-| **standard** | *(none)* — `:latest` | `nginx:stable-alpine` | root | 80 |
-| **rootless** | `:latest-rootless` | `nginx-unprivileged` | non-root (101) | 8080 |
-| **distroless** | `:latest-distroless` | `static-web-server` (scratch) | non-root | 8080 |
+| Variant | Tag suffix | Base | User |
+| --- | --- | --- | --- |
+| **standard** | *(none)* — `:latest` | `nginx:stable-alpine` | root |
+| **rootless** | `:latest-rootless` | `nginx-unprivileged` | non-root (101) |
+| **distroless** | `:latest-distroless` | `static-web-server` (scratch) | non-root |
 
 ```sh
-# standard (unchanged)
-docker run -d --name it-tools -p 8080:80 thetechnetwork/it-tools:latest
-
-# rootless / distroless serve on 8080 inside the container
-docker run -d --name it-tools -p 8080:8080 thetechnetwork/it-tools:latest-rootless
+docker run -d --name it-tools -p 8080:8080 thetechnetwork/it-tools:latest
 ```
+
+> **Note:** the container now listens on **8080** (not 80). If you previously
+> ran the standard image with `-p 8080:80`, switch to `-p 8080:8080`.
 
 The **rootless** and **distroless** variants pair well with a hardened runtime.
 The distroless image has no shell, so use an orchestrator HTTP probe against

@@ -306,17 +306,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # standard: nginx (root) on port 80, has a HEALTHCHECK
+          # every variant listens on 8080; nginx variants have a HEALTHCHECK,
+          # the distroless (no shell) one does not.
           - target: standard
-            port: 80
             healthcheck: true
-          # rootless: nginx-unprivileged on port 8080, has a HEALTHCHECK
           - target: rootless
-            port: 8080
             healthcheck: true
-          # distroless: static-web-server on port 8080, no shell -> no HEALTHCHECK
           - target: distroless
-            port: 8080
             healthcheck: false
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -336,9 +332,9 @@ jobs:
 
       - name: Run container (${{ matrix.target }})
         run: |
-          # Map host 8080 -> container ${{ matrix.port }}. Health-cadence flags
-          # are harmless on the distroless image (it has no HEALTHCHECK).
-          docker run -d --name it-tools-ci -p 8080:${{ matrix.port }} \
+          # Every variant listens on 8080. Health-cadence flags are harmless on
+          # the distroless image (it has no HEALTHCHECK).
+          docker run -d --name it-tools-ci -p 8080:8080 \
             --health-start-period=2s --health-interval=2s \
             --health-timeout=3s --health-retries=5 \
             it-tools:${{ matrix.target }}
