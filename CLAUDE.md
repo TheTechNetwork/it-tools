@@ -917,6 +917,16 @@ const value = useVModel(props, 'value', emit);
 - **No sensitive operations**: All tools run client-side
 - **Input sanitization**: Validate and sanitize user input
 - **XSS prevention**: Use DOMPurify for HTML sanitization
+- **Cloudflare deployment**: Cloudflare is served by a **Worker** (`wrangler.toml`
+  + `worker/index.ts`), not Pages. It serves the built SPA from the static-assets
+  binding (`public/_headers` applies, same as before) and, via an R2 binding
+  (`OCR_ASSETS` → the `thetechnetwork-assets` bucket), serves the OCR assets
+  **same-origin** under `/tesseract/*` (and the reserved `/scribe/*`). Same-origin
+  serving is what lets same-origin-only OCR engines (scribe.js) run on Cloudflare;
+  Vercel/Netlify instead fetch those assets from the cross-origin CDN
+  `assets.thetech.network`. Deploy runs via Cloudflare Workers Builds (`pnpm
+  install && pnpm build`, then `wrangler deploy`); locally `pnpm cf:dev` /
+  `pnpm cf:deploy`, typecheck with `pnpm cf:typecheck`.
 - **Response headers**: The Vercel/Netlify/Cloudflare deploy configs
   (`vercel.json`, `netlify.toml`, `public/_headers`) and all three Docker image
   variants (nginx config in `docker/nginx.conf.template`, static-web-server

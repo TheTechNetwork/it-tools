@@ -1,0 +1,36 @@
+# Cloudflare Worker deployment for it-tools (replaces the previous Pages
+# integration). The Worker serves the built SPA as static assets and, via an R2
+# binding, serves the OCR asset bucket SAME-ORIGIN under /tesseract/* (and the
+# reserved /scribe/*). Same-origin serving is the reason for moving to a Worker:
+# it lets engines that refuse cross-origin assets (scribe.js) run here, and lets
+# the OCR tool avoid the cross-origin CDN the other platforms use.
+#
+# CI/deploy: Cloudflare Workers Builds (Git integration) runs `pnpm install &&
+# pnpm build` to produce dist/, then `wrangler deploy` reads this file. Locally:
+# `pnpm cf:dev` (preview) and `pnpm cf:deploy`.
+name = "it-tools"
+main = "worker/index.ts"
+compatibility_date = "2026-07-01"
+
+# Built SPA (Vite output). Unknown routes fall back to index.html for
+# client-side routing. The Worker runs first only for the R2-backed prefixes;
+# every other path is served straight from the asset store (fast path), with the
+# security headers/CSP coming from dist/_headers (copied from public/_headers).
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = [ "/tesseract/*", "/scribe/*" ]
+
+# R2 bucket holding the Tesseract OCR engine + language data (and future
+# scribe.js assets), uploaded by the ocr-assets workflow under
+# tesseract/<version>/. Bound here so the Worker can serve them same-origin.
+[[r2_buckets]]
+binding = "OCR_ASSETS"
+bucket_name = "thetechnetwork-assets"
+
+# Production custom domain. Cloudflare provisions the route to this Worker.
+# Adjust / add entries here to change the domain(s).
+[[routes]]
+pattern = "tools.thetech.network"
+custom_domain = true

@@ -3,6 +3,12 @@ packages:
 
 allowBuilds:
   esbuild: true
+  # wrangler pulls sharp (image features we don't use) and workerd (only needed
+  # for local `wrangler dev`). We deploy via Cloudflare Workers Builds and never
+  # run wrangler in CI, so skip both build scripts. Devs who want `pnpm cf:dev`
+  # can approve workerd locally with `pnpm approve-builds`.
+  sharp: false
+  workerd: false
   # tesseract.js' only postinstall is opencollective-postinstall (a funding
   # message); nothing needs building, so skip it.
   tesseract.js: false
