@@ -11,8 +11,9 @@ test.describe('Tool - Image to text (OCR)', () => {
 
   test('Shows the upload area, language picker and a disabled extract button', async ({ page }) => {
     await expect(page.getByText('Drag and drop an image')).toBeVisible();
-    await expect(page.getByText('Languages')).toBeVisible();
-    // The button is disabled until an image is selected.
-    await expect(page.getByRole('button', { name: 'Extract text' })).toBeDisabled();
+    await expect(page.getByText('Languages', { exact: true })).toBeVisible();
+    // The button is disabled until an image is selected. c-button renders its
+    // disabled state as a `.disabled` class rather than the native attribute.
+    await expect(page.getByRole('button', { name: 'Extract text' })).toHaveClass(/disabled/);
   });
 });
