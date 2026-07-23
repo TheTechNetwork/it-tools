@@ -903,13 +903,22 @@ const value = useVModel(props, 'value', emit);
 - **No sensitive operations**: All tools run client-side
 - **Input sanitization**: Validate and sanitize user input
 - **XSS prevention**: Use DOMPurify for HTML sanitization
-- **Response headers**: The Vercel/Netlify deploy configs and all three Docker
-  image variants (nginx config in `docker/nginx.conf.template`, static-web-server
+- **Response headers**: The Vercel/Netlify/Cloudflare deploy configs
+  (`vercel.json`, `netlify.toml`, `public/_headers`) and all three Docker image
+  variants (nginx config in `docker/nginx.conf.template`, static-web-server
   config in `docker/sws.toml`) set `X-Content-Type-Options`, `X-Frame-Options`,
-  `Referrer-Policy` and a `Permissions-Policy`. A Content-Security-Policy is
-  **not** configured -
-  a strict CSP still needs validating against Monaco, web workers and any
-  `eval`/wasm the tools use.
+  `Referrer-Policy`, a `Permissions-Policy` and a **Content-Security-Policy**.
+  The app ships **no tracking or ads**, so the CSP allows **no third-party
+  origins** (`default-src 'self'`, `connect-src 'self'`). The only relaxations
+  are `'unsafe-eval'` (mathjs evaluates expressions at runtime) and `style-src
+  'unsafe-inline'` (naive-ui's runtime CSS-in-JS); `worker-src 'self' blob:`
+  covers Monaco. Note `script-src` is `'self' 'unsafe-eval'` with **no**
+  `'unsafe-inline'`, and `object-src`/`base-uri`/`form-action`/`frame-ancestors`
+  are locked down. All six header sources carry the **same** policy, the
+  docker-image CI job asserts its presence on every variant, and it was
+  validated in a real browser across the tools (mathjs, Monaco, canvas, tiptap,
+  …) with zero violations. The remaining `'unsafe-eval'`/style `'unsafe-inline'`
+  are inherent to mathjs and naive-ui.
 - **Supply chain**: published images (release + nightly, all variants, both
   registries) ship a build SBOM and SLSA provenance attestation, are signed
   with **cosign keyless** (Sigstore/OIDC; identity = the GitHub Actions workflow,

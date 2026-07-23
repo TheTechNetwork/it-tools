@@ -29,31 +29,6 @@ export const { config } = defineConfig(
         env: 'VITE_VERCEL_ENV',
       },
     },
-    plausible: {
-      isTrackerEnabled: {
-        doc: 'Is the tracker enabled',
-        schema: v.boolean(),
-        default: false,
-        env: 'VITE_TRACKER_ENABLED',
-      },
-      domain: {
-        doc: 'Plausible current domain',
-        schema: v.string(),
-        default: '',
-        env: 'VITE_PLAUSIBLE_DOMAIN',
-      },
-      apiHost: {
-        doc: 'Plausible remote api host',
-        schema: v.string(),
-        default: '',
-        env: 'VITE_PLAUSIBLE_API_HOST',
-      },
-      trackLocalhost: {
-        doc: 'Enable or disable localhost tracking by plausible',
-        schema: v.boolean(),
-        default: false,
-      },
-    },
     showBanner: {
       doc: 'Show the banner',
       schema: v.boolean(),
