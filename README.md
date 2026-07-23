@@ -76,6 +76,15 @@ cosign verify \
 Images also ship a build [SBOM](https://docs.docker.com/build/metadata/attestations/sla-sbom/)
 and [SLSA provenance](https://docs.docker.com/build/metadata/attestations/slsa-provenance/)
 attestation; inspect them with `docker buildx imagetools inspect thetechnetwork/it-tools:latest`.
+On top of that, a CycloneDX SBOM is published as a cosign-signed attestation you
+can verify (and pipe into a policy engine or vulnerability scanner):
+
+```sh
+cosign verify-attestation --type cyclonedx \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  --certificate-identity-regexp '(?i)^https://github.com/thetechnetwork/it-tools/' \
+  thetechnetwork/it-tools:latest
+```
 
 <details>
 <summary>Upstream images (<code>CorentinTh/it-tools</code>)</summary>

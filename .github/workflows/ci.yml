@@ -400,6 +400,20 @@ jobs:
         if: always()
         run: docker rm -f it-tools-ci || true
 
+      # Full audit: report-only, includes unfixed CVEs, so the log shows the
+      # complete HIGH/CRITICAL exposure (fixable and not) for visibility. Never
+      # blocks - it is the "what's lurking" view.
+      - name: Trivy full audit (report-only, includes unfixed)
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        with:
+          image-ref: it-tools:${{ matrix.target }}
+          severity: 'HIGH,CRITICAL'
+          ignore-unfixed: false
+          format: table
+          exit-code: '0'
+
+      # Gate: fails the job only on a *fixable* HIGH/CRITICAL - something an
+      # image rebuild or base-image bump can actually resolve.
       - name: Scan image with Trivy (fails on fixable HIGH/CRITICAL)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
