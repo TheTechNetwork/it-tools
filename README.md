@@ -86,6 +86,41 @@ cosign verify-attestation --type cyclonedx \
   thetechnetwork/it-tools:latest
 ```
 
+### OCR (Image to text) assets
+
+The **Image to text (OCR)** tool runs Tesseract entirely in the browser, but the
+engine (a few MB of WASM) and the per-language training data (~100 MB+ for the
+full set) are too large to bundle into the app. They are served separately, from
+a path **versioned by the tesseract.js version** (`tesseract/<version>/`) so the
+engine can never drift from its WASM core.
+
+**On the hosted site there is nothing to do** — the assets are served for you.
+How they reach the browser depends on the platform:
+
+- **Cloudflare** (Worker deployment, `wrangler.toml`): the Worker serves them
+  **same-origin** under `/tesseract/*` from the R2 bucket bound as `OCR_ASSETS`.
+- **Vercel / Netlify**: the browser fetches them from the first-party CDN
+  `https://assets.thetech.network` (a public domain on the same R2 bucket). This
+  is the one origin the [CSP](vercel.json) allows beyond `'self'`.
+
+**Publishing / updating the assets** (whoever owns the bucket): the
+[`ocr-assets`](.github/workflows/ocr-assets.yml) workflow prepares every language
+and mirrors it to R2. It needs three repository secrets — `R2_ACCOUNT_ID`,
+`R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` — and no-ops (staying green) until
+they are set. A first-time setup is:
+
+1. Create the R2 bucket `thetechnetwork-assets`. For the Vercel/Netlify path,
+   also connect the public domain `assets.thetech.network` to it and allow the
+   site origins with a CORS policy (`GET`/`HEAD`). The Cloudflare Worker path
+   uses the binding instead and needs neither.
+2. Add the three secrets, then run the **ocr-assets** workflow once
+   (Actions → ocr-assets → Run workflow) to publish `tesseract/<version>/`.
+
+**Self-hosting / air-gapped:** build the assets locally and serve them
+same-origin — run `OCR_ALL_LANGS=1 pnpm script:ocr:assets` to populate
+`public/tesseract/<version>/`, and set `VITE_OCR_ASSETS_BASE_URL=''` so the app
+loads them from your own origin instead of the CDN.
+
 <details>
 <summary>Upstream images (<code>CorentinTh/it-tools</code>)</summary>
 

@@ -6,3 +6,7 @@ test-results
 .git
 .github
 .vscode
+# Cloudflare Worker deployment - not part of the Docker image build
+worker
+wrangler.toml
+.wrangler
