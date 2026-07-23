@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 import process from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
@@ -18,6 +19,10 @@ import svgLoader from 'vite-svg-loader';
 import { configDefaults } from 'vitest/config';
 
 const baseUrl = process.env.BASE_URL ?? '/';
+
+// The OCR tool's self-hosted assets live under a path versioned by the
+// tesseract.js version, so the engine can never drift from its WASM core.
+const tesseractVersion = createRequire(import.meta.url)('tesseract.js/package.json').version;
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -118,6 +123,7 @@ export default defineConfig({
   },
   define: {
     'import.meta.env.PACKAGE_VERSION': JSON.stringify(process.env.npm_package_version),
+    'import.meta.env.TESSERACT_VERSION': JSON.stringify(tesseractVersion),
   },
   optimizeDeps: {
     rolldownOptions: {
@@ -162,10 +168,10 @@ export default defineConfig({
       // get locked in as the new floor. Commit the bumped values.
       thresholds: {
         autoUpdate: true,
-        lines: 61.69,
-        statements: 62.4,
-        functions: 63.41,
-        branches: 72.56,
+        lines: 63.98,
+        statements: 64.71,
+        functions: 66.03,
+        branches: 73.17,
       },
     },
   },
