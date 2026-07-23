@@ -404,7 +404,7 @@ jobs:
       # complete HIGH/CRITICAL exposure (fixable and not) for visibility. Never
       # blocks - it is the "what's lurking" view.
       - name: Trivy full audit (report-only, includes unfixed)
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: it-tools:${{ matrix.target }}
           severity: 'HIGH,CRITICAL'
