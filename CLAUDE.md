@@ -767,6 +767,20 @@ Nightly (and manual) build+publish of the three `:nightly*` image variants, with
 the same SBOM + provenance attestations and keyless cosign signing as the
 release workflow.
 
+#### 7. **ocr-assets.yml** - OCR Asset Publishing
+
+Publishes the Tesseract OCR assets (engine + every supported language) to the
+first-party R2 bucket behind `assets.thetech.network`, under a path versioned by
+the tesseract.js version (`tesseract/<version>/`). Runs on manual dispatch,
+weekly, and when the tesseract.js version or the asset scripts change on main. It
+prepares the assets (`scripts/prepare-tesseract.mjs` with `OCR_ALL_LANGS=1`) and
+mirrors them with `scripts/sync-ocr-assets.mjs`, which shells out to the
+pre-installed `aws` CLI (R2 speaks the S3 API - no AWS SDK added to the repo).
+Needs the `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` secrets;
+it no-ops (staying green) until they are configured. The Image-to-text (OCR) tool
+fetches these assets same-origin-free at runtime, which is why the CSP allows
+`assets.thetech.network` on `script-src`/`connect-src`.
+
 > Static analysis (SAST) runs via GitHub code-scanning **default setup**
 > (configured in repo settings), not a workflow file in this repo. The Trivy
 > image SARIF (from **ci.yml**'s docker-image job) is uploaded into the same
@@ -909,16 +923,20 @@ const value = useVModel(props, 'value', emit);
   config in `docker/sws.toml`) set `X-Content-Type-Options`, `X-Frame-Options`,
   `Referrer-Policy`, a `Permissions-Policy` and a **Content-Security-Policy**.
   The app ships **no tracking or ads**, so the CSP allows **no third-party
-  origins** (`default-src 'self'`, `connect-src 'self'`). The only relaxations
-  are `'unsafe-eval'` (mathjs evaluates expressions at runtime) and `style-src
+  origins**. The single allowance beyond `'self'` is the **first-party** OCR
+  asset host `https://assets.thetech.network` (an R2 bucket serving the
+  Tesseract engine + language data for the Image-to-text tool): it is on
+  `script-src` (the tesseract.js worker/core load via `importScripts`) and
+  `connect-src` (the wasm + `.traineddata` fetches). The other relaxations are
+  `'unsafe-eval'` (mathjs evaluates expressions at runtime) and `style-src
   'unsafe-inline'` (naive-ui's runtime CSS-in-JS); `worker-src 'self' blob:`
-  covers Monaco. Note `script-src` is `'self' 'unsafe-eval'` with **no**
-  `'unsafe-inline'`, and `object-src`/`base-uri`/`form-action`/`frame-ancestors`
-  are locked down. All six header sources carry the **same** policy, the
-  docker-image CI job asserts its presence on every variant, and it was
-  validated in a real browser across the tools (mathjs, Monaco, canvas, tiptap,
-  …) with zero violations. The remaining `'unsafe-eval'`/style `'unsafe-inline'`
-  are inherent to mathjs and naive-ui.
+  covers Monaco. Note `script-src` carries **no** `'unsafe-inline'`, and
+  `object-src`/`base-uri`/`form-action`/`frame-ancestors` are locked down. All
+  six header sources carry the **same** policy, the docker-image CI job asserts
+  its presence on every variant, and both the base policy and the cross-origin
+  OCR asset path were validated in a real browser (mathjs, Monaco, canvas,
+  tiptap, OCR, …) with zero violations. The remaining `'unsafe-eval'`/style
+  `'unsafe-inline'` are inherent to mathjs and naive-ui.
 - **Supply chain**: published images (release + nightly, all variants, both
   registries) ship a build SBOM and SLSA provenance attestation, are signed
   with **cosign keyless** (Sigstore/OIDC; identity = the GitHub Actions workflow,

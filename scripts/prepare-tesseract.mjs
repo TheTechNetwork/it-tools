@@ -1,11 +1,13 @@
-// Populate self-hosted Tesseract OCR assets under public/tesseract/<version>/
-// for LOCAL development and for the bundled (offline) Docker variant.
+// Populate Tesseract OCR assets under public/tesseract/<version>/ so they are
+// served same-origin. Two consumers:
+//   - `pnpm dev` (default: English only, fast) for local OCR, and
+//   - the asset-sync workflow, which runs this with OCR_ALL_LANGS=1 and then
+//     uploads the result to the R2 bucket behind assets.thetech.network
+//     (scripts/sync-ocr-assets.mjs).
 //
-// In production the browser fetches these from the R2-backed asset host
-// (assets.thetech.network / the Cloudflare Pages /tesseract route), so ordinary
-// builds do NOT need this. It exists so:
-//   - `pnpm dev` can OCR locally (default: English only, fast), and
-//   - the `rootless-ocr` Docker image can bake the full set in (OCR_ALL_LANGS=1).
+// In production the browser fetches these from that CDN, so ordinary builds do
+// NOT need this. For an air-gapped self-host, run it with OCR_ALL_LANGS=1 and
+// point VITE_OCR_ASSETS_BASE_URL back to same-origin ('').
 //
 // The path is versioned by the installed tesseract.js version so the engine can
 // never drift from its WASM core. public/tesseract/ is git-ignored.

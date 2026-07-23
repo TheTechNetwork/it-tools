@@ -29,10 +29,12 @@ X-Content-Type-Options = "nosniff"
 X-Frame-Options = "SAMEORIGIN"
 Referrer-Policy = "strict-origin-when-cross-origin"
 Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-# Matches the nginx variants' CSP. No third-party origins (no tracking/ads);
+# Matches the nginx variants' CSP. The only allowed origin beyond 'self' is the
+# first-party OCR asset host (assets.thetech.network), which serves the
+# Tesseract engine + language data for the OCR tool. No tracking/ads origins.
 # 'unsafe-eval' (mathjs), style 'unsafe-inline' (naive-ui CSS-in-JS), and
-# worker/blob (Monaco) are the only relaxations.
-Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+# worker/blob (Monaco) are the only other relaxations.
+Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval' https://assets.thetech.network; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://assets.thetech.network; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
 
 # Content-hashed assets can be cached for a year.
 [[advanced.headers]]

@@ -1,6 +1,6 @@
 import { createWorker } from 'tesseract.js';
 
-export { getAssetsBaseUrl, recognizeText, SUPPORTED_LANGUAGES };
+export { getAssetsBaseUrl, recognizeText, resolveAssetsBase, SUPPORTED_LANGUAGES };
 export type { OcrLanguage };
 
 interface OcrLanguage {
@@ -8,13 +8,19 @@ interface OcrLanguage {
   name: string;
 }
 
-// Self-hosted OCR assets (engine + language data). Default to same-origin -
-// served by the Cloudflare Pages `/tesseract` route (R2-backed) or baked into
-// the offline Docker image. Point VITE_OCR_ASSETS_BASE_URL elsewhere to fetch
-// them from another origin (that origin must then be allowed by connect-src).
-// The path is versioned by the tesseract.js version so the engine and its WASM
-// core stay in lockstep.
-const ASSETS_BASE = (import.meta.env.VITE_OCR_ASSETS_BASE_URL ?? '').replace(/\/+$/, '');
+// OCR assets (engine + language data). In production they are fetched from the
+// first-party CDN (assets.thetech.network, an R2 bucket serving every language);
+// in dev and in the offline Docker image they are served same-origin from
+// public/tesseract (populated by `pnpm script:ocr:assets`). An explicit
+// VITE_OCR_ASSETS_BASE_URL override always wins - that origin must then be
+// allowed by the CSP connect-src/script-src. The path is versioned by the
+// tesseract.js version so the engine and its WASM core stay in lockstep.
+function resolveAssetsBase({ prod, override }: { prod: boolean; override?: string }): string {
+  const fallback = prod ? 'https://assets.thetech.network' : '';
+  return (override ?? fallback).replace(/\/+$/, '');
+}
+
+const ASSETS_BASE = resolveAssetsBase({ prod: import.meta.env.PROD, override: import.meta.env.VITE_OCR_ASSETS_BASE_URL });
 const ASSETS_VERSION = import.meta.env.TESSERACT_VERSION;
 
 function getAssetsBaseUrl(): string {

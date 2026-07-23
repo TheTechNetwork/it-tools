@@ -33,6 +33,7 @@
     "lint": "eslint src scripts *.ts *.mjs --no-warn-ignored",
     "script:create:tool": "node scripts/create-tool.mjs",
     "script:ocr:assets": "node scripts/prepare-tesseract.mjs",
+    "script:ocr:sync": "node scripts/sync-ocr-assets.mjs",
     "script:create:ui": "hygen generator ui-component",
     "release": "node ./scripts/release.mjs"
   },

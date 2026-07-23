@@ -9,11 +9,19 @@ const { createWorker, recognize, terminate } = vi.hoisted(() => {
 
 vi.mock('tesseract.js', () => ({ createWorker }));
 
-const { getAssetsBaseUrl, recognizeText, SUPPORTED_LANGUAGES } = await import('./ocr-image-to-text.service');
+const { getAssetsBaseUrl, recognizeText, resolveAssetsBase, SUPPORTED_LANGUAGES } = await import('./ocr-image-to-text.service');
 
 describe('ocr-image-to-text', () => {
   it('exposes a same-origin asset base url versioned by the tesseract.js version', () => {
     expect(getAssetsBaseUrl()).toMatch(/^\/tesseract\/\d+\.\d+\.\d+$/);
+  });
+
+  it('resolves the asset base: CDN in production, same-origin otherwise, override always wins', () => {
+    expect(resolveAssetsBase({ prod: true })).toBe('https://assets.thetech.network');
+    expect(resolveAssetsBase({ prod: false })).toBe('');
+    // An explicit override wins in either mode, with trailing slashes stripped.
+    expect(resolveAssetsBase({ prod: true, override: 'https://cdn.example.com/' })).toBe('https://cdn.example.com');
+    expect(resolveAssetsBase({ prod: false, override: 'http://localhost:5099//' })).toBe('http://localhost:5099');
   });
 
   it('offers a broad language set including English', () => {
