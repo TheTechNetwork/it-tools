@@ -6,8 +6,8 @@ const compat = new FlatCompat();
 
 export default antfu(
   {
-    // Generated declaration files are not hand-authored source.
-    ignores: ['**/*.d.ts'],
+    // Generated declaration files and vendored data are not hand-authored source.
+    ignores: ['**/*.d.ts', 'src/tools/bip39-generator/wordlists.ts'],
     vue: true,
     typescript: true,
     jsonc: true,

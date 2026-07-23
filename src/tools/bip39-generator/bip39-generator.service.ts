@@ -1,18 +1,16 @@
+import { entropyToMnemonic, generateEntropy, mnemonicToEntropy } from './bip39';
 import {
   chineseSimplifiedWordList,
   chineseTraditionalWordList,
   czechWordList,
   englishWordList,
-  entropyToMnemonic,
   frenchWordList,
-  generateEntropy,
   italianWordList,
   japaneseWordList,
   koreanWordList,
-  mnemonicToEntropy,
   portugueseWordList,
   spanishWordList,
-} from '@it-tools/bip39';
+} from './wordlists';
 
 export {
   convertEntropyToMnemonic,
