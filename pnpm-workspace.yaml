@@ -3,3 +3,6 @@ packages:
 
 allowBuilds:
   esbuild: true
+  # tesseract.js' only postinstall is opencollective-postinstall (a funding
+  # message); nothing needs building, so skip it.
+  tesseract.js: false

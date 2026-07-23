@@ -51,6 +51,7 @@ import { tool as mathEvaluator } from './math-evaluator';
 import { tool as metaTagGenerator } from './meta-tag-generator';
 import { tool as mimeTypes } from './mime-types';
 import { tool as numeronymGenerator } from './numeronym-generator';
+import { tool as ocrImageToText } from './ocr-image-to-text';
 import { tool as otpCodeGeneratorAndValidator } from './otp-code-generator-and-validator';
 import { tool as passwordStrengthAnalyser } from './password-strength-analyser';
 import { tool as pdfSignatureChecker } from './pdf-signature-checker';
@@ -141,7 +142,7 @@ export const toolsByCategory: ToolCategory[] = [
   },
   {
     name: 'Images and videos',
-    components: [qrCodeGenerator, wifiQrCodeGenerator, svgPlaceholderGenerator, cameraRecorder],
+    components: [qrCodeGenerator, wifiQrCodeGenerator, svgPlaceholderGenerator, cameraRecorder, ocrImageToText],
   },
   {
     name: 'Development',
