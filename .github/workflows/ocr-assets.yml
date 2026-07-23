@@ -59,9 +59,9 @@ jobs:
         if: steps.cfg.outputs.configured == 'true'
         run: pnpm install --frozen-lockfile
 
-      - name: Prepare assets (engine + all languages)
+      - name: Prepare assets (engine + all languages, fast + best)
         if: steps.cfg.outputs.configured == 'true'
-        run: OCR_ALL_LANGS=1 pnpm script:ocr:assets
+        run: OCR_ALL_LANGS=1 OCR_BEST=1 pnpm script:ocr:assets
 
       - name: Upload to R2
         if: steps.cfg.outputs.configured == 'true'

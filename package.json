@@ -88,6 +88,7 @@
     "node-forge": "1.4.0",
     "oui-data": "1.1.571",
     "pdf-signature-reader": "1.4.3",
+    "pdfjs-dist": "5.4.624",
     "pinia": "4.0.2",
     "qrcode": "1.5.4",
     "randexp": "0.5.3",
@@ -111,6 +112,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "9.1.0",
+    "@cloudflare/workers-types": "5.20260714.1",
     "@eslint/eslintrc": "3.3.6",
     "@iconify-json/mdi": "1.2.3",
     "@intlify/unplugin-vue-i18n": "11.2.4",
@@ -134,7 +136,6 @@
     "@vue/runtime-dom": "3.5.40",
     "@vue/test-utils": "2.4.11",
     "@vue/tsconfig": "0.9.1",
-    "@cloudflare/workers-types": "5.20260714.1",
     "buffer": "6.0.3",
     "consola": "3.4.2",
     "crypto-browserify": "3.12.1",

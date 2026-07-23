@@ -9,7 +9,7 @@ const { createWorker, recognize, terminate } = vi.hoisted(() => {
 
 vi.mock('tesseract.js', () => ({ createWorker }));
 
-const { getAssetsBaseUrl, recognizeText, resolveAssetsBase, SUPPORTED_LANGUAGES } = await import('./ocr-image-to-text.service');
+const { createRecognizer, getAssetsBaseUrl, recognizeText, resolveAssetsBase, SUPPORTED_LANGUAGES } = await import('./ocr-image-to-text.service');
 
 describe('ocr-image-to-text', () => {
   it('exposes a same-origin asset base url versioned by the tesseract.js version', () => {
@@ -43,5 +43,30 @@ describe('ocr-image-to-text', () => {
     }));
     expect(recognize).toHaveBeenCalledWith('data:image/png;base64,AAAA');
     expect(terminate).toHaveBeenCalled();
+  });
+
+  it('loads tessdata_best when quality is "best"', async () => {
+    createWorker.mockClear();
+    await recognizeText({ image: 'x', languages: ['eng'], quality: 'best' });
+
+    expect(createWorker).toHaveBeenCalledWith(['eng'], 1, expect.objectContaining({
+      langPath: expect.stringMatching(/\/tesseract\/.+\/tessdata-best$/),
+    }));
+  });
+
+  it('createRecognizer reuses one worker across recognize calls and terminates once', async () => {
+    createWorker.mockClear();
+    recognize.mockClear();
+    terminate.mockClear();
+
+    const recognizer = await createRecognizer({ languages: ['eng'] });
+    await recognizer.recognize('a');
+    await recognizer.recognize('b');
+    await recognizer.terminate();
+
+    // One worker for both images (batch), not one per image.
+    expect(createWorker).toHaveBeenCalledTimes(1);
+    expect(recognize).toHaveBeenCalledTimes(2);
+    expect(terminate).toHaveBeenCalledTimes(1);
   });
 });
