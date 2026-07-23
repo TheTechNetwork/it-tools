@@ -719,10 +719,16 @@ Jobs:
    `Dockerfile`) and verifies them in a matrix: the container serves, nginx
    variants reach a healthy HEALTHCHECK, and all three serve the same contract
    (security headers, gzip, asset caching, SPA fallback). Also scans each image
-   with Trivy, which **fails the job on a fixable HIGH/CRITICAL**
-   (`ignore-unfixed` keeps un-actionable base-image CVEs from blocking). Gated
-   to Docker changes (`Dockerfile`, `docker/`, `.dockerignore`) via
-   **toolchain-changes**; always runs on pushes to main.
+   with Trivy: the full result (incl. unfixed) is uploaded to **GitHub code
+   scanning** (Security tab, one `category` per variant) via SARIF, and a
+   blocking gate **fails the job on a fixable HIGH/CRITICAL** (`ignore-unfixed`
+   keeps un-actionable base-image CVEs from blocking). Needs
+   `security-events: write`. Gated to Docker changes (`Dockerfile`, `docker/`,
+   `.dockerignore`) via **toolchain-changes**; always runs on pushes to main.
+6. **dependency-review**: On PRs, `actions/dependency-review-action` fails the
+   build when a PR introduces a dependency with a known HIGH/CRITICAL
+   vulnerability (comments a summary on failure). Complements Renovate, which
+   keeps existing deps current.
 
 **Caches**:
 - Vite build cache
@@ -762,7 +768,10 @@ the same SBOM + provenance attestations and keyless cosign signing as the
 release workflow.
 
 > Static analysis (SAST) runs via GitHub code-scanning **default setup**
-> (configured in repo settings), not a workflow file in this repo.
+> (configured in repo settings), not a workflow file in this repo. The Trivy
+> image SARIF (from **ci.yml**'s docker-image job) is uploaded into the same
+> code-scanning surface under its own `trivy-*` categories, so container CVEs
+> and CodeQL findings share the Security tab.
 
 ### Concurrency
 

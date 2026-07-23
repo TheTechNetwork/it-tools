@@ -293,7 +293,8 @@ jobs:
   # container serves, nginx variants reach a healthy HEALTHCHECK, and all three
   # serve identically (security headers, gzip, asset caching, SPA fallback) -
   # the shared serving contract that keeps the variants in lockstep. Also scans
-  # each image with Trivy, which fails the job on a fixable HIGH/CRITICAL
+  # each image with Trivy: findings are uploaded to GitHub code scanning (the
+  # Security tab) and a blocking gate fails the job on a fixable HIGH/CRITICAL
   # (ignore-unfixed keeps un-actionable base-image CVEs from blocking). Gated to
   # Docker changes (via toolchain-changes) so ordinary PRs skip the image
   # builds; always on main.
@@ -304,6 +305,10 @@ jobs:
       (github.event_name != 'pull_request' || needs.toolchain-changes.outputs.docker == 'true')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    # security-events: write lets the Trivy SARIF upload reach code scanning.
+    permissions:
+      contents: read
+      security-events: write
     strategy:
       fail-fast: false
       matrix:
@@ -400,17 +405,26 @@ jobs:
         if: always()
         run: docker rm -f it-tools-ci || true
 
-      # Full audit: report-only, includes unfixed CVEs, so the log shows the
-      # complete HIGH/CRITICAL exposure (fixable and not) for visibility. Never
-      # blocks - it is the "what's lurking" view.
-      - name: Trivy full audit (report-only, includes unfixed)
+      # Full audit -> GitHub code scanning (Security tab). Report-only (exit 0)
+      # and includes unfixed CVEs, so the Security tab tracks the complete
+      # HIGH/CRITICAL exposure (fixable and not) over time and annotates PRs.
+      # The blocking gate below is what actually fails the build.
+      - name: Trivy full audit (SARIF)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: it-tools:${{ matrix.target }}
           severity: 'HIGH,CRITICAL'
           ignore-unfixed: false
-          format: table
+          format: sarif
+          output: 'trivy-${{ matrix.target }}.sarif'
           exit-code: '0'
+
+      - name: Upload Trivy SARIF to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@4187e74d05793876e9989daffde9c3e66b4acd07 # v3.37.3
+        with:
+          sarif_file: 'trivy-${{ matrix.target }}.sarif'
+          category: 'trivy-${{ matrix.target }}'
 
       # Gate: fails the job only on a *fixable* HIGH/CRITICAL - something an
       # image rebuild or base-image bump can actually resolve.
@@ -422,3 +436,22 @@ jobs:
           ignore-unfixed: true
           format: table
           exit-code: '1'
+
+  # Review dependency changes on PRs: fail when a PR introduces a dependency
+  # with a known HIGH/CRITICAL vulnerability. Complements Renovate (which keeps
+  # existing deps current) by gating what a change brings in.
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Dependency review
+        uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4.9.0
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure
