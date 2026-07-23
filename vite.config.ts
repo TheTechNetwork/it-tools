@@ -120,9 +120,11 @@ export default defineConfig({
     'import.meta.env.PACKAGE_VERSION': JSON.stringify(process.env.npm_package_version),
   },
   optimizeDeps: {
-    esbuildOptions: {
-      define: {
-        global: 'globalThis',
+    rolldownOptions: {
+      transform: {
+        define: {
+          global: 'globalThis',
+        },
       },
     },
   },
