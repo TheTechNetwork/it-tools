@@ -1,11 +1,12 @@
+import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
+import PdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 // Render each page of a PDF to a PNG image so the OCR engine (which works on
 // images) can read PDFs - both scanned documents (where each page is an image)
 // and text PDFs. pdf.js runs its own worker, loaded same-origin as a bundled
 // asset (workerSrc below), so it stays within the CSP's worker-src/connect-src
 // 'self'. This module is loaded on demand (dynamic import) so pdf.js only ships
 // to users who actually process a PDF.
-import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
-import PdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+import './map-upsert.polyfill';
 
 export { renderPdfToImages };
 

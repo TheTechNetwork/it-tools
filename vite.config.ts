@@ -162,6 +162,9 @@ export default defineConfig({
         'src/plugins/**',
         // Browser/canvas-only PDF rendering (pdf.js), exercised by e2e
         'src/tools/ocr-image-to-text/ocr-image-to-text.pdf.ts',
+        // Trivial browser Map-method shim for pdf.js (branch depends on the
+        // runtime), loaded by the pdf module and exercised by e2e
+        'src/tools/ocr-image-to-text/map-upsert.polyfill.ts',
       ],
       // No-regression floor for the logic layer. Fails CI if coverage drops
       // below these values. autoUpdate ratchets them upward automatically: when
