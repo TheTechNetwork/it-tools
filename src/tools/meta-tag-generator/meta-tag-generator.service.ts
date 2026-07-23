@@ -1,6 +1,6 @@
-import type { MetadataConfig } from '@it-tools/oggen';
-import { generateMeta } from '@it-tools/oggen';
+import type { MetadataConfig } from './oggen';
 import _ from 'lodash';
+import { generateMeta } from './oggen';
 
 export { generateMetaTags };
 

@@ -36,8 +36,7 @@
     "release": "node ./scripts/release.mjs"
   },
   "dependencies": {
-    "@it-tools/bip39": "0.0.4",
-    "@it-tools/oggen": "1.3.0",
+    "@noble/hashes": "2.2.0",
     "@regexper/render": "1.0.0",
     "@sindresorhus/slugify": "3.0.0",
     "@tabler/icons-vue": "3.45.0",
