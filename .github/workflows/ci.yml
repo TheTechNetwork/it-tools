@@ -376,6 +376,7 @@ jobs:
           grep -qi '^x-frame-options: SAMEORIGIN' <<<"$shell_headers" || fail "X-Frame-Options"
           grep -qi '^referrer-policy: strict-origin-when-cross-origin' <<<"$shell_headers" || fail "Referrer-Policy"
           grep -qi '^permissions-policy:' <<<"$shell_headers" || fail "Permissions-Policy"
+          grep -qi "^content-security-policy:.*default-src 'self'" <<<"$shell_headers" || fail "Content-Security-Policy"
           grep -qi '^cache-control: no-cache' <<<"$shell_headers" || fail "index.html should be no-cache"
 
           # Asset references come from the served shell; at least one (the entry

@@ -903,13 +903,20 @@ const value = useVModel(props, 'value', emit);
 - **No sensitive operations**: All tools run client-side
 - **Input sanitization**: Validate and sanitize user input
 - **XSS prevention**: Use DOMPurify for HTML sanitization
-- **Response headers**: The Vercel/Netlify deploy configs and all three Docker
-  image variants (nginx config in `docker/nginx.conf.template`, static-web-server
+- **Response headers**: The Vercel/Netlify/Cloudflare deploy configs
+  (`vercel.json`, `netlify.toml`, `public/_headers`) and all three Docker image
+  variants (nginx config in `docker/nginx.conf.template`, static-web-server
   config in `docker/sws.toml`) set `X-Content-Type-Options`, `X-Frame-Options`,
-  `Referrer-Policy` and a `Permissions-Policy`. A Content-Security-Policy is
-  **not** configured -
-  a strict CSP still needs validating against Monaco, web workers and any
-  `eval`/wasm the tools use.
+  `Referrer-Policy`, a `Permissions-Policy` and a **Content-Security-Policy**.
+  The CSP is pragmatic, not maximally strict: it needs `'unsafe-eval'` (mathjs
+  evaluates expressions) and `'unsafe-inline'` (naive-ui's runtime CSS-in-JS and
+  the inline Plausible bootstrap), plus `worker-src blob:` for Monaco. The only
+  third-party origins allowed are Plausible and the Google AdSense domains; it
+  still blocks arbitrary external scripts/connections, `object-src`, `base-uri`
+  and `form-action`. All six header sources carry the **same** policy, and the
+  docker-image CI job asserts its presence on every variant. Tightening it
+  further (nonces to drop `'unsafe-inline'`) is possible but blocked by the
+  inline analytics snippet and CSS-in-JS.
 - **Supply chain**: published images (release + nightly, all variants, both
   registries) ship a build SBOM and SLSA provenance attestation, are signed
   with **cosign keyless** (Sigstore/OIDC; identity = the GitHub Actions workflow,
