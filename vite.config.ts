@@ -160,6 +160,11 @@ export default defineConfig({
         // App wiring, not meaningfully unit-testable
         'src/main.ts',
         'src/plugins/**',
+        // Browser/canvas-only PDF rendering (pdf.js), exercised by e2e
+        'src/tools/ocr-image-to-text/ocr-image-to-text.pdf.ts',
+        // Trivial browser Map-method shim for pdf.js (branch depends on the
+        // runtime), loaded by the pdf module and exercised by e2e
+        'src/tools/ocr-image-to-text/map-upsert.polyfill.ts',
       ],
       // No-regression floor for the logic layer. Fails CI if coverage drops
       // below these values. autoUpdate ratchets them upward automatically: when
@@ -168,10 +173,10 @@ export default defineConfig({
       // get locked in as the new floor. Commit the bumped values.
       thresholds: {
         autoUpdate: true,
-        lines: 64.03,
-        statements: 64.77,
-        functions: 66.09,
-        branches: 73.25,
+        lines: 64.15,
+        statements: 64.87,
+        functions: 66.35,
+        branches: 73.37,
       },
     },
   },

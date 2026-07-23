@@ -27,6 +27,7 @@ const version = require('tesseract.js/package.json').version;
 const outDir = path.join(root, 'public', 'tesseract', version);
 const coreDir = path.join(outDir, 'core');
 const tessdataDir = path.join(outDir, 'tessdata');
+const tessdataBestDir = path.join(outDir, 'tessdata-best');
 
 // The broad set baked into the offline image / uploaded to R2.
 const ALL_LANGUAGES = [
@@ -65,10 +66,18 @@ const ALL_LANGUAGES = [
 ];
 
 // Default to English only so `pnpm dev` is fast; opt into the full set with
-// OCR_ALL_LANGS=1 (the Docker offline variant does this).
+// OCR_ALL_LANGS=1 (the asset-sync workflow does this).
 const languages = process.env.OCR_ALL_LANGS ? ALL_LANGUAGES : ['eng'];
 
-const TESSDATA_BASE = 'https://cdn.jsdelivr.net/gh/tesseract-ocr/tessdata_fast@main';
+// The OCR tool's quality toggle picks fast (tessdata_fast) or best
+// (tessdata_best). Fetch fast always; add best with OCR_BEST=1 (the sync
+// workflow sets it so both qualities are published).
+const QUALITIES = [
+  { name: 'tessdata_fast', base: 'https://cdn.jsdelivr.net/gh/tesseract-ocr/tessdata_fast@main', destDir: tessdataDir },
+  ...(process.env.OCR_BEST
+    ? [{ name: 'tessdata_best', base: 'https://cdn.jsdelivr.net/gh/tesseract-ocr/tessdata_best@main', destDir: tessdataBestDir }]
+    : []),
+];
 
 async function copyEngine() {
   const tesseractPkg = require.resolve('tesseract.js/package.json');
@@ -110,27 +119,31 @@ async function fetchWithRetry(url, attempts = 3) {
   }
 }
 
-async function downloadLanguages() {
-  await mkdir(tessdataDir, { recursive: true });
+async function downloadLanguages({ base, destDir, name }) {
+  await mkdir(destDir, { recursive: true });
   let downloaded = 0;
   for (const lang of languages) {
-    const dest = path.join(tessdataDir, `${lang}.traineddata`);
+    const dest = path.join(destDir, `${lang}.traineddata`);
     if (existsSync(dest) && (await stat(dest)).size > 0) {
       continue;
     }
-    const data = await fetchWithRetry(`${TESSDATA_BASE}/${lang}.traineddata`);
+    const data = await fetchWithRetry(`${base}/${lang}.traineddata`);
     await writeFile(dest, data);
     downloaded++;
-    console.log(`  fetched ${lang}.traineddata (${(data.length / 1048576).toFixed(1)} MB)`);
+    console.log(`  fetched ${name}/${lang}.traineddata (${(data.length / 1048576).toFixed(1)} MB)`);
   }
   return downloaded;
 }
 
 async function main() {
-  console.log(`Preparing Tesseract assets in public/tesseract/${version}/ (${languages.length} language file(s)) ...`);
+  const qualityNames = QUALITIES.map(quality => quality.name).join(' + ');
+  console.log(`Preparing Tesseract assets in public/tesseract/${version}/ (${languages.length} language(s), ${qualityNames}) ...`);
   await mkdir(outDir, { recursive: true });
   await copyEngine();
-  const downloaded = await downloadLanguages();
+  let downloaded = 0;
+  for (const quality of QUALITIES) {
+    downloaded += await downloadLanguages(quality);
+  }
   console.log(downloaded > 0 ? `Done (downloaded ${downloaded} file(s)).` : 'Done (assets already present).');
 }
 

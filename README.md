@@ -88,11 +88,15 @@ cosign verify-attestation --type cyclonedx \
 
 ### OCR (Image to text) assets
 
-The **Image to text (OCR)** tool runs Tesseract entirely in the browser, but the
-engine (a few MB of WASM) and the per-language training data (~100 MB+ for the
-full set) are too large to bundle into the app. They are served separately, from
-a path **versioned by the tesseract.js version** (`tesseract/<version>/`) so the
-engine can never drift from its WASM core.
+The **Image to text (OCR)** tool runs Tesseract entirely in the browser. It reads
+**images and PDFs** (PDF pages are rendered client-side with pdf.js, then OCR'd),
+processes **batches** of files, and offers a **Fast / Best** quality toggle
+(`tessdata_fast` vs the larger, more accurate `tessdata_best`). The engine (a few
+MB of WASM) and the per-language training data (~100 MB+ per quality for the full
+set) are too large to bundle into the app, so they are served separately, from a
+path **versioned by the tesseract.js version** (`tesseract/<version>/`) so the
+engine can never drift from its WASM core. Each quality has its own directory:
+`tessdata/` (fast) and `tessdata-best/` (best).
 
 **On the hosted site there is nothing to do** — the assets are served for you.
 How they reach the browser depends on the platform:
@@ -114,7 +118,9 @@ they are set. A first-time setup is:
    site origins with a CORS policy (`GET`/`HEAD`). The Cloudflare Worker path
    uses the binding instead and needs neither.
 2. Add the three secrets, then run the **ocr-assets** workflow once
-   (Actions → ocr-assets → Run workflow) to publish `tesseract/<version>/`.
+   (Actions → ocr-assets → Run workflow) to publish `tesseract/<version>/`. It
+   publishes both `tessdata/` and `tessdata-best/`, so the "Best" quality roughly
+   doubles the language-data footprint in the bucket.
 
 **Self-hosting / air-gapped:** build the assets locally and serve them
 same-origin — run `OCR_ALL_LANGS=1 pnpm script:ocr:assets` to populate

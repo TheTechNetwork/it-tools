@@ -1,11 +1,29 @@
 import { createWorker } from 'tesseract.js';
 
-export { getAssetsBaseUrl, recognizeText, resolveAssetsBase, SUPPORTED_LANGUAGES };
-export type { OcrLanguage };
+export { createRecognizer, getAssetsBaseUrl, recognizeText, resolveAssetsBase, SUPPORTED_LANGUAGES };
+export type { OcrImage, OcrLanguage, OcrProgress, OcrQuality, Recognizer };
 
 interface OcrLanguage {
   code: string;
   name: string;
+}
+
+// Anything tesseract.js' recognize() accepts.
+type OcrImage = File | Blob | string;
+
+interface OcrProgress {
+  status: string;
+  progress: number;
+}
+
+// fast = tessdata_fast (smaller/faster, the default); best = tessdata_best
+// (larger, slower, higher accuracy). Selects which tessdata directory to load.
+type OcrQuality = 'fast' | 'best';
+
+// A worker created once and reused across a batch of images, then terminated.
+interface Recognizer {
+  recognize: (image: OcrImage) => Promise<string>;
+  terminate: () => Promise<void>;
 }
 
 // OCR assets (engine + language data). In production they are fetched from the
@@ -63,15 +81,24 @@ const SUPPORTED_LANGUAGES: OcrLanguage[] = [
   { code: 'kor', name: 'Korean' },
 ];
 
-async function recognizeText({
-  image,
+// tessdata_fast lives under /tessdata, tessdata_best under /tessdata-best; both
+// are published to the asset host by the sync workflow.
+function langDir(quality: OcrQuality): string {
+  return quality === 'best' ? 'tessdata-best' : 'tessdata';
+}
+
+// Create one worker for the given languages/quality and reuse it across many
+// images before terminating - much faster than re-initializing per image when
+// processing a batch (or the pages of a PDF).
+async function createRecognizer({
   languages,
+  quality = 'fast',
   onProgress,
 }: {
-  image: File | string;
   languages: string[];
-  onProgress?: (info: { status: string; progress: number }) => void;
-}): Promise<string> {
+  quality?: OcrQuality;
+  onProgress?: (info: OcrProgress) => void;
+}): Promise<Recognizer> {
   const base = getAssetsBaseUrl();
 
   // Pass a plain array: tesseract.js posts the languages to its worker, and a
@@ -79,18 +106,39 @@ async function recognizeText({
   const worker = await createWorker([...languages], 1, {
     workerPath: `${base}/worker.min.js`,
     corePath: `${base}/core`,
-    langPath: `${base}/tessdata`,
+    langPath: `${base}/${langDir(quality)}`,
     gzip: false, // the asset host serves raw .traineddata, not .gz
     logger: (message) => {
       onProgress?.({ status: message.status, progress: message.progress });
     },
   });
 
+  return {
+    recognize: async image => (await worker.recognize(image)).data.text,
+    terminate: async () => {
+      await worker.terminate();
+    },
+  };
+}
+
+// Recognize a single image (creates a worker, recognizes, terminates).
+async function recognizeText({
+  image,
+  languages,
+  quality,
+  onProgress,
+}: {
+  image: OcrImage;
+  languages: string[];
+  quality?: OcrQuality;
+  onProgress?: (info: OcrProgress) => void;
+}): Promise<string> {
+  const recognizer = await createRecognizer({ languages, quality, onProgress });
+
   try {
-    const { data } = await worker.recognize(image);
-    return data.text;
+    return await recognizer.recognize(image);
   }
   finally {
-    await worker.terminate();
+    await recognizer.terminate();
   }
 }
