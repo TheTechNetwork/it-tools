@@ -1,7 +1,8 @@
 // Open Graph / Twitter <meta> generator, vendored from the (unmaintained,
 // zero-dependency) @it-tools/oggen package (MIT, CorentinTh) to drop the
-// abandoned dependency. Ported verbatim from its dist - behaviour is unchanged
-// (including that it emits `value="..."` rather than `content="..."`).
+// abandoned dependency. Ported from its dist, with one correctness fix: <meta>
+// tags carry their data in the `content` attribute (what OG/Twitter crawlers
+// read), not `value` - the original emitted the invalid `value="..."`.
 
 export type { MetadataConfig, MetadataValue };
 export { generateMeta };
@@ -69,7 +70,7 @@ function buildMetaStrings({ flatMetadata, type }: { flatMetadata: FlatMeta[]; ty
 }
 
 function metaToString({ flatMetadata: { key, value }, type }: { flatMetadata: FlatMeta; type: string }): string {
-  return `<meta ${type.trim()}="${key.trim()}" value="${value.trim()}" />`;
+  return `<meta ${type.trim()}="${key.trim()}" content="${value.trim()}" />`;
 }
 
 function flattenMetadata(metadata: unknown, { separator = ':', basePrefix = '' }: { separator?: string; basePrefix?: string } = {}): FlatMeta[] {

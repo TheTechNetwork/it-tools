@@ -10,9 +10,9 @@ describe('meta-tag-generator', () => {
         description: 'My description',
       });
 
-      expect(html).toContain('<meta property="og:type" value="website" />');
-      expect(html).toContain('<meta property="og:title" value="My title" />');
-      expect(html).toContain('<meta property="og:description" value="My description" />');
+      expect(html).toContain('<meta property="og:type" content="website" />');
+      expect(html).toContain('<meta property="og:title" content="My title" />');
+      expect(html).toContain('<meta property="og:description" content="My description" />');
     });
 
     it('moves twitter-prefixed keys into dedicated twitter meta tags', () => {
@@ -23,8 +23,8 @@ describe('meta-tag-generator', () => {
         'twitter:site': '@my-site',
       });
 
-      expect(html).toContain('<meta name="twitter:card" value="summary_large_image" />');
-      expect(html).toContain('<meta name="twitter:site" value="@my-site" />');
+      expect(html).toContain('<meta name="twitter:card" content="summary_large_image" />');
+      expect(html).toContain('<meta name="twitter:site" content="@my-site" />');
       expect(html).not.toContain('og:twitter');
     });
 
@@ -35,7 +35,7 @@ describe('meta-tag-generator', () => {
         'twitter:card': 'summary_large_image',
       });
 
-      expect(html).toContain('<meta name="twitter:title" value="My title" />');
+      expect(html).toContain('<meta name="twitter:title" content="My title" />');
     });
 
     it('generates the full snippet for a typical website config', () => {
@@ -48,13 +48,13 @@ describe('meta-tag-generator', () => {
 
       expect(html).toBe([
         '<!-- og meta -->',
-        '<meta property="og:type" value="website" />',
-        '<meta property="og:title" value="My title" />',
+        '<meta property="og:type" content="website" />',
+        '<meta property="og:title" content="My title" />',
         '',
         '<!-- twitter meta -->',
-        '<meta name="twitter:card" value="summary_large_image" />',
-        '<meta name="twitter:site" value="@site" />',
-        '<meta name="twitter:title" value="My title" />',
+        '<meta name="twitter:card" content="summary_large_image" />',
+        '<meta name="twitter:site" content="@site" />',
+        '<meta name="twitter:title" content="My title" />',
       ].join('\n'));
     });
 
