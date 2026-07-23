@@ -908,15 +908,17 @@ const value = useVModel(props, 'value', emit);
   variants (nginx config in `docker/nginx.conf.template`, static-web-server
   config in `docker/sws.toml`) set `X-Content-Type-Options`, `X-Frame-Options`,
   `Referrer-Policy`, a `Permissions-Policy` and a **Content-Security-Policy**.
-  The CSP is pragmatic, not maximally strict: it needs `'unsafe-eval'` (mathjs
-  evaluates expressions) and `'unsafe-inline'` (naive-ui's runtime CSS-in-JS and
-  the inline Plausible bootstrap), plus `worker-src blob:` for Monaco. The only
-  third-party origins allowed are Plausible and the Google AdSense domains; it
-  still blocks arbitrary external scripts/connections, `object-src`, `base-uri`
-  and `form-action`. All six header sources carry the **same** policy, and the
-  docker-image CI job asserts its presence on every variant. Tightening it
-  further (nonces to drop `'unsafe-inline'`) is possible but blocked by the
-  inline analytics snippet and CSS-in-JS.
+  The app ships **no tracking or ads**, so the CSP allows **no third-party
+  origins** (`default-src 'self'`, `connect-src 'self'`). The only relaxations
+  are `'unsafe-eval'` (mathjs evaluates expressions at runtime) and `style-src
+  'unsafe-inline'` (naive-ui's runtime CSS-in-JS); `worker-src 'self' blob:`
+  covers Monaco. Note `script-src` is `'self' 'unsafe-eval'` with **no**
+  `'unsafe-inline'`, and `object-src`/`base-uri`/`form-action`/`frame-ancestors`
+  are locked down. All six header sources carry the **same** policy, the
+  docker-image CI job asserts its presence on every variant, and it was
+  validated in a real browser across the tools (mathjs, Monaco, canvas, tiptap,
+  …) with zero violations. The remaining `'unsafe-eval'`/style `'unsafe-inline'`
+  are inherent to mathjs and naive-ui.
 - **Supply chain**: published images (release + nightly, all variants, both
   registries) ship a build SBOM and SLSA provenance attestation, are signed
   with **cosign keyless** (Sigstore/OIDC; identity = the GitHub Actions workflow,

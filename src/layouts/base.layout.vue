@@ -8,7 +8,6 @@ import { storeToRefs } from 'pinia';
 import { RouterLink } from 'vue-router';
 import CollapsibleToolMenu from '@/components/CollapsibleToolMenu.vue';
 import { config } from '@/config';
-import { useTracker } from '@/modules/tracker/tracker.services';
 import { useStyleStore } from '@/stores/style.store';
 import { useToolStore } from '@/tools/tools.store';
 import HeroGradient from '../assets/hero-gradient.svg?component';
@@ -20,7 +19,6 @@ const styleStore = useStyleStore();
 const version = config.app.version;
 const commitSha = config.app.lastCommitSha.slice(0, 7);
 
-const { tracker } = useTracker();
 const { t } = useI18n();
 
 const toolStore = useToolStore();
@@ -128,7 +126,6 @@ const tools = computed<ToolCategory[]>(() => [
             target="_blank"
             class="support-button"
             :bordered="false"
-            @click="() => tracker.trackEvent({ eventName: 'Support button clicked' })"
           >
             {{ $t('home.buyMeACoffee') }}
             <NIcon v-if="!styleStore.isSmallScreen" :component="Heart" ml-2 />

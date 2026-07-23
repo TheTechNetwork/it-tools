@@ -29,12 +29,12 @@ server {
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
-    # Content-Security-Policy. 'unsafe-eval' is required by mathjs (evaluates
-    # expressions) and 'unsafe-inline' by naive-ui's runtime CSS-in-JS and the
-    # inline Plausible bootstrap; workers/blobs cover Monaco; the Google ad
-    # domains + Plausible are the only third-party origins allowed. Validated
-    # against the tools in CI-adjacent local browser runs.
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://plausible.io https://*.googlesyndication.com https://*.googleadservices.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://plausible.io https://*.googlesyndication.com https://*.google.com https://*.doubleclick.net https://*.adtrafficquality.google; frame-src https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'" always;
+    # Content-Security-Policy. The app has no tracking or ads, so no third-party
+    # origins are allowed. The only relaxations are 'unsafe-eval' (mathjs
+    # evaluates expressions at runtime) and style 'unsafe-inline' (naive-ui's
+    # runtime CSS-in-JS); worker/blob covers Monaco. Validated in a browser
+    # across the tools.
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'" always;
 
     # Vite emits content-hashed filenames under /assets, so they can be cached
     # for a year - a new build produces new names.
