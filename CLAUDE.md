@@ -902,14 +902,15 @@ const value = useVModel(props, 'value', emit);
   a strict CSP still needs validating against Monaco, web workers and any
   `eval`/wasm the tools use.
 - **Supply chain**: published images (release + nightly, all variants, both
-  registries) ship a build SBOM and SLSA provenance attestation and are signed
+  registries) ship a build SBOM and SLSA provenance attestation, are signed
   with **cosign keyless** (Sigstore/OIDC; identity = the GitHub Actions workflow,
-  recorded in the public transparency log). Verify with `cosign verify
-  --certificate-oidc-issuer https://token.actions.githubusercontent.com
-  --certificate-identity-regexp '(?i)^https://github.com/thetechnetwork/it-tools/'
-  thetechnetwork/it-tools:latest` (see README "Verify image signatures"). CI's
-  Trivy scan of each image variant is a **blocking** gate on fixable
-  HIGH/CRITICAL vulnerabilities.
+  recorded in the public transparency log), and additionally carry a
+  **cosign-signed CycloneDX SBOM attestation** (generated with
+  `anchore/sbom-action`, attested with `cosign attest --type cyclonedx`). Verify
+  with `cosign verify` / `cosign verify-attestation --type cyclonedx` (see README
+  "Verify image signatures"). Each image variant's CI Trivy scan runs in two
+  tiers: a report-only full audit (includes unfixed CVEs, for visibility) and a
+  **blocking** gate that fails only on *fixable* HIGH/CRITICAL.
 
 ### Performance
 

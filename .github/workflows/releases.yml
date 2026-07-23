@@ -137,6 +137,26 @@ jobs:
             "thetechnetwork/it-tools@${DIGEST}" \
             "ghcr.io/thetechnetwork/it-tools@${DIGEST}"
 
+      - name: Generate CycloneDX SBOM (${{ matrix.target }})
+        uses: anchore/sbom-action@0b82b0b1a22399a1c542d4d656f70cd903571b5c # v0.21.1
+        with:
+          image: ghcr.io/thetechnetwork/it-tools@${{ steps.build.outputs.digest }}
+          format: cyclonedx-json
+          output-file: sbom.cdx.json
+          upload-artifact: false
+          upload-release-assets: false
+
+      - name: Attest the SBOM (keyless)
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          # Signed, transparency-logged CycloneDX attestation on each registry
+          # ref by digest (complements the buildkit sbom: true attestation).
+          for ref in "thetechnetwork/it-tools" "ghcr.io/thetechnetwork/it-tools"; do
+            cosign attest --yes --type cyclonedx \
+              --predicate sbom.cdx.json "${ref}@${DIGEST}"
+          done
+
   github-release:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -196,11 +216,16 @@ jobs:
             - **rootless** (nginx-unprivileged, non-root, port 8080): `:latest-rootless`, `:${{ env.RELEASE_VERSION }}-rootless`
             - **distroless** (static-web-server, non-root, port 8080): `:latest-distroless`, `:${{ env.RELEASE_VERSION }}-distroless`
 
-            All images are signed with cosign (keyless) and ship SBOM + SLSA
-            provenance attestations. Verify:
+            All images are signed with cosign (keyless) and ship SLSA provenance
+            plus a cosign-signed CycloneDX SBOM attestation. Verify:
 
             ```sh
             cosign verify \
+              --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+              --certificate-identity-regexp '(?i)^https://github.com/thetechnetwork/it-tools/' \
+              thetechnetwork/it-tools:${{ env.RELEASE_VERSION }}
+
+            cosign verify-attestation --type cyclonedx \
               --certificate-oidc-issuer https://token.actions.githubusercontent.com \
               --certificate-identity-regexp '(?i)^https://github.com/thetechnetwork/it-tools/' \
               thetechnetwork/it-tools:${{ env.RELEASE_VERSION }}

@@ -163,3 +163,23 @@ jobs:
           cosign sign --yes \
             "thetechnetwork/it-tools@${DIGEST}" \
             "ghcr.io/thetechnetwork/it-tools@${DIGEST}"
+
+      - name: Generate CycloneDX SBOM (${{ matrix.target }})
+        uses: anchore/sbom-action@0b82b0b1a22399a1c542d4d656f70cd903571b5c # v0.21.1
+        with:
+          image: ghcr.io/thetechnetwork/it-tools@${{ steps.build.outputs.digest }}
+          format: cyclonedx-json
+          output-file: sbom.cdx.json
+          upload-artifact: false
+          upload-release-assets: false
+
+      - name: Attest the SBOM (keyless)
+        env:
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          # Signed, transparency-logged CycloneDX attestation on each registry
+          # ref by digest (complements the buildkit sbom: true attestation).
+          for ref in "thetechnetwork/it-tools" "ghcr.io/thetechnetwork/it-tools"; do
+            cosign attest --yes --type cyclonedx \
+              --predicate sbom.cdx.json "${ref}@${DIGEST}"
+          done
