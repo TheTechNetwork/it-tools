@@ -57,6 +57,7 @@ import { tool as markdownToHtml } from './markdown-to-html';
 import { tool as mathEvaluator } from './math-evaluator';
 import { tool as metaTagGenerator } from './meta-tag-generator';
 import { tool as mimeTypes } from './mime-types';
+import { tool as numberToWords } from './number-to-words';
 import { tool as numeronymGenerator } from './numeronym-generator';
 import { tool as ocrImageToText } from './ocr-image-to-text';
 import { tool as otpCodeGeneratorAndValidator } from './otp-code-generator-and-validator';
@@ -201,6 +202,7 @@ export const toolsByCategory: ToolCategory[] = [
       asciiTextDrawer,
       textLineTools,
       stringEscape,
+      numberToWords,
     ],
   },
   {
