@@ -392,3 +392,55 @@ tools:
   text-to-binary:
     title: Text to ASCII binary
     description: Convert text to its ASCII binary representation and vice-versa.
+
+  jwt-generator:
+    title: JWT generator
+    description: 'Sign and generate a JSON Web Token (JWT) from a payload and key - HS256/384/512, RS, PS, ES and EdDSA. Runs entirely in your browser; the key never leaves your device.'
+
+  color-contrast-checker:
+    title: Color contrast checker
+    description: 'Check the WCAG contrast ratio between a text and a background color, and see which accessibility levels (AA / AAA) it passes.'
+
+  data-storage-converter:
+    title: Data storage converter
+    description: 'Convert digital storage sizes between bits, bytes and their decimal (kB, MB, GB…) and binary (KiB, MiB, GiB…) multiples.'
+
+  text-line-tools:
+    title: Text line tools
+    description: 'Sort, deduplicate, reverse, shuffle, number, trim and filter the lines of a block of text.'
+
+  json-to-typescript:
+    title: JSON to TypeScript
+    description: 'Generate TypeScript interfaces from a JSON object or array, with nested types automatically extracted.'
+
+  csv-to-json:
+    title: CSV to JSON
+    description: 'Convert CSV (comma, semicolon or any delimiter) to JSON, with proper handling of quoted fields, escaped quotes and embedded newlines.'
+
+  duration-converter:
+    title: Duration converter
+    description: 'Convert a duration between nanoseconds, microseconds, milliseconds, seconds, minutes, hours, days and weeks, with a human-readable breakdown.'
+
+  html-to-markdown:
+    title: HTML to Markdown
+    description: 'Convert HTML to clean Markdown, with headings, links, lists, emphasis and fenced code blocks.'
+
+  string-escape:
+    title: String escape / unescape
+    description: 'Escape or unescape a string using backslash sequences (\n, \t, \", \uXXXX…), as used in JSON, JavaScript and many programming languages.'
+
+  number-to-words:
+    title: Number to words
+    description: 'Spell out a number in English words (e.g. 1234 becomes "one thousand two hundred thirty-four"), with support for negatives and decimals.'
+
+  unicode-inspector:
+    title: Unicode inspector
+    description: 'Inspect a string character by character: Unicode code point, decimal value, HTML entity, and UTF-8 / UTF-16 byte sequences.'
+
+  markdown-toc-generator:
+    title: Markdown TOC generator
+    description: 'Generate a nested table of contents with GitHub-style anchor links from the headings of a Markdown document.'
+
+  json-sort-keys:
+    title: JSON sort keys
+    description: 'Recursively sort the keys of a JSON object to produce a canonical, diff-friendly output (array order is preserved).'

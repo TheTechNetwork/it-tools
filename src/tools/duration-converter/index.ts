@@ -1,10 +1,11 @@
 import { Hourglass } from '@vicons/tabler';
+import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 
 export const tool = defineTool({
-  name: 'Duration converter',
+  name: translate('tools.duration-converter.title'),
   path: '/duration-converter',
-  description: 'Convert a duration between nanoseconds, microseconds, milliseconds, seconds, minutes, hours, days and weeks, with a human-readable breakdown.',
+  description: translate('tools.duration-converter.description'),
   keywords: ['duration', 'time', 'converter', 'nanosecond', 'microsecond', 'millisecond', 'second', 'minute', 'hour', 'day', 'week', 'humanize'],
   component: () => import('./duration-converter.vue'),
   icon: Hourglass,

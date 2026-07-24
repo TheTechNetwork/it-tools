@@ -1,10 +1,11 @@
 import { Braces } from '@vicons/tabler';
+import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 
 export const tool = defineTool({
-  name: 'JSON to TypeScript',
+  name: translate('tools.json-to-typescript.title'),
   path: '/json-to-typescript',
-  description: 'Generate TypeScript interfaces from a JSON object or array, with nested types automatically extracted.',
+  description: translate('tools.json-to-typescript.description'),
   keywords: ['json', 'typescript', 'ts', 'interface', 'type', 'types', 'convert', 'generate', 'definition'],
   component: () => import('./json-to-typescript.vue'),
   icon: Braces,

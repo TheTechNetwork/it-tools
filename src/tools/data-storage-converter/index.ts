@@ -1,10 +1,11 @@
 import { Database } from '@vicons/tabler';
+import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 
 export const tool = defineTool({
-  name: 'Data storage converter',
+  name: translate('tools.data-storage-converter.title'),
   path: '/data-storage-converter',
-  description: 'Convert digital storage sizes between bits, bytes and their decimal (kB, MB, GB…) and binary (KiB, MiB, GiB…) multiples.',
+  description: translate('tools.data-storage-converter.description'),
   keywords: ['data', 'storage', 'size', 'converter', 'byte', 'bit', 'kilobyte', 'megabyte', 'gigabyte', 'terabyte', 'kibibyte', 'mebibyte', 'gibibyte', 'binary', 'decimal', 'iec', 'si'],
   component: () => import('./data-storage-converter.vue'),
   icon: Database,
