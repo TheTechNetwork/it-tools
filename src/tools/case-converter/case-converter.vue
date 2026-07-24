@@ -10,6 +10,7 @@ import {
   toMockingCase,
   toNoCase,
   toPascalCase,
+  toPascalSnakeCase,
   toPathCase,
   toSentenceCase,
   toSnakeCase,
@@ -17,63 +18,69 @@ import {
   toUpperCase,
 } from './case-converter.service';
 
+const { t } = useI18n();
+
 const input = ref('lorem ipsum dolor sit amet');
 
 const formats = computed(() => [
   {
-    label: 'Lowercase:',
+    label: t('tools.case-converter.lowercase'),
     value: toLowerCase(input.value),
   },
   {
-    label: 'Uppercase:',
+    label: t('tools.case-converter.uppercase'),
     value: toUpperCase(input.value),
   },
   {
-    label: 'Camelcase:',
+    label: t('tools.case-converter.camelcase'),
     value: toCamelCase(input.value),
   },
   {
-    label: 'Capitalcase:',
+    label: t('tools.case-converter.capitalcase'),
     value: toCapitalCase(input.value),
   },
   {
-    label: 'Constantcase:',
+    label: t('tools.case-converter.constantcase'),
     value: toConstantCase(input.value),
   },
   {
-    label: 'Dotcase:',
+    label: t('tools.case-converter.dotcase'),
     value: toDotCase(input.value),
   },
   {
-    label: 'Traincase:',
+    label: t('tools.case-converter.traincase'),
     value: toTrainCase(input.value),
   },
   {
-    label: 'Nocase:',
+    label: t('tools.case-converter.nocase'),
     value: toNoCase(input.value),
   },
   {
-    label: 'Kebabcase:',
+    label: t('tools.case-converter.kebabcase'),
     value: toKebabCase(input.value),
   },
   {
-    label: 'Pascalcase:',
+    label: t('tools.case-converter.pascalcase'),
     value: toPascalCase(input.value),
   },
   {
-    label: 'Pathcase:',
+    label: t('tools.case-converter.pascalsnakecase'),
+    value: toPascalSnakeCase(input.value),
+  },
+  {
+    label: t('tools.case-converter.pathcase'),
     value: toPathCase(input.value),
   },
   {
-    label: 'Sentencecase:',
+    label: t('tools.case-converter.sentencecase'),
     value: toSentenceCase(input.value),
   },
   {
-    label: 'Snakecase:',
+    label: t('tools.case-converter.snakecase'),
     value: toSnakeCase(input.value),
   },
   {
-    label: 'Mockingcase:',
+    label: t('tools.case-converter.mockingcase'),
     value: toMockingCase(input.value),
   },
 ]);
@@ -89,8 +96,8 @@ const inputLabelAlignmentConfig = {
   <c-card>
     <c-input-text
       v-model:value="input"
-      label="Your string:"
-      placeholder="Your string..."
+      :label="t('tools.case-converter.yourString')"
+      :placeholder="t('tools.case-converter.placeholder')"
       raw-text
       v-bind="inputLabelAlignmentConfig"
     />
