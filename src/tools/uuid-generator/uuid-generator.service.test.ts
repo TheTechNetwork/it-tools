@@ -3,12 +3,12 @@ import { generateUuids, isValidUuid, uuidVersions } from './uuid-generator.servi
 
 const dnsNamespace = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
 const urlNamespace = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
-const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-7][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
 describe('uuid-generator', () => {
   describe('uuidVersions', () => {
     it('exposes the supported versions', () => {
-      expect(uuidVersions).toEqual(['NIL', 'v1', 'v3', 'v4', 'v5']);
+      expect(uuidVersions).toEqual(['NIL', 'v1', 'v3', 'v4', 'v5', 'v6', 'v7']);
     });
   });
 
@@ -79,6 +79,29 @@ describe('uuid-generator', () => {
       expect(uuid?.charAt(14)).toBe('5');
     });
 
+    it('generates well-formed and unique v6 uuids', () => {
+      const uuids = generateUuids({ version: 'v6', count: 50 });
+
+      for (const uuid of uuids) {
+        expect(uuid).toMatch(uuidRegex);
+        expect(uuid.charAt(14)).toBe('6');
+      }
+
+      expect(new Set(uuids).size).toBe(50);
+    });
+
+    it('generates well-formed and unique v7 uuids', () => {
+      const uuids = generateUuids({ version: 'v7', count: 50 });
+
+      for (const uuid of uuids) {
+        expect(uuid).toMatch(uuidRegex);
+        expect(uuid.charAt(14)).toBe('7');
+        expect(isValidUuid(uuid)).toBe(true);
+      }
+
+      expect(new Set(uuids).size).toBe(50);
+    });
+
     it('throws when generating a v3 or v5 uuid with an invalid namespace', () => {
       expect(() => generateUuids({ version: 'v3', name: 'hello', namespace: 'not-a-uuid' })).toThrow();
       expect(() => generateUuids({ version: 'v5', name: 'hello', namespace: '' })).toThrow();
@@ -90,18 +113,22 @@ describe('uuid-generator', () => {
       expect(isValidUuid('00000000-0000-0000-0000-000000000000')).toBe(true);
     });
 
-    it('accepts well-formed uuids', () => {
-      expect(isValidUuid('6ba7b810-9dad-11d1-80b4-00c04fd430c8')).toBe(true);
-      expect(isValidUuid('9342d47a-1bab-5709-9869-c840b2eac501')).toBe(true);
+    it('accepts well-formed uuids of every version, including v6 and v7', () => {
+      expect(isValidUuid('6ba7b810-9dad-11d1-80b4-00c04fd430c8')).toBe(true); // v1
+      expect(isValidUuid('9342d47a-1bab-5709-9869-c840b2eac501')).toBe(true); // v5
+      expect(isValidUuid('6ba7b810-9dad-61d1-80b4-00c04fd430c8')).toBe(true); // v6
+      expect(isValidUuid('017f22e2-79b0-7cc3-98c4-dc0c0c07398f')).toBe(true); // v7
+    });
+
+    it('accepts uppercase uuids (validation is case-insensitive)', () => {
+      expect(isValidUuid('6BA7B810-9DAD-11D1-80B4-00C04FD430C8')).toBe(true);
     });
 
     it('rejects malformed uuids', () => {
       expect(isValidUuid('')).toBe(false);
       expect(isValidUuid('not-a-uuid')).toBe(false);
-      expect(isValidUuid('6ba7b810-9dad-11d1-80b4-00c04fd430c')).toBe(false);
-      expect(isValidUuid('6ba7b810-9dad-61d1-80b4-00c04fd430c8')).toBe(false);
-      expect(isValidUuid('6ba7b810-9dad-11d1-c0b4-00c04fd430c8')).toBe(false);
-      expect(isValidUuid('6BA7B810-9DAD-11D1-80B4-00C04FD430C8')).toBe(false);
+      expect(isValidUuid('6ba7b810-9dad-11d1-80b4-00c04fd430c')).toBe(false); // too short
+      expect(isValidUuid('6ba7b810-9dad-11d1-c0b4-00c04fd430c8')).toBe(false); // invalid variant
     });
   });
 });
