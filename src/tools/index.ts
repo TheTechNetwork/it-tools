@@ -54,6 +54,7 @@ import { tool as loremIpsumGenerator } from './lorem-ipsum-generator';
 import { tool as macAddressGenerator } from './mac-address-generator';
 import { tool as macAddressLookup } from './mac-address-lookup';
 import { tool as markdownToHtml } from './markdown-to-html';
+import { tool as markdownTocGenerator } from './markdown-toc-generator';
 import { tool as mathEvaluator } from './math-evaluator';
 import { tool as metaTagGenerator } from './meta-tag-generator';
 import { tool as mimeTypes } from './mime-types';
@@ -177,6 +178,7 @@ export const toolsByCategory: ToolCategory[] = [
       emailNormalizer,
       regexTester,
       regexMemo,
+      markdownTocGenerator,
     ],
   },
   {
