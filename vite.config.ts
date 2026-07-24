@@ -173,9 +173,9 @@ export default defineConfig({
       // get locked in as the new floor. Commit the bumped values.
       thresholds: {
         autoUpdate: true,
-        lines: 69.31,
-        statements: 69.9,
-        functions: 68.1,
+        lines: 69.33,
+        statements: 69.91,
+        functions: 68.15,
         branches: 77.34,
       },
     },
