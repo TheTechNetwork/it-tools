@@ -15,10 +15,12 @@ import { tool as chronometer } from './chronometer';
 import { tool as colorContrastChecker } from './color-contrast-checker';
 import { tool as colorConverter } from './color-converter';
 import { tool as crontabGenerator } from './crontab-generator';
+import { tool as csvToJson } from './csv-to-json';
 import { tool as dataStorageConverter } from './data-storage-converter';
 import { tool as dateTimeConverter } from './date-time-converter';
 import { tool as deviceInformation } from './device-information';
 import { tool as dockerRunToDockerComposeConverter } from './docker-run-to-docker-compose-converter';
+import { tool as durationConverter } from './duration-converter';
 import { tool as emailNormalizer } from './email-normalizer';
 import { tool as emojiPicker } from './emoji-picker';
 import { tool as cypher } from './encryption';
@@ -39,6 +41,7 @@ import { tool as jsonDiff } from './json-diff';
 import { tool as jsonMinify } from './json-minify';
 import { tool as jsonToCsv } from './json-to-csv';
 import { tool as jsonToToml } from './json-to-toml';
+import { tool as jsonToTypescript } from './json-to-typescript';
 import { tool as jsonToXml } from './json-to-xml';
 import { tool as jsonToYaml } from './json-to-yaml-converter';
 import { tool as jsonViewer } from './json-viewer';
@@ -115,6 +118,8 @@ export const toolsByCategory: ToolCategory[] = [
       yamlToToml,
       jsonToYaml,
       jsonToToml,
+      jsonToTypescript,
+      csvToJson,
       listConverter,
       tomlToJson,
       tomlToYaml,
@@ -179,7 +184,7 @@ export const toolsByCategory: ToolCategory[] = [
   },
   {
     name: 'Measurement',
-    components: [chronometer, temperatureConverter, benchmarkBuilder, dataStorageConverter],
+    components: [chronometer, temperatureConverter, benchmarkBuilder, dataStorageConverter, durationConverter],
   },
   {
     name: 'Text',
