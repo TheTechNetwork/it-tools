@@ -1,0 +1,4 @@
+{
+  "_comment": "Auto-ratcheting floor for tool i18n coverage: the percentage of tools whose title and description are internationalised (a non-empty title+description in locales/en.yml AND a translate('tools.<name>.*') call in the tool's index.ts). The test in src/tools/i18n-coverage.test.ts fails when coverage drops below this floor, and raises it automatically on local runs when coverage improves (never lowers it). Commit the bumped value.",
+  "minCoveragePercent": 70
+}
