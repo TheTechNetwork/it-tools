@@ -6,13 +6,14 @@ import { parse } from 'yaml';
 
 // This test guards the internationalisation of the tool catalogue with an
 // auto-ratcheting floor, mirroring the unit-coverage threshold in
-// vite.config.ts. A tool counts as "internationalised" when its title and
-// description are translatable: a non-empty `tools.<name>.title` and
-// `.description` in locales/en.yml AND a matching `translate('tools.<name>.*')`
-// call in the tool's index.ts. When coverage rises above the floor, a local
-// run rewrites the floor upward so the gain is locked in; CI only ever asserts
-// against the committed floor (it never writes), so the check stays
-// deterministic there.
+// vite.config.ts. A tool counts as "internationalised" when its index.ts calls
+// translate('tools.<key>.title') and that <key> resolves to a non-empty title
+// and description in locales/en.yml. The key is read from the translate() call
+// rather than assumed from the folder name, because several tools keep a legacy
+// key that differs from their directory (e.g. json-viewer -> tools.json-prettify).
+// When coverage rises above the floor, a local run rewrites the floor upward so
+// the gain is locked in; CI only ever asserts against the committed floor (it
+// never writes), so the check stays deterministic there.
 
 const ROOT = resolve(import.meta.dirname, '../..');
 const TOOLS_DIR = resolve(ROOT, 'src/tools');
@@ -35,27 +36,34 @@ function hasLocaleStrings(toolsSection: Record<string, any>, key: string): boole
   );
 }
 
-function usesTranslate(key: string): boolean {
-  const index = readFileSync(resolve(TOOLS_DIR, key, 'index.ts'), 'utf8');
-  return index.includes(`translate('tools.${key}.title')`);
+// The i18n key a tool uses is whatever it passes to translate() in its
+// index.ts, which is NOT always the folder name — several tools keep a legacy
+// key (e.g. json-viewer -> tools.json-prettify). Resolve the actual key so
+// those tools are measured against the strings they really use.
+function localeKeyOf(toolDir: string): string | undefined {
+  const index = readFileSync(resolve(TOOLS_DIR, toolDir, 'index.ts'), 'utf8');
+  return /translate\('tools\.([\w-]+)\.title'\)/.exec(index)?.[1];
 }
 
 describe('tool i18n coverage', () => {
-  const toolKeys = listToolKeys();
+  const toolDirs = listToolKeys();
   const enLocale = parse(readFileSync(EN_LOCALE, 'utf8')) ?? {};
   const toolsSection = enLocale.tools ?? {};
 
-  const uncovered = toolKeys.filter(key => !(hasLocaleStrings(toolsSection, key) && usesTranslate(key)));
-  const covered = toolKeys.length - uncovered.length;
+  const uncovered = toolDirs.filter((dir) => {
+    const key = localeKeyOf(dir);
+    return !(key !== undefined && hasLocaleStrings(toolsSection, key));
+  });
+  const covered = toolDirs.length - uncovered.length;
   // Floor to two decimals so the measured value never overstates coverage.
-  const coverage = Math.floor((covered / toolKeys.length) * 10000) / 100;
+  const coverage = Math.floor((covered / toolDirs.length) * 10000) / 100;
 
   const floorConfig = JSON.parse(readFileSync(FLOOR_FILE, 'utf8'));
   const floor: number = floorConfig.minCoveragePercent;
 
   it(`keeps tool i18n coverage at or above the ${floor}% floor`, () => {
     const message = uncovered.length > 0
-      ? `${covered}/${toolKeys.length} tools internationalised (${coverage}%). `
+      ? `${covered}/${toolDirs.length} tools internationalised (${coverage}%). `
       + `Missing a translate()-wired title/description in locales/en.yml:\n  - ${uncovered.join('\n  - ')}`
       : undefined;
 
