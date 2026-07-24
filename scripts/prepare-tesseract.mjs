@@ -18,6 +18,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+import { getLanguages, getQualities, QUALITY_SOURCES } from './ocr-assets.config.mjs';
 
 const require = createRequire(import.meta.url);
 const root = path.resolve(fileURLToPath(import.meta.url), '../..');
@@ -26,58 +27,15 @@ const version = require('tesseract.js/package.json').version;
 
 const outDir = path.join(root, 'public', 'tesseract', version);
 const coreDir = path.join(outDir, 'core');
-const tessdataDir = path.join(outDir, 'tessdata');
-const tessdataBestDir = path.join(outDir, 'tessdata-best');
 
-// The broad set baked into the offline image / uploaded to R2.
-const ALL_LANGUAGES = [
-  'eng',
-  'spa',
-  'fra',
-  'deu',
-  'ita',
-  'por',
-  'nld',
-  'pol',
-  'ron',
-  'ces',
-  'hun',
-  'swe',
-  'dan',
-  'fin',
-  'nor',
-  'tur',
-  'ell',
-  'rus',
-  'ukr',
-  'bul',
-  'srp',
-  'ara',
-  'heb',
-  'hin',
-  'tha',
-  'vie',
-  'ind',
-  'chi_sim',
-  'chi_tra',
-  'jpn',
-  'kor',
-  'osd',
-];
-
-// Default to English only so `pnpm dev` is fast; opt into the full set with
-// OCR_ALL_LANGS=1 (the asset-sync workflow does this).
-const languages = process.env.OCR_ALL_LANGS ? ALL_LANGUAGES : ['eng'];
-
-// The OCR tool's quality toggle picks fast (tessdata_fast) or best
-// (tessdata_best). Fetch fast always; add best with OCR_BEST=1 (the sync
-// workflow sets it so both qualities are published).
-const QUALITIES = [
-  { name: 'tessdata_fast', base: 'https://cdn.jsdelivr.net/gh/tesseract-ocr/tessdata_fast@main', destDir: tessdataDir },
-  ...(process.env.OCR_BEST
-    ? [{ name: 'tessdata_best', base: 'https://cdn.jsdelivr.net/gh/tesseract-ocr/tessdata_best@main', destDir: tessdataBestDir }]
-    : []),
-];
+// Languages and qualities to prepare (English/fast for `pnpm dev`, the full set
+// for the sync workflow via OCR_ALL_LANGS=1 / OCR_BEST=1).
+const languages = getLanguages();
+const QUALITIES = getQualities().map(quality => ({
+  name: quality,
+  base: QUALITY_SOURCES[quality].base,
+  destDir: path.join(outDir, QUALITY_SOURCES[quality].dir),
+}));
 
 async function copyEngine() {
   const tesseractPkg = require.resolve('tesseract.js/package.json');
