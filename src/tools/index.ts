@@ -20,6 +20,7 @@ import { tool as dataStorageConverter } from './data-storage-converter';
 import { tool as dateTimeConverter } from './date-time-converter';
 import { tool as deviceInformation } from './device-information';
 import { tool as dockerRunToDockerComposeConverter } from './docker-run-to-docker-compose-converter';
+import { tool as durationConverter } from './duration-converter';
 import { tool as emailNormalizer } from './email-normalizer';
 import { tool as emojiPicker } from './emoji-picker';
 import { tool as cypher } from './encryption';
@@ -183,7 +184,7 @@ export const toolsByCategory: ToolCategory[] = [
   },
   {
     name: 'Measurement',
-    components: [chronometer, temperatureConverter, benchmarkBuilder, dataStorageConverter],
+    components: [chronometer, temperatureConverter, benchmarkBuilder, dataStorageConverter, durationConverter],
   },
   {
     name: 'Text',
