@@ -73,6 +73,7 @@ import { tool as stringObfuscator } from './string-obfuscator';
 import { tool as svgPlaceholderGenerator } from './svg-placeholder-generator';
 import { tool as temperatureConverter } from './temperature-converter';
 import { tool as textDiff } from './text-diff';
+import { tool as textLineTools } from './text-line-tools';
 import { tool as textStatistics } from './text-statistics';
 import { tool as textToBinary } from './text-to-binary';
 import { tool as textToNatoAlphabet } from './text-to-nato-alphabet';
@@ -190,6 +191,7 @@ export const toolsByCategory: ToolCategory[] = [
       textDiff,
       numeronymGenerator,
       asciiTextDrawer,
+      textLineTools,
     ],
   },
   {
