@@ -40,6 +40,7 @@ import { tool as jsonToToml } from './json-to-toml';
 import { tool as jsonToXml } from './json-to-xml';
 import { tool as jsonToYaml } from './json-to-yaml-converter';
 import { tool as jsonViewer } from './json-viewer';
+import { tool as jwtGenerator } from './jwt-generator';
 import { tool as jwtParser } from './jwt-parser';
 import { tool as keycodeInfo } from './keycode-info';
 import { tool as listConverter } from './list-converter';
@@ -131,6 +132,7 @@ export const toolsByCategory: ToolCategory[] = [
       otpCodeGeneratorAndValidator,
       mimeTypes,
       jwtParser,
+      jwtGenerator,
       keycodeInfo,
       slugifyString,
       htmlWysiwygEditor,

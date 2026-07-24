@@ -127,6 +127,7 @@ declare module 'vue' {
     JsonToXml: typeof import('./src/tools/json-to-xml/json-to-xml.vue')['default']
     JsonToYaml: typeof import('./src/tools/json-to-yaml-converter/json-to-yaml.vue')['default']
     JsonViewer: typeof import('./src/tools/json-viewer/json-viewer.vue')['default']
+    JwtGenerator: typeof import('./src/tools/jwt-generator/jwt-generator.vue')['default']
     JwtParser: typeof import('./src/tools/jwt-parser/jwt-parser.vue')['default']
     KeycodeInfo: typeof import('./src/tools/keycode-info/keycode-info.vue')['default']
     ListConverter: typeof import('./src/tools/list-converter/list-converter.vue')['default']
