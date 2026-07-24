@@ -20,6 +20,6 @@ test.describe('Tool - String escape / unescape', () => {
 
     await page.getByLabel('String to unescape').fill('a\\tb\\u0041');
 
-    await expect(page.getByLabel('Result')).toHaveValue('a\tb A');
+    await expect(page.getByLabel('Result')).toHaveValue('a\tbA');
   });
 });
