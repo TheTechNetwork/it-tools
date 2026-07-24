@@ -12,8 +12,10 @@ import { tool as cameraRecorder } from './camera-recorder';
 import { tool as caseConverter } from './case-converter';
 import { tool as chmodCalculator } from './chmod-calculator';
 import { tool as chronometer } from './chronometer';
+import { tool as colorContrastChecker } from './color-contrast-checker';
 import { tool as colorConverter } from './color-converter';
 import { tool as crontabGenerator } from './crontab-generator';
+import { tool as dataStorageConverter } from './data-storage-converter';
 import { tool as dateTimeConverter } from './date-time-converter';
 import { tool as deviceInformation } from './device-information';
 import { tool as dockerRunToDockerComposeConverter } from './docker-run-to-docker-compose-converter';
@@ -40,6 +42,7 @@ import { tool as jsonToToml } from './json-to-toml';
 import { tool as jsonToXml } from './json-to-xml';
 import { tool as jsonToYaml } from './json-to-yaml-converter';
 import { tool as jsonViewer } from './json-viewer';
+import { tool as jwtGenerator } from './jwt-generator';
 import { tool as jwtParser } from './jwt-parser';
 import { tool as keycodeInfo } from './keycode-info';
 import { tool as listConverter } from './list-converter';
@@ -70,6 +73,7 @@ import { tool as stringObfuscator } from './string-obfuscator';
 import { tool as svgPlaceholderGenerator } from './svg-placeholder-generator';
 import { tool as temperatureConverter } from './temperature-converter';
 import { tool as textDiff } from './text-diff';
+import { tool as textLineTools } from './text-line-tools';
 import { tool as textStatistics } from './text-statistics';
 import { tool as textToBinary } from './text-to-binary';
 import { tool as textToNatoAlphabet } from './text-to-nato-alphabet';
@@ -131,6 +135,7 @@ export const toolsByCategory: ToolCategory[] = [
       otpCodeGeneratorAndValidator,
       mimeTypes,
       jwtParser,
+      jwtGenerator,
       keycodeInfo,
       slugifyString,
       htmlWysiwygEditor,
@@ -138,6 +143,7 @@ export const toolsByCategory: ToolCategory[] = [
       httpStatusCodes,
       jsonDiff,
       safelinkDecoder,
+      colorContrastChecker,
     ],
   },
   {
@@ -173,7 +179,7 @@ export const toolsByCategory: ToolCategory[] = [
   },
   {
     name: 'Measurement',
-    components: [chronometer, temperatureConverter, benchmarkBuilder],
+    components: [chronometer, temperatureConverter, benchmarkBuilder, dataStorageConverter],
   },
   {
     name: 'Text',
@@ -185,6 +191,7 @@ export const toolsByCategory: ToolCategory[] = [
       textDiff,
       numeronymGenerator,
       asciiTextDrawer,
+      textLineTools,
     ],
   },
   {
