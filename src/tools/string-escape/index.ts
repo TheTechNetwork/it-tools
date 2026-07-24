@@ -1,10 +1,11 @@
 import { Quote } from '@vicons/tabler';
+import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 
 export const tool = defineTool({
-  name: 'String escape / unescape',
+  name: translate('tools.string-escape.title'),
   path: '/string-escape',
-  description: 'Escape or unescape a string using backslash sequences (\\n, \\t, \\", \\uXXXX…), as used in JSON, JavaScript and many programming languages.',
+  description: translate('tools.string-escape.description'),
   keywords: ['string', 'escape', 'unescape', 'backslash', 'json', 'javascript', 'quote', 'newline', 'tab', 'unicode'],
   component: () => import('./string-escape.vue'),
   icon: Quote,

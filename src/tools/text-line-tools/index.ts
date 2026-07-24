@@ -1,10 +1,11 @@
 import { ListNumbers } from '@vicons/tabler';
+import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 
 export const tool = defineTool({
-  name: 'Text line tools',
+  name: translate('tools.text-line-tools.title'),
   path: '/text-line-tools',
-  description: 'Sort, deduplicate, reverse, shuffle, number, trim and filter the lines of a block of text.',
+  description: translate('tools.text-line-tools.description'),
   keywords: ['text', 'line', 'lines', 'sort', 'dedupe', 'deduplicate', 'unique', 'reverse', 'shuffle', 'number', 'trim', 'empty', 'filter'],
   component: () => import('./text-line-tools.vue'),
   icon: ListNumbers,

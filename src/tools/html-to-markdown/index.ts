@@ -1,10 +1,11 @@
 import { Markdown } from '@vicons/tabler';
+import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 
 export const tool = defineTool({
-  name: 'HTML to Markdown',
+  name: translate('tools.html-to-markdown.title'),
   path: '/html-to-markdown',
-  description: 'Convert HTML to clean Markdown, with headings, links, lists, emphasis and fenced code blocks.',
+  description: translate('tools.html-to-markdown.description'),
   keywords: ['html', 'markdown', 'md', 'convert', 'converter', 'turndown', 'transform'],
   component: () => import('./html-to-markdown.vue'),
   icon: Markdown,
