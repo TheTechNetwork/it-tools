@@ -73,6 +73,7 @@ import { tool as rsaKeyPairGenerator } from './rsa-key-pair-generator';
 import { tool as safelinkDecoder } from './safelink-decoder';
 import { tool as slugifyString } from './slugify-string';
 import { tool as sqlPrettify } from './sql-prettify';
+import { tool as stringEscape } from './string-escape';
 import { tool as stringObfuscator } from './string-obfuscator';
 import { tool as svgPlaceholderGenerator } from './svg-placeholder-generator';
 import { tool as temperatureConverter } from './temperature-converter';
@@ -199,6 +200,7 @@ export const toolsByCategory: ToolCategory[] = [
       numeronymGenerator,
       asciiTextDrawer,
       textLineTools,
+      stringEscape,
     ],
   },
   {
