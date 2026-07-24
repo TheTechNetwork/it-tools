@@ -344,6 +344,22 @@ tools:
   base-converter:
     title: Integer base converter
     description: Convert a number between different bases (decimal, hexadecimal, binary, octal, base64, ...)
+    inputNumber: Input number
+    inputNumberPlaceholder: 'Put your number here (ex: 42)'
+    inputBase: Input base
+    inputBasePlaceholder: 'Put your input base here (ex: 10)'
+    binary: Binary (2)
+    binaryPlaceholder: Binary version will be here...
+    octal: Octal (8)
+    octalPlaceholder: Octal version will be here...
+    decimal: Decimal (10)
+    decimalPlaceholder: Decimal version will be here...
+    hexadecimal: Hexadecimal (16)
+    hexadecimalPlaceholder: Hexadecimal version will be here...
+    base64: Base64 (64)
+    base64Placeholder: Base64 version will be here...
+    custom: 'Custom:'
+    customPlaceholder: 'Base {base} will be here...'
 
   yaml-to-json-converter:
     title: YAML to JSON converter
