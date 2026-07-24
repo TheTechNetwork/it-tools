@@ -39,6 +39,7 @@ import { tool as jsonDiff } from './json-diff';
 import { tool as jsonMinify } from './json-minify';
 import { tool as jsonToCsv } from './json-to-csv';
 import { tool as jsonToToml } from './json-to-toml';
+import { tool as jsonToTypescript } from './json-to-typescript';
 import { tool as jsonToXml } from './json-to-xml';
 import { tool as jsonToYaml } from './json-to-yaml-converter';
 import { tool as jsonViewer } from './json-viewer';
@@ -115,6 +116,7 @@ export const toolsByCategory: ToolCategory[] = [
       yamlToToml,
       jsonToYaml,
       jsonToToml,
+      jsonToTypescript,
       listConverter,
       tomlToJson,
       tomlToYaml,
