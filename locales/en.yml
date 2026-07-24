@@ -444,3 +444,39 @@ tools:
   json-sort-keys:
     title: JSON sort keys
     description: 'Recursively sort the keys of a JSON object to produce a canonical, diff-friendly output (array order is preserved).'
+
+  ascii-text-drawer:
+    title: ASCII Art Text Generator
+    description: 'Create ASCII art text with many fonts and styles.'
+
+  email-normalizer:
+    title: Email normalizer
+    description: 'Normalize email addresses to a standard format for easier comparison. Useful for deduplication and data cleaning.'
+
+  json-to-xml:
+    title: JSON to XML
+    description: 'Convert JSON to XML'
+
+  markdown-to-html:
+    title: Markdown to HTML
+    description: 'Convert Markdown to Html and allow to print (as PDF)'
+
+  ocr-image-to-text:
+    title: Image to text (OCR)
+    description: 'Extract text from images and PDFs (photos, screenshots, scans) with Tesseract OCR, in 30+ languages, in batches. Runs entirely in your browser - files are never uploaded.'
+
+  regex-memo:
+    title: Regex cheatsheet
+    description: 'Javascript Regex/Regular Expression cheatsheet'
+
+  regex-tester:
+    title: Regex Tester
+    description: 'Test your regular expressions with sample text.'
+
+  safelink-decoder:
+    title: Outlook Safelink decoder
+    description: 'Decode Outlook SafeLink links'
+
+  xml-to-json:
+    title: XML to JSON
+    description: 'Convert XML to JSON'
