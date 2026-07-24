@@ -15,6 +15,7 @@ import { tool as chronometer } from './chronometer';
 import { tool as colorContrastChecker } from './color-contrast-checker';
 import { tool as colorConverter } from './color-converter';
 import { tool as crontabGenerator } from './crontab-generator';
+import { tool as csvToJson } from './csv-to-json';
 import { tool as dataStorageConverter } from './data-storage-converter';
 import { tool as dateTimeConverter } from './date-time-converter';
 import { tool as deviceInformation } from './device-information';
@@ -117,6 +118,7 @@ export const toolsByCategory: ToolCategory[] = [
       jsonToYaml,
       jsonToToml,
       jsonToTypescript,
+      csvToJson,
       listConverter,
       tomlToJson,
       tomlToYaml,
