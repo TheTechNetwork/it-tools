@@ -6,6 +6,7 @@ import {
   kebabCase,
   noCase,
   pascalCase,
+  pascalSnakeCase,
   pathCase,
   sentenceCase,
   snakeCase,
@@ -22,6 +23,7 @@ export {
   toMockingCase,
   toNoCase,
   toPascalCase,
+  toPascalSnakeCase,
   toPathCase,
   toSentenceCase,
   toSnakeCase,
@@ -67,6 +69,10 @@ function toKebabCase(input: string): string {
 
 function toPascalCase(input: string): string {
   return pascalCase(input);
+}
+
+function toPascalSnakeCase(input: string): string {
+  return pascalSnakeCase(input);
 }
 
 function toPathCase(input: string): string {
