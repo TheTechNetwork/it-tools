@@ -40,6 +40,7 @@ import { tool as ipv4SubnetCalculator } from './ipv4-subnet-calculator';
 import { tool as ipv6UlaGenerator } from './ipv6-ula-generator';
 import { tool as jsonDiff } from './json-diff';
 import { tool as jsonMinify } from './json-minify';
+import { tool as jsonSortKeys } from './json-sort-keys';
 import { tool as jsonToCsv } from './json-to-csv';
 import { tool as jsonToToml } from './json-to-toml';
 import { tool as jsonToTypescript } from './json-to-typescript';
@@ -169,6 +170,7 @@ export const toolsByCategory: ToolCategory[] = [
       crontabGenerator,
       jsonViewer,
       jsonMinify,
+      jsonSortKeys,
       jsonToCsv,
       sqlPrettify,
       chmodCalculator,
