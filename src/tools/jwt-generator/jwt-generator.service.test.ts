@@ -1,3 +1,7 @@
+// @vitest-environment node
+// jose relies on `instanceof Uint8Array`, which fails under jsdom because it
+// swaps in its own realm's typed-array globals; the browser (see the e2e) and
+// Node share one realm, so run this suite in the node environment.
 import { Buffer } from 'node:buffer';
 import { exportPKCS8, generateKeyPair } from 'jose';
 import { describe, expect, it } from 'vitest';
