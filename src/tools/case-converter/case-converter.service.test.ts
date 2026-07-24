@@ -9,6 +9,7 @@ import {
   toMockingCase,
   toNoCase,
   toPascalCase,
+  toPascalSnakeCase,
   toPathCase,
   toSentenceCase,
   toSnakeCase,
@@ -174,6 +175,20 @@ describe('case-converter', () => {
 
     it('handles an empty string', () => {
       expect(toPascalCase('')).toBe('');
+    });
+  });
+
+  describe('toPascalSnakeCase', () => {
+    it('converts a sentence to Pascal_Snake_Case', () => {
+      expect(toPascalSnakeCase('lorem ipsum dolor sit amet')).toBe('Lorem_Ipsum_Dolor_Sit_Amet');
+    });
+
+    it('handles mixed delimiters', () => {
+      expect(toPascalSnakeCase('hello-world_foo bar')).toBe('Hello_World_Foo_Bar');
+    });
+
+    it('handles an empty string', () => {
+      expect(toPascalSnakeCase('')).toBe('');
     });
   });
 

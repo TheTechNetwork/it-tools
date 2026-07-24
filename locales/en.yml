@@ -220,6 +220,23 @@ tools:
   case-converter:
     title: Case converter
     description: Transform the case of a string and choose between different formats
+    yourString: 'Your string:'
+    placeholder: Your string...
+    lowercase: 'Lowercase:'
+    uppercase: 'Uppercase:'
+    camelcase: 'Camelcase:'
+    capitalcase: 'Capitalcase:'
+    constantcase: 'Constantcase:'
+    dotcase: 'Dotcase:'
+    traincase: 'Traincase:'
+    nocase: 'Nocase:'
+    kebabcase: 'Kebabcase:'
+    pascalcase: 'Pascalcase:'
+    pascalsnakecase: 'Pascal snake case:'
+    pathcase: 'Pathcase:'
+    sentencecase: 'Sentencecase:'
+    snakecase: 'Snakecase:'
+    mockingcase: 'Mockingcase:'
 
   html-entities:
     title: Escape HTML entities
@@ -252,6 +269,12 @@ tools:
   qrcode-generator:
     title: QR Code generator
     description: Generate and download a QR code for a URL (or just plain text), and customize the background and foreground colors.
+    text: 'Text:'
+    textPlaceholder: Your link or text...
+    foregroundColor: 'Foreground color:'
+    backgroundColor: 'Background color:'
+    errorResistance: 'Error resistance:'
+    download: Download qr-code
 
   wifi-qrcode-generator:
     title: WiFi QR Code generator
