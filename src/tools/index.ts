@@ -29,6 +29,7 @@ import { tool as gitMemo } from './git-memo';
 import { tool as hashText } from './hash-text';
 import { tool as hmacGenerator } from './hmac-generator';
 import { tool as htmlEntities } from './html-entities';
+import { tool as htmlToMarkdown } from './html-to-markdown';
 import { tool as htmlWysiwygEditor } from './html-wysiwyg-editor';
 import { tool as httpStatusCodes } from './http-status-codes';
 import { tool as ibanValidatorAndParser } from './iban-validator-and-parser';
@@ -56,6 +57,7 @@ import { tool as markdownToHtml } from './markdown-to-html';
 import { tool as mathEvaluator } from './math-evaluator';
 import { tool as metaTagGenerator } from './meta-tag-generator';
 import { tool as mimeTypes } from './mime-types';
+import { tool as numberToWords } from './number-to-words';
 import { tool as numeronymGenerator } from './numeronym-generator';
 import { tool as ocrImageToText } from './ocr-image-to-text';
 import { tool as otpCodeGeneratorAndValidator } from './otp-code-generator-and-validator';
@@ -72,6 +74,7 @@ import { tool as rsaKeyPairGenerator } from './rsa-key-pair-generator';
 import { tool as safelinkDecoder } from './safelink-decoder';
 import { tool as slugifyString } from './slugify-string';
 import { tool as sqlPrettify } from './sql-prettify';
+import { tool as stringEscape } from './string-escape';
 import { tool as stringObfuscator } from './string-obfuscator';
 import { tool as svgPlaceholderGenerator } from './svg-placeholder-generator';
 import { tool as temperatureConverter } from './temperature-converter';
@@ -126,6 +129,7 @@ export const toolsByCategory: ToolCategory[] = [
       xmlToJson,
       jsonToXml,
       markdownToHtml,
+      htmlToMarkdown,
     ],
   },
   {
@@ -197,6 +201,8 @@ export const toolsByCategory: ToolCategory[] = [
       numeronymGenerator,
       asciiTextDrawer,
       textLineTools,
+      stringEscape,
+      numberToWords,
     ],
   },
   {
