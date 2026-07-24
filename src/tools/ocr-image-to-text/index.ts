@@ -1,10 +1,11 @@
 import { Scan } from '@vicons/tabler';
+import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 
 export const tool = defineTool({
-  name: 'Image to text (OCR)',
+  name: translate('tools.ocr-image-to-text.title'),
   path: '/ocr-image-to-text',
-  description: 'Extract text from images and PDFs (photos, screenshots, scans) with Tesseract OCR, in 30+ languages, in batches. Runs entirely in your browser - files are never uploaded.',
+  description: translate('tools.ocr-image-to-text.description'),
   keywords: ['ocr', 'image', 'pdf', 'text', 'tesseract', 'recognize', 'extract', 'scan', 'photo', 'screenshot', 'picture', 'batch'],
   component: () => import('./ocr-image-to-text.vue'),
   icon: Scan,
