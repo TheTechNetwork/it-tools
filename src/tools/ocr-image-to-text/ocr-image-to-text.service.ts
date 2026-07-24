@@ -87,6 +87,24 @@ function langDir(quality: OcrQuality): string {
   return quality === 'best' ? 'tessdata-best' : 'tessdata';
 }
 
+// Fail fast (with a clear, catchable error) if a language's data can't be
+// fetched. tesseract.js does NOT reject createWorker when a .traineddata is
+// missing/unreachable - it hits an internal race and hangs - so without this
+// the UI would spin forever with no message when the asset host is unpopulated
+// or a download drops.
+async function assertLanguageAvailable(url: string, language: string): Promise<void> {
+  let response: Response;
+  try {
+    response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+  }
+  catch {
+    throw new Error(`Could not reach the OCR data for "${language}". Check your connection and try again.`);
+  }
+  if (!response.ok) {
+    throw new Error(`OCR data for "${language}" is unavailable (HTTP ${response.status}).`);
+  }
+}
+
 // Create one worker for the given languages/quality and reuse it across many
 // images before terminating - much faster than re-initializing per image when
 // processing a batch (or the pages of a PDF).
@@ -100,13 +118,17 @@ async function createRecognizer({
   onProgress?: (info: OcrProgress) => void;
 }): Promise<Recognizer> {
   const base = getAssetsBaseUrl();
+  const dir = langDir(quality);
+
+  // Confirm every language's data is reachable before starting the worker.
+  await Promise.all(languages.map(language => assertLanguageAvailable(`${base}/${dir}/${language}.traineddata`, language)));
 
   // Pass a plain array: tesseract.js posts the languages to its worker, and a
   // reactive/proxied array would fail structured clone ("could not be cloned").
   const worker = await createWorker([...languages], 1, {
     workerPath: `${base}/worker.min.js`,
     corePath: `${base}/core`,
-    langPath: `${base}/${langDir(quality)}`,
+    langPath: `${base}/${dir}`,
     gzip: false, // the asset host serves raw .traineddata, not .gz
     logger: (message) => {
       onProgress?.({ status: message.status, progress: message.progress });

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const { createWorker, recognize, terminate } = vi.hoisted(() => {
   const recognize = vi.fn(async () => ({ data: { text: 'hello world' } }));
@@ -8,6 +8,15 @@ const { createWorker, recognize, terminate } = vi.hoisted(() => {
 });
 
 vi.mock('tesseract.js', () => ({ createWorker }));
+
+// The recognizer preflights each language's .traineddata with a HEAD request;
+// stub fetch as reachable by default (individual tests override it).
+const fetchMock = vi.fn(async () => ({ ok: true, status: 200 } as Response));
+beforeEach(() => {
+  fetchMock.mockClear();
+  fetchMock.mockResolvedValue({ ok: true, status: 200 } as Response);
+  vi.stubGlobal('fetch', fetchMock);
+});
 
 const { createRecognizer, getAssetsBaseUrl, recognizeText, resolveAssetsBase, SUPPORTED_LANGUAGES } = await import('./ocr-image-to-text.service');
 
@@ -68,5 +77,25 @@ describe('ocr-image-to-text', () => {
     expect(createWorker).toHaveBeenCalledTimes(1);
     expect(recognize).toHaveBeenCalledTimes(2);
     expect(terminate).toHaveBeenCalledTimes(1);
+  });
+
+  it('preflights each language and HEADs its .traineddata before starting the worker', async () => {
+    fetchMock.mockClear();
+    await recognizeText({ image: 'x', languages: ['eng', 'fra'] });
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringMatching(/\/tesseract\/.+\/tessdata\/eng\.traineddata$/),
+      expect.objectContaining({ method: 'HEAD' }),
+    );
+  });
+
+  it('fails fast with a clear error (not a hang) when a language is unavailable', async () => {
+    createWorker.mockClear();
+    fetchMock.mockResolvedValue({ ok: false, status: 404 } as Response);
+
+    await expect(recognizeText({ image: 'x', languages: ['jpn'] })).rejects.toThrow(/jpn.*unavailable/i);
+    // The worker is never started when the data can't be fetched.
+    expect(createWorker).not.toHaveBeenCalled();
   });
 });
