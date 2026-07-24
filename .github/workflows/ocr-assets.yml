@@ -4,17 +4,22 @@
 # there at runtime, so this keeps the deploy lean and works identically across
 # Cloudflare, Vercel, Netlify and Docker.
 #
-# Runs on manual dispatch, weekly (to pick up new tessdata_fast), and whenever the
-# tesseract.js version or the asset scripts change on main. It no-ops (does not
-# fail) until the R2_* secrets are configured, so it stays green before the bucket
-# is set up.
+# The version-pinned path is immutable, so a given version only needs publishing
+# ONCE. This runs on manual dispatch and whenever the tesseract.js version or the
+# asset scripts change on main; a `check` step reads the published manifest and
+# skips prepare + upload entirely when the current version is already complete,
+# so re-runs don't re-download ~200 MB of tessdata for nothing. Use the `force`
+# dispatch input to re-publish regardless. It no-ops (does not fail) until the
+# R2_* secrets are configured, so it stays green before the bucket is set up.
 name: ocr-assets
 
 on:
   workflow_dispatch:
-  schedule:
-    # Weekly, Monday 05:00 UTC.
-    - cron: '0 5 * * 1'
+    inputs:
+      force:
+        description: 'Re-publish even if this version is already synced'
+        type: boolean
+        default: false
   push:
     branches: [ "main" ]
     paths:
@@ -22,6 +27,7 @@ on:
       - 'pnpm-lock.yaml'
       - 'scripts/prepare-tesseract.mjs'
       - 'scripts/sync-ocr-assets.mjs'
+      - 'scripts/ocr-assets.config.mjs'
       - '.github/workflows/ocr-assets.yml'
 
 concurrency:
@@ -35,6 +41,12 @@ jobs:
   sync:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    env:
+      OCR_ALL_LANGS: '1'
+      OCR_BEST: '1'
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -59,14 +71,30 @@ jobs:
         if: steps.cfg.outputs.configured == 'true'
         run: pnpm install --frozen-lockfile
 
-      - name: Prepare assets (engine + all languages, fast + best)
-        if: steps.cfg.outputs.configured == 'true'
-        run: OCR_ALL_LANGS=1 OCR_BEST=1 pnpm script:ocr:assets
-
-      - name: Upload to R2
+      - name: Check whether this version is already published
+        id: check
         if: steps.cfg.outputs.configured == 'true'
         env:
-          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          FORCE: ${{ inputs.force && '1' || '' }}
+        run: |
+          result=$(node scripts/sync-ocr-assets.mjs --check || echo not-synced)
+          echo "check: $result"
+          if [ "$result" = "synced" ]; then
+            echo "synced=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "synced=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Already published - nothing to do
+        if: steps.cfg.outputs.configured == 'true' && steps.check.outputs.synced == 'true'
+        run: echo "This tesseract version is already published to R2; skipping prepare + upload."
+
+      - name: Prepare assets (engine + all languages, fast + best)
+        if: steps.cfg.outputs.configured == 'true' && steps.check.outputs.synced != 'true'
+        run: pnpm script:ocr:assets
+
+      - name: Upload to R2
+        if: steps.cfg.outputs.configured == 'true' && steps.check.outputs.synced != 'true'
+        env:
+          FORCE: ${{ inputs.force && '1' || '' }}
         run: pnpm script:ocr:sync

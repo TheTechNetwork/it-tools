@@ -13,6 +13,10 @@
 //   R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY
 // Optional: R2_BUCKET (default "thetechnetwork-assets"), FORCE=1 (re-upload
 // files that already exist), DRY_RUN=1 (print the plan, touch nothing).
+//
+// `--check` prints "synced" if this version's manifest already covers the
+// expected languages/qualities (so the workflow can skip prepare + upload
+// entirely), else "not-synced". A successful sync writes that manifest.
 import { execFileSync } from 'node:child_process';
 import { existsSync, statSync } from 'node:fs';
 import { readdir } from 'node:fs/promises';
@@ -20,6 +24,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
+import { getLanguages, getQualities } from './ocr-assets.config.mjs';
 
 const require = createRequire(import.meta.url);
 const root = path.resolve(fileURLToPath(import.meta.url), '../..');
@@ -28,8 +33,10 @@ const version = require('tesseract.js/package.json').version;
 const localDir = path.join(root, 'public', 'tesseract', version);
 const bucket = process.env.R2_BUCKET || 'thetechnetwork-assets';
 const keyPrefix = `tesseract/${version}`;
+const manifestKey = `${keyPrefix}/manifest.json`;
 const dryRun = !!process.env.DRY_RUN;
 const force = !!process.env.FORCE;
+const checkOnly = process.argv.includes('--check');
 
 // Content-hashed, version-pinned path -> immutable, cache for a year.
 const CACHE_CONTROL = 'public, max-age=31536000, immutable';
@@ -103,7 +110,59 @@ function objectExists(key) {
   return result !== null;
 }
 
-async function main() {
+// The manifest records which languages/qualities have been published for this
+// version. It lets `--check` tell whether there is anything to do without
+// re-downloading ~200 MB of tessdata every run.
+function readManifest() {
+  try {
+    const out = execFileSync('aws', ['s3', 'cp', `s3://${bucket}/${manifestKey}`, '-', '--endpoint-url', endpoint()], {
+      env: awsEnv(),
+      stdio: ['ignore', 'pipe', 'ignore'],
+    });
+    return JSON.parse(out.toString());
+  }
+  catch {
+    return null;
+  }
+}
+
+function writeManifest() {
+  const manifest = JSON.stringify({ version, languages: getLanguages(), qualities: getQualities() });
+  execFileSync('aws', [
+    's3',
+    'cp',
+    '-',
+    `s3://${bucket}/${manifestKey}`,
+    '--content-type',
+    'application/json',
+    '--cache-control',
+    'no-cache',
+    '--endpoint-url',
+    endpoint(),
+  ], { env: awsEnv(), input: manifest });
+  console.log('  wrote manifest.json');
+}
+
+// True if the published manifest already covers every expected language/quality.
+function isAlreadySynced() {
+  const manifest = readManifest();
+  if (!manifest) {
+    return false;
+  }
+  const languages = manifest.languages ?? [];
+  const qualities = manifest.qualities ?? [];
+  return getLanguages().every(language => languages.includes(language))
+    && getQualities().every(quality => qualities.includes(quality));
+}
+
+async function runCheck() {
+  requireEnv();
+  const synced = !force && isAlreadySynced();
+  // Single-word stdout the workflow captures to decide whether to skip.
+  console.log(synced ? 'synced' : 'not-synced');
+}
+
+async function runSync() {
   if (!existsSync(localDir)) {
     throw new Error(`No assets at ${localDir} - run \`OCR_ALL_LANGS=1 pnpm script:ocr:assets\` first.`);
   }
@@ -150,8 +209,17 @@ async function main() {
   }
 
   if (!dryRun) {
+    writeManifest();
     console.log(`Done: ${uploaded} uploaded (${(bytes / 1048576).toFixed(1)} MB), ${skipped} already present.`);
   }
+}
+
+async function main() {
+  if (checkOnly) {
+    await runCheck();
+    return;
+  }
+  await runSync();
 }
 
 main().catch((error) => {

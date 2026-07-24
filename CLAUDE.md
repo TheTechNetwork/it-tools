@@ -769,17 +769,24 @@ release workflow.
 
 #### 7. **ocr-assets.yml** - OCR Asset Publishing
 
-Publishes the Tesseract OCR assets (engine + every supported language) to the
-first-party R2 bucket behind `assets.thetech.network`, under a path versioned by
-the tesseract.js version (`tesseract/<version>/`). Runs on manual dispatch,
-weekly, and when the tesseract.js version or the asset scripts change on main. It
-prepares the assets (`scripts/prepare-tesseract.mjs` with `OCR_ALL_LANGS=1`) and
+Publishes the Tesseract OCR assets (engine + every supported language, `fast`
+and `best`) to the first-party R2 bucket behind `assets.thetech.network`, under a
+path versioned by the tesseract.js version (`tesseract/<version>/`). Because that
+path is immutable, a version only needs publishing once: the workflow runs on
+manual dispatch and when the tesseract.js version or the asset scripts change on
+main, and a `check` step reads the published `manifest.json` and **skips prepare +
+upload when the version is already complete** (so re-runs don't re-download
+~200 MB of tessdata for nothing); a `force` dispatch input re-publishes anyway.
+The language set + quality sources live in `scripts/ocr-assets.config.mjs` (shared
+by prepare and sync so the manifest check stays in lockstep). It prepares the
+assets (`scripts/prepare-tesseract.mjs` with `OCR_ALL_LANGS=1 OCR_BEST=1`) and
 mirrors them with `scripts/sync-ocr-assets.mjs`, which shells out to the
-pre-installed `aws` CLI (R2 speaks the S3 API - no AWS SDK added to the repo).
-Needs the `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID` and `R2_SECRET_ACCESS_KEY` secrets;
-it no-ops (staying green) until they are configured. The Image-to-text (OCR) tool
-fetches these assets same-origin-free at runtime, which is why the CSP allows
-`assets.thetech.network` on `script-src`/`connect-src`.
+pre-installed `aws` CLI (R2 speaks the S3 API - no AWS SDK added to the repo) and
+writes the manifest on success. Needs the `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID` and
+`R2_SECRET_ACCESS_KEY` secrets; it no-ops (staying green) until they are
+configured. The Image-to-text (OCR) tool fetches these assets same-origin-free at
+runtime, which is why the CSP allows `assets.thetech.network` on
+`script-src`/`connect-src`.
 
 > Static analysis (SAST) runs via GitHub code-scanning **default setup**
 > (configured in repo settings), not a workflow file in this repo. The Trivy
