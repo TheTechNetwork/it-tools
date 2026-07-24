@@ -94,5 +94,14 @@ describe('token-generator', () => {
       expect(token).toHaveLength(256);
       expect(token).toMatch(/^[a-z]+$/i);
     });
+
+    it('includes N and n (regression: they were missing from the alphabet)', () => {
+      // Over 5000 draws the chance of never seeing N/n is (25/26)^5000 ~= 0.
+      const upper = createToken({ withUppercase: true, withLowercase: false, withNumbers: false, withSymbols: false, length: 5000 });
+      const lower = createToken({ withUppercase: false, withLowercase: true, withNumbers: false, withSymbols: false, length: 5000 });
+
+      expect(upper).toContain('N');
+      expect(lower).toContain('n');
+    });
   });
 });
