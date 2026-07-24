@@ -40,6 +40,7 @@ import { tool as ipv4SubnetCalculator } from './ipv4-subnet-calculator';
 import { tool as ipv6UlaGenerator } from './ipv6-ula-generator';
 import { tool as jsonDiff } from './json-diff';
 import { tool as jsonMinify } from './json-minify';
+import { tool as jsonSortKeys } from './json-sort-keys';
 import { tool as jsonToCsv } from './json-to-csv';
 import { tool as jsonToToml } from './json-to-toml';
 import { tool as jsonToTypescript } from './json-to-typescript';
@@ -54,6 +55,7 @@ import { tool as loremIpsumGenerator } from './lorem-ipsum-generator';
 import { tool as macAddressGenerator } from './mac-address-generator';
 import { tool as macAddressLookup } from './mac-address-lookup';
 import { tool as markdownToHtml } from './markdown-to-html';
+import { tool as markdownTocGenerator } from './markdown-toc-generator';
 import { tool as mathEvaluator } from './math-evaluator';
 import { tool as metaTagGenerator } from './meta-tag-generator';
 import { tool as mimeTypes } from './mime-types';
@@ -88,6 +90,7 @@ import { tool as tokenGenerator } from './token-generator';
 import { tool as tomlToJson } from './toml-to-json';
 import { tool as tomlToYaml } from './toml-to-yaml';
 import { tool as ulidGenerator } from './ulid-generator';
+import { tool as unicodeInspector } from './unicode-inspector';
 import { tool as urlEncoder } from './url-encoder';
 import { tool as urlParser } from './url-parser';
 import { tool as userAgentParser } from './user-agent-parser';
@@ -167,6 +170,7 @@ export const toolsByCategory: ToolCategory[] = [
       crontabGenerator,
       jsonViewer,
       jsonMinify,
+      jsonSortKeys,
       jsonToCsv,
       sqlPrettify,
       chmodCalculator,
@@ -176,6 +180,7 @@ export const toolsByCategory: ToolCategory[] = [
       emailNormalizer,
       regexTester,
       regexMemo,
+      markdownTocGenerator,
     ],
   },
   {
@@ -203,6 +208,7 @@ export const toolsByCategory: ToolCategory[] = [
       textLineTools,
       stringEscape,
       numberToWords,
+      unicodeInspector,
     ],
   },
   {
