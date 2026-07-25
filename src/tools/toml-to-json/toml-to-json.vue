@@ -3,6 +3,8 @@ import type { UseValidationRule } from '@/composable/validation';
 import { withDefaultOnError } from '../../utils/defaults';
 import { convertTomlToJson, isValidToml } from './toml-to-json.service';
 
+const { t } = useI18n();
+
 const transformer = (value: string) => value === '' ? '' : withDefaultOnError(() => convertTomlToJson(value), '');
 
 const rules: UseValidationRule<string>[] = [
@@ -15,9 +17,9 @@ const rules: UseValidationRule<string>[] = [
 
 <template>
   <format-transformer
-    input-label="Your TOML"
-    input-placeholder="Paste your TOML here..."
-    output-label="JSON from your TOML"
+    :input-label="t('tools.toml-to-json.inputLabel')"
+    :input-placeholder="t('tools.toml-to-json.inputPlaceholder')"
+    :output-label="t('tools.toml-to-json.outputLabel')"
     output-language="json"
     :input-validation-rules="rules"
     :transformer="transformer"

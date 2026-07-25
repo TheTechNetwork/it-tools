@@ -4,6 +4,8 @@ import JSON5 from 'json5';
 import { withDefaultOnError } from '../../utils/defaults';
 import { convertJsonToToml } from './json-to-toml.service';
 
+const { t } = useI18n();
+
 const transformer = (value: string) => value.trim() === '' ? '' : withDefaultOnError(() => convertJsonToToml(value), '');
 
 const rules: UseValidationRule<string>[] = [
@@ -16,9 +18,9 @@ const rules: UseValidationRule<string>[] = [
 
 <template>
   <format-transformer
-    input-label="Your JSON"
-    input-placeholder="Paste your JSON here..."
-    output-label="TOML from your JSON"
+    :input-label="t('tools.json-to-toml.inputLabel')"
+    :input-placeholder="t('tools.json-to-toml.inputPlaceholder')"
+    :output-label="t('tools.json-to-toml.outputLabel')"
     output-language="toml"
     :input-validation-rules="rules"
     :transformer="transformer"
