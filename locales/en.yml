@@ -148,6 +148,14 @@ tools:
   slugify-string:
     title: Slugify string
     description: Make a string url, filename and id safe.
+    yourString: Your string to slugify
+    stringPlaceholder: 'Put your string here (ex: My file path)'
+    yourSlug: Your slug
+    slugPlaceholder: 'Your slug will be generated here (ex: my-file-path)'
+    separator: 'Separator:'
+    lowercase: 'Lowercase:'
+    copySlug: Copy slug
+    copied: Slug copied to clipboard
 
   encryption:
     title: Encrypt / decrypt text
@@ -156,6 +164,9 @@ tools:
   random-port-generator:
     title: Random port generator
     description: Generate random port numbers outside of the range of "known" ports (0-1023).
+    copy: Copy
+    refresh: Refresh
+    copied: Port copied to the clipboard
 
   yaml-prettify:
     title: YAML prettify and format
@@ -307,6 +318,17 @@ tools:
   mac-address-generator:
     title: MAC address generator
     description: Enter the quantity and prefix. MAC addresses will be generated in your chosen case (uppercase or lowercase)
+    quantity: 'Quantity:'
+    prefix: 'MAC address prefix:'
+    prefixPlaceholder: 'Set a prefix, e.g. 64:16:7F'
+    case: 'Case:'
+    uppercase: Uppercase
+    lowercase: Lowercase
+    separator: 'Separator:'
+    separatorNone: None
+    refresh: Refresh
+    copy: Copy
+    copied: MAC addresses copied to the clipboard
 
   json-diff:
     title: JSON diff
@@ -420,6 +442,13 @@ tools:
   basic-auth-generator:
     title: Basic auth generator
     description: Generate a base64 basic auth header from a username and password.
+    username: Username
+    usernamePlaceholder: Your username...
+    password: Password
+    passwordPlaceholder: Your password...
+    header: 'Authorization header:'
+    copyHeader: Copy header
+    copied: Header copied to the clipboard
 
   text-to-unicode:
     title: Text to Unicode
