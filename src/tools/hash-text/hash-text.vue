@@ -6,6 +6,8 @@ import { useQueryParam } from '@/composable/queryParams';
 import InputCopyable from '../../components/InputCopyable.vue';
 import { convertHexToBin } from './hash-text.service';
 
+const { t } = useI18n();
+
 const algos = {
   MD5,
   SHA1,
@@ -37,29 +39,29 @@ const hashText = (algo: AlgoNames, value: string) => formatWithEncoding(algos[al
 <template>
   <div>
     <c-card>
-      <c-input-text v-model:value="clearText" multiline raw-text placeholder="Your string to hash..." rows="3" autosize autofocus label="Your text to hash:" />
+      <c-input-text v-model:value="clearText" multiline raw-text :placeholder="t('tools.hash-text.textPlaceholder')" rows="3" autosize autofocus :label="t('tools.hash-text.textLabel')" />
 
       <n-divider />
 
       <c-select
         v-model:value="encoding"
         mb-4
-        label="Digest encoding"
+        :label="t('tools.hash-text.digestEncoding')"
         :options="[
           {
-            label: 'Binary (base 2)',
+            label: t('tools.hash-text.encoding.binary'),
             value: 'Bin',
           },
           {
-            label: 'Hexadecimal (base 16)',
+            label: t('tools.hash-text.encoding.hexadecimal'),
             value: 'Hex',
           },
           {
-            label: 'Base64 (base 64)',
+            label: t('tools.hash-text.encoding.base64'),
             value: 'Base64',
           },
           {
-            label: 'Base64url (base 64 with url safe chars)',
+            label: t('tools.hash-text.encoding.base64url'),
             value: 'Base64url',
           },
         ]"

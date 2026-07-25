@@ -77,6 +77,14 @@ tools:
   password-strength-analyser:
     title: Password strength analyser
     description: Discover the strength of your password with this client-side-only password strength analyser and crack time estimation tool.
+    passwordPlaceholder: Enter a password...
+    crackDuration: Duration to crack this password with brute force
+    passwordLength: 'Password length:'
+    entropy: 'Entropy:'
+    charsetSize: 'Character set size:'
+    score: 'Score:'
+    note: 'Note: '
+    noteText: The computed strength is based on the time it would take to crack the password using a brute force approach, it does not take into account the possibility of a dictionary attack.
 
   chronometer:
     title: Chronometer
@@ -130,6 +138,23 @@ tools:
   bcrypt:
     title: Bcrypt
     description: Hash and compare text string using bcrypt. Bcrypt is a password-hashing function based on the Blowfish cipher.
+    hash:
+      title: Hash
+      stringLabel: 'Your string: '
+      stringPlaceholder: Your string to bcrypt...
+      saltCount: 'Salt count: '
+      saltCountPlaceholder: Salt rounds...
+      copyHash: Copy hash
+    copied: Hashed string copied to the clipboard
+    compare:
+      title: Compare string with hash
+      stringLabel: 'Your string: '
+      stringPlaceholder: Your string to compare...
+      hashLabel: 'Your hash: '
+      hashPlaceholder: Your hash to compare...
+      doTheyMatch: 'Do they match ? '
+      matchYes: 'Yes'
+      matchNo: 'No'
 
   crontab-generator:
     title: Crontab generator
@@ -166,6 +191,20 @@ tools:
   encryption:
     title: Encrypt / decrypt text
     description: Encrypt clear text and decrypt ciphertext using crypto algorithms like AES, TripleDES, Rabbit or RC4.
+    secretKey: 'Your secret key:'
+    algorithm: 'Encryption algorithm:'
+    outputPlaceholder: Your string hash
+    encrypt:
+      title: Encrypt
+      textLabel: 'Your text:'
+      textPlaceholder: The string to cypher
+      outputLabel: 'Your text encrypted:'
+    decrypt:
+      title: Decrypt
+      textLabel: 'Your encrypted text:'
+      outputLabel: 'Your decrypted text:'
+      errorTitle: Error while decrypting
+    unableToDecrypt: Unable to decrypt your text
 
   random-port-generator:
     title: Random port generator
@@ -189,10 +228,36 @@ tools:
   hmac-generator:
     title: Hmac generator
     description: Computes a hash-based message authentication code (HMAC) using a secret key and your favorite hashing function.
+    plainTextLabel: Plain text to compute the hash
+    plainTextPlaceholder: Plain text to compute the hash...
+    secretLabel: Secret key
+    secretPlaceholder: Enter the secret key...
+    hashingFunction: Hashing function
+    hashingFunctionPlaceholder: Select an hashing function...
+    outputEncoding: Output encoding
+    outputEncodingPlaceholder: Select the result encoding...
+    encoding:
+      binary: Binary (base 2)
+      hexadecimal: Hexadecimal (base 16)
+      base64: Base64 (base 64)
+      base64url: Base64-url (base 64 with url safe chars)
+    hmacLabel: HMAC of your text
+    hmacPlaceholder: The result of the HMAC...
+    copyHmac: Copy HMAC
 
   bip39-generator:
     title: BIP39 passphrase generator
     description: Generate a BIP39 passphrase from an existing or random mnemonic, or get the mnemonic from the passphrase.
+    language: 'Language:'
+    entropy: 'Entropy (seed):'
+    entropyPlaceholder: Your string...
+    passphrase: 'Passphrase (mnemonic):'
+    passphrasePlaceholder: Your mnemonic...
+    entropyLengthError: Entropy length should be >= 16, <= 32 and be a multiple of 4
+    entropyHexError: Entropy should be an hexadecimal string
+    invalidMnemonic: Invalid mnemonic
+    entropyCopied: Entropy copied to the clipboard
+    passphraseCopied: Passphrase copied to the clipboard
 
   base64-file-converter:
     title: Base64 file converter
@@ -327,6 +392,11 @@ tools:
   rsa-key-pair-generator:
     title: RSA key pair generator
     description: Generate a new random RSA private and public pem certificate key pair.
+    bits: 'Bits :'
+    bitsError: Bits should be 256 <= bits <= 16384 and be a multiple of 8
+    refresh: Refresh key-pair
+    publicKey: Public key
+    privateKey: Private key
 
   html-wysiwyg-editor:
     title: HTML WYSIWYG editor
@@ -385,6 +455,14 @@ tools:
   hash-text:
     title: Hash text
     description: 'Hash a text string using the function you need : MD5, SHA1, SHA256, SHA224, SHA512, SHA384, SHA3 or RIPEMD160'
+    textLabel: 'Your text to hash:'
+    textPlaceholder: Your string to hash...
+    digestEncoding: Digest encoding
+    encoding:
+      binary: Binary (base 2)
+      hexadecimal: Hexadecimal (base 16)
+      base64: Base64 (base 64)
+      base64url: Base64url (base 64 with url safe chars)
 
   json-to-toml:
     title: JSON to TOML
@@ -400,6 +478,24 @@ tools:
   pdf-signature-checker:
     title: PDF signature checker
     description: Verify the signatures of a PDF file. A signed PDF file contains one or more signatures that may be used to determine whether the contents of the file have been altered since the file was signed.
+    dragDrop: Drag and drop a PDF file here, or click to select a file
+    noSignatures: No signatures found in the provided file.
+    signatureCertificates: 'Signature {number} certificates :'
+    details:
+      validityPeriod: Validity period
+      issuedBy: Issued by
+      issuedTo: Issued to
+      pemCertificate: PEM certificate
+      certificateName: Certificate {number}
+      notBefore: Not before
+      notAfter: Not after
+      commonName: Common name
+      organizationName: Organization name
+      countryName: Country name
+      localityName: Locality name
+      organizationalUnitName: Organizational unit name
+      stateOrProvinceName: State or province name
+      viewPemCert: View PEM cert
 
   json-minify:
     title: JSON minify
@@ -411,6 +507,14 @@ tools:
   ulid-generator:
     title: ULID generator
     description: Generate random Universally Unique Lexicographically Sortable Identifier (ULID).
+    quantity: 'Quantity:'
+    format: 'Format: '
+    formats:
+      raw: Raw
+      json: JSON
+    refresh: Refresh
+    copy: Copy
+    copied: ULIDs copied to the clipboard
 
   string-obfuscator:
     title: String obfuscator
