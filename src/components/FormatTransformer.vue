@@ -30,6 +30,8 @@ const props = withDefaults(
   },
 );
 
+const { t } = useI18n();
+
 const {
   transformer,
   inputValidationRules,
@@ -80,7 +82,7 @@ function downloadOutput() {
     <div v-if="showImport" mb-2 flex justify-end>
       <input ref="fileInput" type="file" class="hidden" @change="onFileImport">
       <c-button size="small" @click="triggerImport">
-        Import file
+        {{ t('formatTransformer.importFile') }}
       </c-button>
     </div>
 
@@ -103,7 +105,7 @@ function downloadOutput() {
     <div mb-5px flex items-center justify-between gap-2>
       <span>{{ outputLabel }}</span>
       <c-button v-if="showDownload" size="small" :disabled="output === ''" @click="downloadOutput">
-        Download
+        {{ t('formatTransformer.download') }}
       </c-button>
     </div>
     <textarea-copyable :value="output" :language="outputLanguage" :follow-height-of="inputElement?.inputWrapperRef" />
