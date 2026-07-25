@@ -4,6 +4,8 @@ import JSON5 from 'json5';
 import { withDefaultOnError } from '@/utils/defaults';
 import { convertArrayToCsv } from './json-to-csv.service';
 
+const { t } = useI18n();
+
 function transformer(value: string) {
   return withDefaultOnError(() => {
     if (value === '') {
@@ -23,9 +25,9 @@ const rules: UseValidationRule<string>[] = [
 
 <template>
   <format-transformer
-    input-label="Your raw JSON"
-    input-placeholder="Paste your raw JSON here..."
-    output-label="CSV version of your JSON"
+    :input-label="t('tools.json-to-csv.inputLabel')"
+    :input-placeholder="t('tools.json-to-csv.inputPlaceholder')"
+    :output-label="t('tools.json-to-csv.outputLabel')"
     :input-validation-rules="rules"
     :transformer="transformer"
   />

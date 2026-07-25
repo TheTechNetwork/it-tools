@@ -3,6 +3,8 @@ import type { ConvertOptions } from './list-converter.types';
 import { useStorage } from '@vueuse/core';
 import { convert } from './list-converter.models';
 
+const { t } = useI18n();
+
 const sortOrderOptions = [
   {
     label: 'Sort ascending',
@@ -115,9 +117,9 @@ function transformer(value: string) {
     </div>
   </div>
   <format-transformer
-    input-label="Your input data"
-    input-placeholder="Paste your input data here..."
-    output-label="Your transformed data"
+    :input-label="t('tools.list-converter.inputLabel')"
+    :input-placeholder="t('tools.list-converter.inputPlaceholder')"
+    :output-label="t('tools.list-converter.outputLabel')"
     :transformer="transformer"
   />
 </template>

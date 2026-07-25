@@ -2,6 +2,8 @@
 import type { UseValidationRule } from '@/composable/validation';
 import { formatXml, isValidXML } from './xml-formatter.service';
 
+const { t } = useI18n();
+
 const defaultValue = '<hello><world>foo</world><world>bar</world></hello>';
 const indentSize = useStorage('xml-formatter:indent-size', 2);
 const collapseContent = useStorage('xml-formatter:collapse-content', true);
@@ -35,9 +37,9 @@ const rules: UseValidationRule<string>[] = [
   </div>
 
   <format-transformer
-    input-label="Your XML"
-    input-placeholder="Paste your XML here..."
-    output-label="Formatted XML from your XML"
+    :input-label="t('tools.xml-formatter.inputLabel')"
+    :input-placeholder="t('tools.xml-formatter.inputPlaceholder')"
+    :output-label="t('tools.xml-formatter.outputLabel')"
     output-language="xml"
     :input-validation-rules="rules"
     :transformer="transformer"

@@ -57,6 +57,9 @@ toolCard:
   new: New
 search:
   label: Search
+formatTransformer:
+  importFile: Import file
+  download: Download
 tools:
   categories:
     favorite-tools: 'Your favorite tools'
@@ -104,6 +107,9 @@ tools:
   json-to-csv:
     title: JSON to CSV
     description: Convert JSON to CSV with automatic header detection.
+    inputLabel: 'Your raw JSON'
+    inputPlaceholder: 'Paste your raw JSON here...'
+    outputLabel: 'CSV version of your JSON'
 
   camera-recorder:
     title: Camera recorder
@@ -195,6 +201,9 @@ tools:
   list-converter:
     title: List converter
     description: This tool can process column-based data and apply various changes (transpose, add prefix and suffix, reverse list, sort list, lowercase values, truncate values) to each row.
+    inputLabel: 'Your input data'
+    inputPlaceholder: 'Paste your input data here...'
+    outputLabel: 'Your transformed data'
 
   base64-string-converter:
     title: Base64 string encoder/decoder
@@ -203,6 +212,9 @@ tools:
   toml-to-yaml:
     title: TOML to YAML
     description: Parse and convert TOML to YAML.
+    inputLabel: 'Your TOML'
+    inputPlaceholder: 'Paste your TOML here...'
+    outputLabel: 'YAML from your TOML'
 
   math-evaluator:
     title: Math evaluator
@@ -211,6 +223,9 @@ tools:
   json-to-yaml-converter:
     title: JSON to YAML converter
     description: Simply convert JSON to YAML with this online live converter.
+    inputLabel: 'Your JSON'
+    inputPlaceholder: 'Paste your JSON here...'
+    outputLabel: 'YAML from your JSON'
 
   url-parser:
     title: URL parser
@@ -272,6 +287,9 @@ tools:
   toml-to-json:
     title: TOML to JSON
     description: Parse and convert TOML to JSON.
+    inputLabel: 'Your TOML'
+    inputPlaceholder: 'Paste your TOML here...'
+    outputLabel: 'JSON from your TOML'
 
   lorem-ipsum-generator:
     title: Lorem ipsum generator
@@ -294,6 +312,9 @@ tools:
   xml-formatter:
     title: XML formatter
     description: Prettify your XML string into a friendly, human-readable format.
+    inputLabel: 'Your XML'
+    inputPlaceholder: 'Paste your XML here...'
+    outputLabel: 'Formatted XML from your XML'
 
   temperature-converter:
     title: Temperature converter
@@ -314,6 +335,9 @@ tools:
   yaml-to-toml:
     title: YAML to TOML
     description: Parse and convert YAML to TOML.
+    inputLabel: 'Your YAML'
+    inputPlaceholder: 'Paste your YAML here...'
+    outputLabel: 'TOML from your YAML'
 
   mac-address-generator:
     title: MAC address generator
@@ -365,6 +389,9 @@ tools:
   json-to-toml:
     title: JSON to TOML
     description: Parse and convert JSON to TOML.
+    inputLabel: 'Your JSON'
+    inputPlaceholder: 'Paste your JSON here...'
+    outputLabel: 'TOML from your JSON'
 
   device-information:
     title: Device information
@@ -377,6 +404,9 @@ tools:
   json-minify:
     title: JSON minify
     description: Minify and compress your JSON by removing unnecessary whitespace.
+    inputLabel: 'Your raw JSON'
+    inputPlaceholder: 'Paste your raw JSON here...'
+    outputLabel: 'Minified version of your JSON'
 
   ulid-generator:
     title: ULID generator
@@ -409,6 +439,9 @@ tools:
   yaml-to-json-converter:
     title: YAML to JSON converter
     description: Simply convert YAML to JSON with this online live converter.
+    inputLabel: 'Your YAML'
+    inputPlaceholder: 'Paste your yaml here...'
+    outputLabel: 'JSON from your YAML'
 
   uuid-generator:
     title: UUIDs generator
@@ -493,10 +526,19 @@ tools:
   json-to-typescript:
     title: JSON to TypeScript
     description: 'Generate TypeScript interfaces from a JSON object or array, with nested types automatically extracted.'
+    inputLabel: 'Your JSON'
+    inputPlaceholder: 'Paste your JSON here...'
+    outputLabel: 'TypeScript interfaces'
 
   csv-to-json:
     title: CSV to JSON
     description: 'Convert CSV (comma, semicolon or any delimiter) to JSON, with proper handling of quoted fields, escaped quotes and embedded newlines.'
+    inputLabel: 'Your CSV'
+    inputPlaceholder: 'Paste your CSV here...'
+    outputLabel: 'JSON from your CSV'
+    delimiter: Delimiter
+    delimiterPlaceholder: ','
+    header: First row is a header
 
   duration-converter:
     title: Duration converter
@@ -505,6 +547,9 @@ tools:
   html-to-markdown:
     title: HTML to Markdown
     description: 'Convert HTML to clean Markdown, with headings, links, lists, emphasis and fenced code blocks.'
+    inputLabel: 'Your HTML'
+    inputPlaceholder: 'Paste your HTML here...'
+    outputLabel: 'Markdown from your HTML'
 
   string-escape:
     title: String escape / unescape
@@ -525,6 +570,12 @@ tools:
   json-sort-keys:
     title: JSON sort keys
     description: 'Recursively sort the keys of a JSON object to produce a canonical, diff-friendly output (array order is preserved).'
+    inputLabel: 'Your JSON'
+    inputPlaceholder: 'Paste your JSON here...'
+    outputLabel: 'JSON with sorted keys'
+    keyOrder: Key order
+    ascending: Ascending (A→Z)
+    descending: Descending (Z→A)
 
   ascii-text-drawer:
     title: ASCII Art Text Generator
@@ -537,6 +588,9 @@ tools:
   json-to-xml:
     title: JSON to XML
     description: 'Convert JSON to XML'
+    inputLabel: 'Your JSON content'
+    inputPlaceholder: 'Paste your JSON content here...'
+    outputLabel: 'Converted XML'
 
   markdown-to-html:
     title: Markdown to HTML
@@ -561,3 +615,6 @@ tools:
   xml-to-json:
     title: XML to JSON
     description: 'Convert XML to JSON'
+    inputLabel: 'Your XML content'
+    inputPlaceholder: 'Paste your XML content here...'
+    outputLabel: 'Converted JSON'

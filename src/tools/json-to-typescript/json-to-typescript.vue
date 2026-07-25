@@ -4,6 +4,8 @@ import { isNotThrowing } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
 import { convertJsonToTypescript } from './json-to-typescript.service';
 
+const { t } = useI18n();
+
 const transformer = (value: string) => withDefaultOnError(() => convertJsonToTypescript(value), '');
 
 const rules: UseValidationRule<string>[] = [
@@ -16,9 +18,9 @@ const rules: UseValidationRule<string>[] = [
 
 <template>
   <format-transformer
-    input-label="Your JSON"
-    input-placeholder="Paste your JSON here..."
-    output-label="TypeScript interfaces"
+    :input-label="t('tools.json-to-typescript.inputLabel')"
+    :input-placeholder="t('tools.json-to-typescript.inputPlaceholder')"
+    :output-label="t('tools.json-to-typescript.outputLabel')"
     output-language="typescript"
     download-file-name="types.ts"
     :input-validation-rules="rules"
