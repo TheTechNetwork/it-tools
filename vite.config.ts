@@ -160,6 +160,9 @@ export default defineConfig({
         // App wiring, not meaningfully unit-testable
         'src/main.ts',
         'src/plugins/**',
+        // Browser-only Node global shims (global/process); the guarded branches
+        // never execute under Node/jsdom where those globals already exist.
+        'src/polyfills/**',
         // Browser/canvas-only PDF rendering (pdf.js), exercised by e2e
         'src/tools/ocr-image-to-text/ocr-image-to-text.pdf.ts',
         // Trivial browser Map-method shim for pdf.js (branch depends on the
