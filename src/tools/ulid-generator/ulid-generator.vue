@@ -3,23 +3,28 @@ import { computedRefreshable } from '@/composable/computedRefreshable';
 import { useCopy } from '@/composable/copy';
 import { generateUlids } from './ulid-generator.service';
 
+const { t } = useI18n();
+
 const amount = useStorage('ulid-generator-amount', 1);
-const formats = [{ label: 'Raw', value: 'raw' as const }, { label: 'JSON', value: 'json' as const }];
-const format = useStorage<typeof formats[number]['value']>('ulid-generator-format', formats[0]?.value ?? 'raw');
+const formats = computed(() => [
+  { label: t('tools.ulid-generator.formats.raw'), value: 'raw' as const },
+  { label: t('tools.ulid-generator.formats.json'), value: 'json' as const },
+]);
+const format = useStorage<'raw' | 'json'>('ulid-generator-format', 'raw');
 
 const [ulids, refreshUlids] = computedRefreshable(() => generateUlids({ amount: amount.value, format: format.value }));
 
-const { copy } = useCopy({ source: ulids, text: 'ULIDs copied to the clipboard' });
+const { copy } = useCopy({ source: ulids, text: t('tools.ulid-generator.copied') });
 </script>
 
 <template>
   <div flex flex-col justify-center gap-2>
     <div flex items-center>
-      <label w-75px> Quantity:</label>
+      <label w-75px> {{ t('tools.ulid-generator.quantity') }}</label>
       <n-input-number v-model:value="amount" min="1" max="100" flex-1 />
     </div>
 
-    <c-buttons-select v-model:value="format" :options="formats" label="Format: " label-width="75px" />
+    <c-buttons-select v-model:value="format" :options="formats" :label="t('tools.ulid-generator.format')" label-width="75px" />
 
     <c-card mt-5 flex data-test-id="ulids">
       <pre m-0 m-x-auto>{{ ulids }}</pre>
@@ -27,10 +32,10 @@ const { copy } = useCopy({ source: ulids, text: 'ULIDs copied to the clipboard' 
 
     <div flex justify-center gap-2>
       <c-button data-test-id="refresh" @click="refreshUlids()">
-        Refresh
+        {{ t('tools.ulid-generator.refresh') }}
       </c-button>
       <c-button @click="copy()">
-        Copy
+        {{ t('tools.ulid-generator.copy') }}
       </c-button>
     </div>
   </div>

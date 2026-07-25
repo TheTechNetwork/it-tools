@@ -2,6 +2,8 @@
 import { computedCatch } from '@/composable/computed/catchedComputed';
 import { algos, decryptText, encryptText } from './encryption.service';
 
+const { t } = useI18n();
+
 const cypherInput = ref('Lorem ipsum dolor sit amet');
 const cypherAlgo = ref<keyof typeof algos>('AES');
 const cypherSecret = ref('my secret key');
@@ -14,65 +16,65 @@ const decryptAlgo = ref<keyof typeof algos>('AES');
 const decryptSecret = ref('my secret key');
 const [decryptOutput, decryptError] = computedCatch(() => decryptText({ text: decryptInput.value, secret: decryptSecret.value, algo: decryptAlgo.value }), {
   defaultValue: '',
-  defaultErrorMessage: 'Unable to decrypt your text',
+  defaultErrorMessage: t('tools.encryption.unableToDecrypt'),
 });
 </script>
 
 <template>
-  <c-card title="Encrypt">
+  <c-card :title="t('tools.encryption.encrypt.title')">
     <div flex gap-3>
       <c-input-text
         v-model:value="cypherInput"
-        label="Your text:"
-        placeholder="The string to cypher"
+        :label="t('tools.encryption.encrypt.textLabel')"
+        :placeholder="t('tools.encryption.encrypt.textPlaceholder')"
         rows="4"
         multiline raw-text monospace autosize flex-1
       />
       <div flex flex-1 flex-col gap-2>
-        <c-input-text v-model:value="cypherSecret" label="Your secret key:" clearable raw-text />
+        <c-input-text v-model:value="cypherSecret" :label="t('tools.encryption.secretKey')" clearable raw-text />
 
         <c-select
           v-model:value="cypherAlgo"
-          label="Encryption algorithm:"
+          :label="t('tools.encryption.algorithm')"
           :options="Object.keys(algos).map((label) => ({ label, value: label }))"
         />
       </div>
     </div>
     <c-input-text
-      label="Your text encrypted:"
+      :label="t('tools.encryption.encrypt.outputLabel')"
       :value="cypherOutput"
       rows="3"
-      placeholder="Your string hash"
+      :placeholder="t('tools.encryption.outputPlaceholder')"
       multiline monospace readonly autosize mt-5
     />
   </c-card>
-  <c-card title="Decrypt">
+  <c-card :title="t('tools.encryption.decrypt.title')">
     <div flex gap-3>
       <c-input-text
         v-model:value="decryptInput"
-        label="Your encrypted text:"
-        placeholder="The string to cypher"
+        :label="t('tools.encryption.decrypt.textLabel')"
+        :placeholder="t('tools.encryption.encrypt.textPlaceholder')"
         rows="4"
         multiline raw-text monospace autosize flex-1
       />
       <div flex flex-1 flex-col gap-2>
-        <c-input-text v-model:value="decryptSecret" label="Your secret key:" clearable raw-text />
+        <c-input-text v-model:value="decryptSecret" :label="t('tools.encryption.secretKey')" clearable raw-text />
 
         <c-select
           v-model:value="decryptAlgo"
-          label="Encryption algorithm:"
+          :label="t('tools.encryption.algorithm')"
           :options="Object.keys(algos).map((label) => ({ label, value: label }))"
         />
       </div>
     </div>
-    <c-alert v-if="decryptError" type="warning" mt-12 title="Error while decrypting">
+    <c-alert v-if="decryptError" type="warning" mt-12 :title="t('tools.encryption.decrypt.errorTitle')">
       {{ decryptError }}
     </c-alert>
     <c-input-text
       v-else
-      label="Your decrypted text:"
+      :label="t('tools.encryption.decrypt.outputLabel')"
       :value="decryptOutput"
-      placeholder="Your string hash"
+      :placeholder="t('tools.encryption.outputPlaceholder')"
       rows="3"
       multiline monospace readonly autosize mt-5
     />
