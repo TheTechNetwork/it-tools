@@ -164,6 +164,9 @@ tools:
   random-port-generator:
     title: Random port generator
     description: Generate random port numbers outside of the range of "known" ports (0-1023).
+    copy: Copy
+    refresh: Refresh
+    copied: Port copied to the clipboard
 
   yaml-prettify:
     title: YAML prettify and format
@@ -439,6 +442,13 @@ tools:
   basic-auth-generator:
     title: Basic auth generator
     description: Generate a base64 basic auth header from a username and password.
+    username: Username
+    usernamePlaceholder: Your username...
+    password: Password
+    passwordPlaceholder: Your password...
+    header: 'Authorization header:'
+    copyHeader: Copy header
+    copied: Header copied to the clipboard
 
   text-to-unicode:
     title: Text to Unicode
