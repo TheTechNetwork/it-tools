@@ -148,6 +148,14 @@ tools:
   slugify-string:
     title: Slugify string
     description: Make a string url, filename and id safe.
+    yourString: Your string to slugify
+    stringPlaceholder: 'Put your string here (ex: My file path)'
+    yourSlug: Your slug
+    slugPlaceholder: 'Your slug will be generated here (ex: my-file-path)'
+    separator: 'Separator:'
+    lowercase: 'Lowercase:'
+    copySlug: Copy slug
+    copied: Slug copied to clipboard
 
   encryption:
     title: Encrypt / decrypt text

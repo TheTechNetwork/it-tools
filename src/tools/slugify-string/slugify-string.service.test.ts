@@ -45,5 +45,14 @@ describe('slugify-string', () => {
     it('handles a string with only special characters', () => {
       expect(slugifyString('!@#$%')).toBe('');
     });
+
+    it('supports a custom separator', () => {
+      expect(slugifyString('My file path', { separator: '_' })).toBe('my_file_path');
+      expect(slugifyString('My file path', { separator: '.' })).toBe('my.file.path');
+    });
+
+    it('can preserve the original case', () => {
+      expect(slugifyString('My File Path', { lowercase: false })).toBe('My-File-Path');
+    });
   });
 });
