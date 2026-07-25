@@ -315,6 +315,17 @@ tools:
   mac-address-generator:
     title: MAC address generator
     description: Enter the quantity and prefix. MAC addresses will be generated in your chosen case (uppercase or lowercase)
+    quantity: 'Quantity:'
+    prefix: 'MAC address prefix:'
+    prefixPlaceholder: 'Set a prefix, e.g. 64:16:7F'
+    case: 'Case:'
+    uppercase: Uppercase
+    lowercase: Lowercase
+    separator: 'Separator:'
+    separatorNone: None
+    refresh: Refresh
+    copy: Copy
+    copied: MAC addresses copied to the clipboard
 
   json-diff:
     title: JSON diff
