@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { convertDuration, DURATION_UNITS, humanizeDuration } from './duration-converter.service';
 
+const { t } = useI18n();
+
 const unitOptions = DURATION_UNITS.map(({ key, label }) => ({ label, value: key }));
 
 const inputValue = ref(3661);
@@ -22,14 +24,14 @@ function swap() {
 <template>
   <c-card>
     <div flex flex-col gap-3>
-      <n-form-item label="Duration to convert" :show-feedback="false">
+      <n-form-item :label="t('tools.duration-converter.durationLabel')" :show-feedback="false">
         <n-input-number v-model:value="inputValue" w-full />
       </n-form-item>
 
       <div flex flex-wrap items-end gap-3>
         <c-select
           v-model:value="fromUnit"
-          label="From"
+          :label="t('tools.duration-converter.fromLabel')"
           :options="unitOptions"
 
           searchable flex-1
@@ -41,7 +43,7 @@ function swap() {
 
         <c-select
           v-model:value="toUnit"
-          label="To"
+          :label="t('tools.duration-converter.toLabel')"
           :options="unitOptions"
 
           searchable flex-1
@@ -49,7 +51,7 @@ function swap() {
       </div>
 
       <c-input-text
-        label="Result"
+        :label="t('tools.duration-converter.resultLabel')"
         :value="result"
         readonly
         monospace
@@ -57,7 +59,7 @@ function swap() {
       />
 
       <c-input-text
-        label="Human readable"
+        :label="t('tools.duration-converter.humanReadableLabel')"
         :value="humanized"
         readonly
       />

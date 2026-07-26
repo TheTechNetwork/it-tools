@@ -3,6 +3,9 @@ import type { EmojiInfo } from './emoji.types';
 import { useCopy } from '@/composable/copy';
 
 const props = (defineProps<{ emojiInfo: EmojiInfo }>());
+
+const { t } = useI18n();
+
 const { emojiInfo } = toRefs(props);
 
 const { copy } = useCopy();
@@ -10,7 +13,7 @@ const { copy } = useCopy();
 
 <template>
   <c-card flex items-center gap-3 important:py-8px important:pl-10px important:pr-5px>
-    <div cursor-pointer text-30px @click="copy(emojiInfo.emoji, { notificationMessage: `Emoji ${emojiInfo.emoji} copied to the clipboard` })">
+    <div cursor-pointer text-30px @click="copy(emojiInfo.emoji, { notificationMessage: t('tools.emoji-picker.emojiCopied', { emoji: emojiInfo.emoji }) })">
       {{ emojiInfo.emoji }}
     </div>
 
@@ -30,10 +33,10 @@ const { copy } = useCopy();
       </div> -->
 
       <div flex gap-2 text-xs font-mono op-70>
-        <span cursor-pointer transition hover:text-primary @click="copy(emojiInfo.codePoints, { notificationMessage: `Code points '${emojiInfo.codePoints}' copied to the clipboard` })">
+        <span cursor-pointer transition hover:text-primary @click="copy(emojiInfo.codePoints, { notificationMessage: t('tools.emoji-picker.codePointsCopied', { codePoints: emojiInfo.codePoints }) })">
           {{ emojiInfo.codePoints }}
         </span>
-        <span cursor-pointer truncate transition hover:text-primary @click="copy(emojiInfo.unicode, { notificationMessage: `Unicode '${emojiInfo.unicode}' copied to the clipboard` })">
+        <span cursor-pointer truncate transition hover:text-primary @click="copy(emojiInfo.unicode, { notificationMessage: t('tools.emoji-picker.unicodeCopied', { unicode: emojiInfo.unicode }) })">
           {{ emojiInfo.unicode }}
         </span>
       </div>

@@ -6,6 +6,8 @@ import { useQueryParamOrStorage } from '@/composable/queryParams';
 import { useValidation } from '@/composable/validation';
 import { matchRegex } from './regex-tester.service';
 
+const { t } = useI18n();
+
 const regex = useQueryParamOrStorage({ name: 'regex', storageName: 'regex-tester:regex', defaultValue: '' });
 const text = ref('');
 const global = ref(true);
@@ -20,7 +22,7 @@ const regexValidation = useValidation({
   source: regex,
   rules: [
     {
-      message: 'Invalid regex: {0}',
+      message: `${t('tools.regex-tester.invalidRegex')}: {0}`,
       validator: (value: string) => new RegExp(value),
       getErrorMessage: (value: string) => {
         const _ = new RegExp(value);
@@ -92,36 +94,36 @@ watchEffect(
 
 <template>
   <div max-w-600px>
-    <c-card title="Regex" mb-1>
+    <c-card :title="t('tools.regex-tester.regexTitle')" mb-1>
       <c-input-text
         v-model:value="regex"
-        label="Regex to test:"
-        placeholder="Put the regex to test"
+        :label="t('tools.regex-tester.regexToTest')"
+        :placeholder="t('tools.regex-tester.regexPlaceholder')"
         multiline
         rows="3"
         :validation="regexValidation"
       />
       <router-link target="_blank" to="/regex-memo" mb-1 mt-1>
-        See Regular Expression Cheatsheet
+        {{ t('tools.regex-tester.cheatsheet') }}
       </router-link>
       <n-space>
         <n-checkbox v-model:checked="global">
-          <span title="Global search">Global search. (<code>g</code>)</span>
+          <span :title="t('tools.regex-tester.flags.globalTitle')">{{ t('tools.regex-tester.flags.global') }} (<code>g</code>)</span>
         </n-checkbox>
         <n-checkbox v-model:checked="ignoreCase">
-          <span title="Case-insensitive search">Case-insensitive search. (<code>i</code>)</span>
+          <span :title="t('tools.regex-tester.flags.ignoreCaseTitle')">{{ t('tools.regex-tester.flags.ignoreCase') }} (<code>i</code>)</span>
         </n-checkbox>
         <n-checkbox v-model:checked="multiline">
-          <span title="Allows ^ and $ to match next to newline characters.">Multiline(<code>m</code>)</span>
+          <span :title="t('tools.regex-tester.flags.multilineTitle')">{{ t('tools.regex-tester.flags.multiline') }}(<code>m</code>)</span>
         </n-checkbox>
         <n-checkbox v-model:checked="dotAll">
-          <span title="Allows . to match newline characters.">Singleline(<code>s</code>)</span>
+          <span :title="t('tools.regex-tester.flags.singlelineTitle')">{{ t('tools.regex-tester.flags.singleline') }}(<code>s</code>)</span>
         </n-checkbox>
         <n-checkbox v-model:checked="unicode">
-          <span title="Unicode; treat a pattern as a sequence of Unicode code points.">Unicode(<code>u</code>)</span>
+          <span :title="t('tools.regex-tester.flags.unicodeTitle')">{{ t('tools.regex-tester.flags.unicode') }}(<code>u</code>)</span>
         </n-checkbox>
         <n-checkbox v-model:checked="unicodeSets">
-          <span title="An upgrade to the u mode with more Unicode features.">Unicode Sets (<code>v</code>)</span>
+          <span :title="t('tools.regex-tester.flags.unicodeSetsTitle')">{{ t('tools.regex-tester.flags.unicodeSets') }} (<code>v</code>)</span>
         </n-checkbox>
       </n-space>
 
@@ -129,28 +131,28 @@ watchEffect(
 
       <c-input-text
         v-model:value="text"
-        label="Text to match:"
-        placeholder="Put the text to match"
+        :label="t('tools.regex-tester.textToMatch')"
+        :placeholder="t('tools.regex-tester.textPlaceholder')"
         multiline
         rows="5"
       />
     </c-card>
 
-    <c-card title="Matches" mb-1 mt-3>
+    <c-card :title="t('tools.regex-tester.matchesTitle')" mb-1 mt-3>
       <n-table v-if="results?.length > 0">
         <thead>
           <tr>
             <th scope="col">
-              Index in text
+              {{ t('tools.regex-tester.table.indexInText') }}
             </th>
             <th scope="col">
-              Value
+              {{ t('tools.regex-tester.table.value') }}
             </th>
             <th scope="col">
-              Captures
+              {{ t('tools.regex-tester.table.captures') }}
             </th>
             <th scope="col">
-              Groups
+              {{ t('tools.regex-tester.table.groups') }}
             </th>
           </tr>
         </thead>
@@ -176,15 +178,15 @@ watchEffect(
         </tbody>
       </n-table>
       <c-alert v-else>
-        No match
+        {{ t('tools.regex-tester.noMatch') }}
       </c-alert>
     </c-card>
 
-    <c-card title="Sample matching text" mt-3>
+    <c-card :title="t('tools.regex-tester.sampleTitle')" mt-3>
       <pre style="white-space: pre-wrap; word-break: break-all;">{{ sample }}</pre>
     </c-card>
 
-    <c-card title="Regex Diagram" style="overflow-x: scroll;" mt-3>
+    <c-card :title="t('tools.regex-tester.diagramTitle')" style="overflow-x: scroll;" mt-3>
       <shadow-root ref="visualizerSVG">
 &#xa0;
       </shadow-root>

@@ -2,30 +2,32 @@
 import { useCopy } from '@/composable/copy';
 import { generateToc } from './markdown-toc-generator.service';
 
+const { t } = useI18n();
+
 const input = ref('# Introduction\n\n## Getting started\n\n### Installation\n\n### Usage\n\n## API reference\n\n## License');
 
 const bullet = ref('-');
 const maxLevel = ref(6);
 
-const bulletOptions = [
-  { label: 'Dash (-)', value: '-' },
-  { label: 'Asterisk (*)', value: '*' },
-  { label: 'Ordered (1.)', value: '1.' },
-];
+const bulletOptions = computed(() => [
+  { label: t('tools.markdown-toc-generator.bulletDash'), value: '-' },
+  { label: t('tools.markdown-toc-generator.bulletAsterisk'), value: '*' },
+  { label: t('tools.markdown-toc-generator.bulletOrdered'), value: '1.' },
+]);
 
-const levelOptions = [2, 3, 4, 5, 6].map(value => ({ label: `H1–H${value}`, value }));
+const levelOptions = computed(() => [2, 3, 4, 5, 6].map(value => ({ label: t('tools.markdown-toc-generator.levelOption', { n: value }), value })));
 
 const toc = computed(() => generateToc(input.value, { bullet: bullet.value, maxLevel: maxLevel.value }));
 
-const { copy } = useCopy({ source: toc, text: 'Table of contents copied to the clipboard' });
+const { copy } = useCopy({ source: toc, text: t('tools.markdown-toc-generator.copied') });
 </script>
 
 <template>
   <div>
     <c-input-text
       v-model:value="input"
-      label="Your Markdown"
-      placeholder="Paste your Markdown here..."
+      :label="t('tools.markdown-toc-generator.markdownLabel')"
+      :placeholder="t('tools.markdown-toc-generator.markdownPlaceholder')"
       multiline
       rows="10"
       raw-text
@@ -35,13 +37,13 @@ const { copy } = useCopy({ source: toc, text: 'Table of contents copied to the c
     <div my-3 flex flex-wrap items-center gap-4>
       <c-select
         v-model:value="bullet"
-        label="List style"
+        :label="t('tools.markdown-toc-generator.listStyleLabel')"
         :options="bulletOptions"
         w-48
       />
       <c-select
         v-model:value="maxLevel"
-        label="Include up to"
+        :label="t('tools.markdown-toc-generator.includeUpToLabel')"
         :options="levelOptions"
         w-40
       />
@@ -49,8 +51,8 @@ const { copy } = useCopy({ source: toc, text: 'Table of contents copied to the c
 
     <c-input-text
       :value="toc"
-      label="Table of contents"
-      placeholder="The generated table of contents will appear here..."
+      :label="t('tools.markdown-toc-generator.tocLabel')"
+      :placeholder="t('tools.markdown-toc-generator.tocPlaceholder')"
       multiline
       rows="8"
       readonly
@@ -60,7 +62,7 @@ const { copy } = useCopy({ source: toc, text: 'Table of contents copied to the c
 
     <div mt-4 flex justify-center>
       <c-button :disabled="toc === ''" @click="copy()">
-        Copy table of contents
+        {{ t('tools.markdown-toc-generator.copyButton') }}
       </c-button>
     </div>
   </div>

@@ -3,6 +3,8 @@ import { useValidation } from '@/composable/validation';
 import { convertBase } from '../integer-base-converter/integer-base-converter.model';
 import { ipv4ToInt, ipv4ToIpv6, isValidIpv4 } from './ipv4-address-converter.service';
 
+const { t } = useI18n();
+
 const rawIpAddress = useStorage('ipv4-converter:ip', '192.168.1.1');
 
 const convertedSections = computed(() => {
@@ -10,23 +12,23 @@ const convertedSections = computed(() => {
 
   return [
     {
-      label: 'Decimal: ',
+      label: t('tools.ipv4-address-converter.labels.decimal'),
       value: String(ipInDecimal),
     },
     {
-      label: 'Hexadecimal: ',
+      label: t('tools.ipv4-address-converter.labels.hexadecimal'),
       value: convertBase({ fromBase: 10, toBase: 16, value: String(ipInDecimal) }).toUpperCase(),
     },
     {
-      label: 'Binary: ',
+      label: t('tools.ipv4-address-converter.labels.binary'),
       value: convertBase({ fromBase: 10, toBase: 2, value: String(ipInDecimal) }),
     },
     {
-      label: 'Ipv6: ',
+      label: t('tools.ipv4-address-converter.labels.ipv6'),
       value: ipv4ToIpv6({ ip: rawIpAddress.value }),
     },
     {
-      label: 'Ipv6 (short): ',
+      label: t('tools.ipv4-address-converter.labels.ipv6Short'),
       value: ipv4ToIpv6({ ip: rawIpAddress.value, prefix: '::ffff:' }),
     },
   ];
@@ -34,13 +36,13 @@ const convertedSections = computed(() => {
 
 const { attrs: validationAttrs } = useValidation({
   source: rawIpAddress,
-  rules: [{ message: 'Invalid ipv4 address', validator: (ip: string) => isValidIpv4({ ip }) }],
+  rules: [{ message: t('tools.ipv4-address-converter.validation.invalid'), validator: (ip: string) => isValidIpv4({ ip }) }],
 });
 </script>
 
 <template>
   <div>
-    <c-input-text v-model:value="rawIpAddress" label="The ipv4 address:" placeholder="The ipv4 address..." />
+    <c-input-text v-model:value="rawIpAddress" :label="t('tools.ipv4-address-converter.addressLabel')" :placeholder="t('tools.ipv4-address-converter.addressPlaceholder')" />
 
     <n-divider />
 
@@ -53,7 +55,7 @@ const { attrs: validationAttrs } = useValidation({
       label-align="right"
       mb-2
       :value="validationAttrs.validationStatus === 'error' ? '' : value"
-      placeholder="Set a correct ipv4 address"
+      :placeholder="t('tools.ipv4-address-converter.correctPlaceholder')"
     />
   </div>
 </template>

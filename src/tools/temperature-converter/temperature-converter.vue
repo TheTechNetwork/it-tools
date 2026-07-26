@@ -17,6 +17,8 @@ import {
   convertRomerToKelvin,
 } from './temperature-converter.service';
 
+const { t } = useI18n();
+
 type TemperatureScale = 'kelvin' | 'celsius' | 'fahrenheit' | 'rankine' | 'delisle' | 'newton' | 'reaumur' | 'romer';
 
 const units = reactive<
@@ -26,56 +28,56 @@ const units = reactive<
   >
 >({
   kelvin: {
-    title: 'Kelvin',
+    title: t('tools.temperature-converter.kelvin'),
     unit: 'K',
     ref: 0,
     toKelvin: _.identity,
     fromKelvin: _.identity,
   },
   celsius: {
-    title: 'Celsius',
+    title: t('tools.temperature-converter.celsius'),
     unit: '°C',
     ref: 0,
     toKelvin: convertCelsiusToKelvin,
     fromKelvin: convertKelvinToCelsius,
   },
   fahrenheit: {
-    title: 'Fahrenheit',
+    title: t('tools.temperature-converter.fahrenheit'),
     unit: '°F',
     ref: 0,
     toKelvin: convertFahrenheitToKelvin,
     fromKelvin: convertKelvinToFahrenheit,
   },
   rankine: {
-    title: 'Rankine',
+    title: t('tools.temperature-converter.rankine'),
     unit: '°R',
     ref: 0,
     toKelvin: convertRankineToKelvin,
     fromKelvin: convertKelvinToRankine,
   },
   delisle: {
-    title: 'Delisle',
+    title: t('tools.temperature-converter.delisle'),
     unit: '°De',
     ref: 0,
     toKelvin: convertDelisleToKelvin,
     fromKelvin: convertKelvinToDelisle,
   },
   newton: {
-    title: 'Newton',
+    title: t('tools.temperature-converter.newton'),
     unit: '°N',
     ref: 0,
     toKelvin: convertNewtonToKelvin,
     fromKelvin: convertKelvinToNewton,
   },
   reaumur: {
-    title: 'Réaumur',
+    title: t('tools.temperature-converter.reaumur'),
     unit: '°Ré',
     ref: 0,
     toKelvin: convertReaumurToKelvin,
     fromKelvin: convertKelvinToReaumur,
   },
   romer: {
-    title: 'Rømer',
+    title: t('tools.temperature-converter.romer'),
     unit: '°Rø',
     ref: 0,
     toKelvin: convertRomerToKelvin,

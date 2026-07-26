@@ -2,6 +2,8 @@
 import { useCopy } from '@/composable/copy';
 import { numberToWords } from './number-to-words.service';
 
+const { t } = useI18n();
+
 const input = ref('1234');
 
 const result = computed(() => {
@@ -14,15 +16,15 @@ const result = computed(() => {
 });
 
 const words = computed(() => result.value.words);
-const { copy } = useCopy({ source: words, text: 'Words copied to the clipboard' });
+const { copy } = useCopy({ source: words, text: t('tools.number-to-words.copied') });
 </script>
 
 <template>
   <c-card>
     <c-input-text
       v-model:value="input"
-      label="Number"
-      placeholder="Enter a number, e.g. 1234.56"
+      :label="t('tools.number-to-words.numberLabel')"
+      :placeholder="t('tools.number-to-words.numberPlaceholder')"
       monospace
     />
 
@@ -33,7 +35,7 @@ const { copy } = useCopy({ source: words, text: 'Words copied to the clipboard' 
     <c-input-text
       v-else
       :value="words"
-      label="In words"
+      :label="t('tools.number-to-words.inWords')"
       readonly
       multiline
       autosize
@@ -43,7 +45,7 @@ const { copy } = useCopy({ source: words, text: 'Words copied to the clipboard' 
 
     <div mt-4 flex justify-center>
       <c-button :disabled="words === ''" @click="copy()">
-        Copy words
+        {{ t('tools.number-to-words.copyWords') }}
       </c-button>
     </div>
   </c-card>

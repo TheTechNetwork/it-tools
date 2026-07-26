@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { getContrastRatio, getWcagCompliance, isValidColor } from './color-contrast-checker.service';
 
+const { t } = useI18n();
+
 const foreground = ref('#333333');
 const background = ref('#ffffff');
 
@@ -13,23 +15,23 @@ const ratioLabel = computed(() => `${ratio.value.toFixed(2)}:1`);
 const compliance = computed(() => getWcagCompliance(ratio.value));
 
 const results = computed(() => [
-  { label: 'Normal text', aa: compliance.value.normalAa, aaa: compliance.value.normalAaa },
-  { label: 'Large text', aa: compliance.value.largeAa, aaa: compliance.value.largeAaa },
+  { label: t('tools.color-contrast-checker.normalText'), aa: compliance.value.normalAa, aaa: compliance.value.normalAaa },
+  { label: t('tools.color-contrast-checker.largeText'), aa: compliance.value.largeAa, aaa: compliance.value.largeAaa },
 ]);
 </script>
 
 <template>
   <div flex flex-col gap-4>
-    <c-card title="Colors">
+    <c-card :title="t('tools.color-contrast-checker.sections.colors')">
       <div flex flex-wrap gap-4>
-        <n-form-item label="Text color" :show-feedback="false" flex-1>
+        <n-form-item :label="t('tools.color-contrast-checker.textColorLabel')" :show-feedback="false" flex-1>
           <div flex flex-1 items-center gap-2>
             <n-color-picker v-model:value="foreground" :show-alpha="false" flex-1 />
             <c-input-text v-model:value="foreground" :validation-rules="[]" monospace w-32 />
           </div>
         </n-form-item>
 
-        <n-form-item label="Background color" :show-feedback="false" flex-1>
+        <n-form-item :label="t('tools.color-contrast-checker.backgroundColorLabel')" :show-feedback="false" flex-1>
           <div flex flex-1 items-center gap-2>
             <n-color-picker v-model:value="background" :show-alpha="false" flex-1 />
             <c-input-text v-model:value="background" monospace w-32 />
@@ -38,43 +40,43 @@ const results = computed(() => [
       </div>
 
       <n-alert v-if="!bothValid" type="error" mt-2 :show-icon="false">
-        Please enter two valid CSS colors.
+        {{ t('tools.color-contrast-checker.invalidColors') }}
       </n-alert>
     </c-card>
 
-    <c-card title="Preview">
+    <c-card :title="t('tools.color-contrast-checker.sections.preview')">
       <div
         class="preview"
         :style="{ color: foreground, backgroundColor: background }"
       >
         <p class="preview-large">
-          Large text — the quick brown fox
+          {{ t('tools.color-contrast-checker.previewLarge') }}
         </p>
         <p class="preview-normal">
-          Normal text — the quick brown fox jumps over the lazy dog.
+          {{ t('tools.color-contrast-checker.previewNormal') }}
         </p>
       </div>
     </c-card>
 
-    <c-card title="Contrast ratio">
+    <c-card :title="t('tools.color-contrast-checker.sections.contrastRatio')">
       <div flex flex-col items-center gap-1>
         <div text-4xl font-bold>
           {{ ratioLabel }}
         </div>
         <div op-70>
-          WCAG 2.1 contrast ratio (1:1 to 21:1)
+          {{ t('tools.color-contrast-checker.ratioDescription') }}
         </div>
       </div>
 
       <n-table mt-4 :bordered="false" :single-line="false">
         <thead>
           <tr>
-            <th>Content</th>
+            <th>{{ t('tools.color-contrast-checker.table.content') }}</th>
             <th text-center>
-              AA
+              {{ t('tools.color-contrast-checker.table.aa') }}
             </th>
             <th text-center>
-              AAA
+              {{ t('tools.color-contrast-checker.table.aaa') }}
             </th>
           </tr>
         </thead>
@@ -83,12 +85,12 @@ const results = computed(() => [
             <td>{{ row.label }}</td>
             <td text-center>
               <n-tag :type="row.aa ? 'success' : 'error'" :bordered="false">
-                {{ row.aa ? 'Pass' : 'Fail' }}
+                {{ row.aa ? t('tools.color-contrast-checker.pass') : t('tools.color-contrast-checker.fail') }}
               </n-tag>
             </td>
             <td text-center>
               <n-tag :type="row.aaa ? 'success' : 'error'" :bordered="false">
-                {{ row.aaa ? 'Pass' : 'Fail' }}
+                {{ row.aaa ? t('tools.color-contrast-checker.pass') : t('tools.color-contrast-checker.fail') }}
               </n-tag>
             </td>
           </tr>
@@ -96,7 +98,7 @@ const results = computed(() => [
       </n-table>
 
       <div mt-2 text-sm op-70>
-        Large text is 18pt (24px) or 14pt (18.66px) bold and above.
+        {{ t('tools.color-contrast-checker.largeTextNote') }}
       </div>
     </c-card>
   </div>

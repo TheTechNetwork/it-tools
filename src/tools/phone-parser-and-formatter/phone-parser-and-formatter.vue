@@ -8,6 +8,8 @@ import {
   parsePhoneNumberDetails,
 } from './phone-parser-and-formatter.service';
 
+const { t } = useI18n();
+
 const rawPhone = ref('');
 const defaultCountryCode = ref(getDefaultCountryCode());
 const validation = useValidation({
@@ -15,7 +17,7 @@ const validation = useValidation({
   rules: [
     {
       validator: (value: string) => value === '' || /^[0-9 +\-()]+$/.test(value),
-      message: 'Invalid phone number',
+      message: t('tools.phone-parser-and-formatter.validation.invalid'),
     },
   ],
 });
@@ -39,12 +41,12 @@ const countriesOptions = getCountries().map(code => ({
 
 <template>
   <div>
-    <c-select v-model:value="defaultCountryCode" label="Default country code:" :options="countriesOptions" searchable mb-5 />
+    <c-select v-model:value="defaultCountryCode" :label="t('tools.phone-parser-and-formatter.countryCodeLabel')" :options="countriesOptions" searchable mb-5 />
 
     <c-input-text
       v-model:value="rawPhone"
-      placeholder="Enter a phone number"
-      label="Phone number:"
+      :placeholder="t('tools.phone-parser-and-formatter.phonePlaceholder')"
+      :label="t('tools.phone-parser-and-formatter.phoneLabel')"
       :validation="validation"
       mb-5
     />
@@ -58,7 +60,7 @@ const countriesOptions = getCountries().map(code => ({
           <td>
             <span-copyable v-if="value" :value="value" />
             <span v-else op-70>
-              Unknown
+              {{ t('tools.phone-parser-and-formatter.unknown') }}
             </span>
           </td>
         </tr>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { convertDataSize, DATA_UNITS } from './data-storage-converter.service';
 
+const { t } = useI18n();
+
 const unitOptions = DATA_UNITS.map(({ key, label }) => ({ label, value: key }));
 
 const inputValue = ref(1);
@@ -21,14 +23,14 @@ function swap() {
 <template>
   <c-card>
     <div flex flex-col gap-3>
-      <n-form-item label="Value to convert" :show-feedback="false">
+      <n-form-item :label="t('tools.data-storage-converter.valueToConvert')" :show-feedback="false">
         <n-input-number v-model:value="inputValue" w-full :min="0" />
       </n-form-item>
 
       <div flex flex-wrap items-end gap-3>
         <c-select
           v-model:value="fromUnit"
-          label="From"
+          :label="t('tools.data-storage-converter.from')"
           :options="unitOptions"
 
           searchable flex-1
@@ -40,7 +42,7 @@ function swap() {
 
         <c-select
           v-model:value="toUnit"
-          label="To"
+          :label="t('tools.data-storage-converter.to')"
           :options="unitOptions"
 
           searchable flex-1
@@ -48,7 +50,7 @@ function swap() {
       </div>
 
       <c-input-text
-        label="Result"
+        :label="t('tools.data-storage-converter.result')"
         :value="result"
         readonly
         monospace

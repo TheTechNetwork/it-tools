@@ -3,6 +3,8 @@ import type { OcrQuality, Recognizer } from './ocr-image-to-text.service';
 import { useCopy } from '@/composable/copy';
 import { createRecognizer, SUPPORTED_LANGUAGES } from './ocr-image-to-text.service';
 
+const { t } = useI18n();
+
 interface UploadItem {
   id: string;
   file: File;
@@ -36,7 +38,7 @@ function isAllowed(file: File): boolean {
 function onFilesUpload(files: File[]) {
   const rejected = files.filter(file => !isAllowed(file));
   if (rejected.length > 0) {
-    message.warning(`Skipped ${rejected.length} unsupported file(s): ${rejected.map(file => file.name).join(', ')}`);
+    message.warning(t('tools.ocr-image-to-text.warning.skipped', { n: rejected.length, files: rejected.map(file => file.name).join(', ') }));
   }
 
   for (const file of files.filter(isAllowed)) {
@@ -75,13 +77,13 @@ function clearAll() {
 function statusLabel(item: UploadItem): string {
   switch (item.status) {
     case 'processing':
-      return 'Processing…';
+      return t('tools.ocr-image-to-text.status.processing');
     case 'done':
-      return item.text.trim() === '' ? 'No text detected' : `${item.text.length} characters`;
+      return item.text.trim() === '' ? t('tools.ocr-image-to-text.status.noText') : t('tools.ocr-image-to-text.status.characters', { n: item.text.length });
     case 'error':
-      return `Error: ${item.error}`;
+      return t('tools.ocr-image-to-text.status.error', { error: item.error });
     default:
-      return item.kind === 'pdf' ? 'PDF · ready' : 'Ready';
+      return item.kind === 'pdf' ? t('tools.ocr-image-to-text.status.pdfReady') : t('tools.ocr-image-to-text.status.ready');
   }
 }
 
@@ -92,21 +94,21 @@ const combinedText = computed(() =>
     .join('\n\n'),
 );
 
-const { copy } = useCopy({ source: combinedText, text: 'Extracted text copied to the clipboard' });
+const { copy } = useCopy({ source: combinedText, text: t('tools.ocr-image-to-text.copied') });
 
 async function runOcr() {
   if (items.value.length === 0) {
-    message.warning('Please add at least one image or PDF');
+    message.warning(t('tools.ocr-image-to-text.warning.noFiles'));
     return;
   }
   if (selectedLanguages.value.length === 0) {
-    message.warning('Please select at least one language');
+    message.warning(t('tools.ocr-image-to-text.warning.noLanguage'));
     return;
   }
 
   isProcessing.value = true;
   progressPercent.value = 0;
-  progressLabel.value = 'Loading OCR engine…';
+  progressLabel.value = t('tools.ocr-image-to-text.progress.loadingEngine');
 
   let recognizer: Recognizer | undefined;
   let renderPdfToImages: (typeof import('./ocr-image-to-text.pdf'))['renderPdfToImages'] | undefined;
@@ -125,19 +127,19 @@ async function runOcr() {
       item.status = 'processing';
       item.text = '';
       item.error = '';
-      const position = `File ${index + 1}/${items.value.length} · ${item.file.name}`;
+      const position = t('tools.ocr-image-to-text.progress.position', { current: index + 1, total: items.value.length, name: item.file.name });
 
       try {
         if (item.kind === 'pdf') {
           if (!renderPdfToImages) {
             ({ renderPdfToImages } = await import('./ocr-image-to-text.pdf'));
           }
-          progressLabel.value = `${position} · rendering PDF…`;
+          progressLabel.value = t('tools.ocr-image-to-text.progress.renderingPdf', { position });
           const pages = await renderPdfToImages(item.file);
 
           const pageTexts: string[] = [];
           for (const [pageIndex, page] of pages.entries()) {
-            progressLabel.value = `${position} · page ${pageIndex + 1}/${pages.length}`;
+            progressLabel.value = t('tools.ocr-image-to-text.progress.page', { position, current: pageIndex + 1, total: pages.length });
             pageTexts.push(await recognizer.recognize(page));
           }
           item.text = pages.length > 1
@@ -157,11 +159,11 @@ async function runOcr() {
     }
 
     if (combinedText.value.trim() === '' && items.value.every(item => item.status === 'done')) {
-      message.info('No text was detected');
+      message.info(t('tools.ocr-image-to-text.info.noTextDetected'));
     }
   }
   catch (error: any) {
-    message.error(`OCR failed: ${error?.message ?? error}`);
+    message.error(t('tools.ocr-image-to-text.error.ocrFailed', { error: error?.message ?? error }));
   }
   finally {
     await recognizer?.terminate();
@@ -175,11 +177,11 @@ onBeforeUnmount(clearAll);
 
 <template>
   <div flex flex-col gap-4>
-    <c-card title="Files">
+    <c-card :title="t('tools.ocr-image-to-text.section.files')">
       <c-file-upload
         multiple
         :accept="ACCEPT"
-        title="Drag and drop images or PDFs here, or click to select"
+        :title="t('tools.ocr-image-to-text.upload.title')"
         @files-upload="onFilesUpload"
       />
 
@@ -220,41 +222,41 @@ onBeforeUnmount(clearAll);
 
         <div flex justify-end>
           <c-button variant="text" :disabled="isProcessing" @click="clearAll">
-            Clear all
+            {{ t('tools.ocr-image-to-text.button.clearAll') }}
           </c-button>
         </div>
       </div>
     </c-card>
 
-    <c-card title="Options">
-      <n-form-item label="Languages" :show-feedback="false">
+    <c-card :title="t('tools.ocr-image-to-text.section.options')">
+      <n-form-item :label="t('tools.ocr-image-to-text.languages.label')" :show-feedback="false">
         <n-select
           v-model:value="selectedLanguages"
           multiple
           filterable
           :options="languageOptions"
-          placeholder="Select one or more languages"
+          :placeholder="t('tools.ocr-image-to-text.languages.placeholder')"
         />
       </n-form-item>
 
       <div mt-3 flex flex-wrap items-center gap-3>
-        <span>Quality</span>
+        <span>{{ t('tools.ocr-image-to-text.quality.label') }}</span>
         <n-switch v-model:value="quality" checked-value="best" unchecked-value="fast">
           <template #checked>
-            Best
+            {{ t('tools.ocr-image-to-text.quality.best') }}
           </template>
           <template #unchecked>
-            Fast
+            {{ t('tools.ocr-image-to-text.quality.fast') }}
           </template>
         </n-switch>
         <span text-xs op-60>
-          Best is more accurate but slower and downloads larger language data.
+          {{ t('tools.ocr-image-to-text.quality.hint') }}
         </span>
       </div>
 
       <div mt-4 flex justify-center>
         <c-button :disabled="items.length === 0 || isProcessing" :loading="isProcessing" @click="runOcr">
-          Extract text
+          {{ t('tools.ocr-image-to-text.button.extract') }}
         </c-button>
       </div>
 
@@ -266,17 +268,17 @@ onBeforeUnmount(clearAll);
       </div>
     </c-card>
 
-    <c-card v-if="combinedText" title="Extracted text">
+    <c-card v-if="combinedText" :title="t('tools.ocr-image-to-text.section.extractedText')">
       <c-input-text
         :value="combinedText"
         multiline
         readonly
         rows="12"
-        placeholder="The extracted text will appear here"
+        :placeholder="t('tools.ocr-image-to-text.output.placeholder')"
       />
       <div mt-3 flex justify-center>
         <c-button @click="copy()">
-          Copy text
+          {{ t('tools.ocr-image-to-text.button.copy') }}
         </c-button>
       </div>
     </c-card>

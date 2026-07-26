@@ -89,6 +89,10 @@ tools:
   chronometer:
     title: Chronometer
     description: Monitor the duration of a thing. Basically a chronometer with simple chronometer features.
+    button:
+      start: Start
+      stop: Stop
+      reset: Reset
 
   token-generator:
     title: Token generator
@@ -107,10 +111,37 @@ tools:
   percentage-calculator:
     title: Percentage calculator
     description: Easily calculate percentages from a value to another value, or from a percentage to a value.
+    whatIs: What is
+    percentOf: '% of'
+    placeholderX: X
+    placeholderY: Y
+    placeholderResult: Result
+    xIsWhatPercentOfY: X is what percent of Y
+    isWhatPercentOf: is what percent of
+    increaseDecrease: What is the percentage increase/decrease
+    placeholderFrom: From
+    placeholderTo: To
 
   svg-placeholder-generator:
     title: SVG placeholder generator
     description: Generate svg images to use as a placeholder in your applications.
+    width: Width (in px)
+    widthPlaceholder: SVG width...
+    background: Background
+    height: Height (in px)
+    heightPlaceholder: SVG height...
+    textColor: Text color
+    fontSize: Font size
+    fontSizePlaceholder: Font size...
+    customText: Custom text
+    customTextPlaceholder: Default is {width}x{height}
+    useExactSize: Use exact size
+    svgHtmlElement: SVG HTML element
+    svgInBase64: SVG in Base64
+    copySvg: Copy svg
+    copyBase64: Copy base64
+    downloadSvg: Download svg
+    imageAlt: Image
 
   json-to-csv:
     title: JSON to CSV
@@ -122,18 +153,61 @@ tools:
   camera-recorder:
     title: Camera recorder
     description: Take a picture or record a video from your webcam or camera.
+    notSupported: Your browser does not support recording video from camera
+    needPermission: You need to grant permission to use your camera and microphone
+    permissionBlocked: Your browser has blocked permission request or does not support it. You need to grant permission manually in your browser settings (usually the lock icon in the address bar).
+    grantPermission: Grant permission
+    videoLabel: 'Video:'
+    selectCamera: Select camera
+    audioLabel: 'Audio:'
+    selectMicrophone: Select microphone
+    startWebcam: Start webcam
+    takeScreenshot: Take screenshot
+    startRecording: Start recording
+    pause: Pause
+    resume: Resume
+    stop: Stop
+    recordingNotSupported: Video recording is not supported in your browser
+    screenshot: Screenshot
+    video: Video
 
   keycode-info:
     title: Keycode info
     description: Find the javascript keycode, code, location and modifiers of any pressed key.
+    key: 'Key :'
+    keyPlaceholder: Key name...
+    keycode: 'Keycode :'
+    keycodePlaceholder: Keycode...
+    code: 'Code :'
+    codePlaceholder: Code...
+    location: 'Location :'
+    modifiers: 'Modifiers :'
+    modifiersPlaceholder: None
+    prompt: Press the key on your keyboard you want to get info about this key
 
   emoji-picker:
     title: Emoji picker
     description: Copy and paste emojis easily and get the unicode and code points value of each emoji.
+    searchPlaceholder: Search emojis (e.g. 'smile')...
+    noResults: No results
+    searchResult: Search result
+    emojiCopied: Emoji {emoji} copied to the clipboard
+    codePointsCopied: Code points '{codePoints}' copied to the clipboard
+    unicodeCopied: Unicode '{unicode}' copied to the clipboard
 
   color-converter:
     title: Color converter
     description: Convert color between the different formats (hex, rgb, hsl and css name)
+    colorPicker: color picker
+    name: name
+    unknown: Unknown
+    hexPlaceholder: 'e.g. #ff0000'
+    rgbPlaceholder: e.g. rgb(255, 0, 0)
+    hslPlaceholder: e.g. hsl(0, 100%, 50%)
+    hwbPlaceholder: e.g. hwb(0, 0%, 0%)
+    lchPlaceholder: e.g. lch(53.24, 104.55, 40.85)
+    cmykPlaceholder: e.g. cmyk(0, 100%, 100%, 0)
+    namePlaceholder: e.g. red
 
   bcrypt:
     title: Bcrypt
@@ -159,18 +233,97 @@ tools:
   crontab-generator:
     title: Crontab generator
     description: Validate and generate crontab and get the human-readable description of the cron schedule.
+    validation:
+      invalid: This cron is invalid
+    form:
+      verbose: Verbose
+      use24Hour: Use 24 hour time format
+      daysStartAtZero: Days start at 0
+    table:
+      symbol: Symbol
+      meaning: Meaning
+      example: Example
+      equivalent: Equivalent
+    helpers:
+      anyValue: Any value
+      rangeOfValues: Range of values
+      listOfValues: List of values
+      stepValues: Step values
+      yearly: Once every year at midnight of 1 January
+      annually: Same as {'@'}yearly
+      monthly: Once a month at midnight on the first day
+      weekly: Once a week at midnight on Sunday morning
+      daily: Once a day at midnight
+      midnight: Same as {'@'}daily
+      hourly: Once an hour at the beginning of the hour
+      reboot: Run at startup
+    equivalent:
+      everyMinute: Every minute
+      minutes1Through10: Minutes 1 through 10
+      atMinutes1And10: At minutes 1 and 10
+      every10Minutes: Every 10 minutes
 
   http-status-codes:
     title: HTTP status codes
     description: The list of all HTTP status codes, their name, and their meaning.
+    searchResults: Search results
+    searchPlaceholder: Search http status...
+    forType: For {type}.
 
   sql-prettify:
     title: SQL prettify and format
     description: Format and prettify your SQL queries online (it supports various SQL dialects).
+    dialectLabel: Dialect
+    dialect:
+      bigquery: GCP BigQuery
+      db2: IBM DB2
+      hive: Apache Hive
+      mariadb: MariaDB
+      mysql: MySQL
+      n1ql: Couchbase N1QL
+      plsql: Oracle PL/SQL
+      postgresql: PostgreSQL
+      redshift: Amazon Redshift
+      spark: Spark
+      sql: Standard SQL
+      sqlite: sqlite
+      tsql: SQL Server Transact-SQL
+    keywordCaseLabel: Keyword case
+    keywordCase:
+      upper: UPPERCASE
+      lower: lowercase
+      preserve: Preserve
+    indentStyleLabel: Indent style
+    indentStyle:
+      standard: Standard
+      tabularLeft: Tabular left
+      tabularRight: Tabular right
+    queryLabel: Your SQL query
+    queryPlaceholder: Put your SQL query here...
+    outputLabel: Prettify version of your query
 
   benchmark-builder:
     title: Benchmark builder
     description: Easily compare execution time of tasks with this very simple online benchmark builder.
+    header:
+      position: Position
+      suite: Suite
+      samples: Samples
+      mean: Mean
+      variance: Variance
+    suiteName: Suite name
+    suiteNamePlaceholder: Suite name...
+    suiteValues: Suite values
+    deleteSuite: Delete suite
+    addSuite: Add suite
+    unit: Unit
+    unitPlaceholder: 'Unit (eg: ms)'
+    resetSuites: Reset suites
+    copyAsMarkdown: Copy as markdown table
+    copyAsBulletList: Copy as bullet list
+    measurePlaceholder: Set your measure...
+    deleteValue: Delete this value
+    addMeasure: Add a measure
 
   git-memo:
     title: Git cheatsheet
@@ -216,14 +369,44 @@ tools:
   yaml-prettify:
     title: YAML prettify and format
     description: Prettify your YAML string into a friendly, human-readable format.
+    validation:
+      invalid: Provided YAML is not valid.
+    sortKeys: 'Sort keys :'
+    indentSize: 'Indent size :'
+    rawYamlLabel: Your raw YAML
+    rawYamlPlaceholder: Paste your raw YAML here...
+    prettifiedLabel: Prettified version of your YAML
 
   eta-calculator:
     title: ETA calculator
     description: An ETA (Estimated Time of Arrival) calculator to determine the approximate end time of a task, for example, the end time and duration of a file download.
+    units:
+      milliseconds: milliseconds
+      seconds: seconds
+      minutes: minutes
+      hours: hours
+      days: days
+    example: With a concrete example, if you wash 5 plates in 3 minutes and you have 500 plates to wash, it will take you 5 hours to wash them all.
+    amountToConsume: Amount of element to consume
+    consumptionStartedAt: The consumption started at
+    amountConsumedByTimeSpan: Amount of unit consumed by time span
+    in: in
+    totalDuration: Total duration
+    itWillEnd: 'It will end '
 
   roman-numeral-converter:
     title: Roman numeral converter
     description: Convert Roman numerals to numbers and convert numbers to Roman numerals.
+    arabicToRoman:
+      title: Arabic to roman
+      rangeError: We can only convert numbers between {min} and {max}
+    romanToArabic:
+      title: Roman to arabic
+      invalidError: The input you entered is not a valid roman number
+    button:
+      copy: Copy
+    romanCopied: Roman number copied to the clipboard
+    arabicCopied: Arabic number copied to the clipboard
 
   hmac-generator:
     title: Hmac generator
@@ -262,6 +445,20 @@ tools:
   base64-file-converter:
     title: Base64 file converter
     description: Convert a string, file, or image into its base64 representation.
+    base64ToFile: Base64 to file
+    fileName: File Name
+    fileNamePlaceholder: Download filename
+    extension: Extension
+    extensionPlaceholder: Extension
+    base64InputPlaceholder: Put your base64 file string here...
+    invalidBase64: Invalid base 64 string
+    previewImage: Preview image
+    downloadFile: Download file
+    fileToBase64: File to base64
+    fileUploadTitle: Drag and drop a file here, or click to select a file
+    fileBase64Placeholder: File in base64 will be here
+    copy: Copy
+    base64Copied: Base64 string copied to the clipboard
 
   list-converter:
     title: List converter
@@ -273,6 +470,31 @@ tools:
   base64-string-converter:
     title: Base64 string encoder/decoder
     description: Simply encode and decode strings into their base64 representation.
+    sections:
+      stringToBase64: String to base64
+      base64ToString: Base64 to string
+    encodeUrlSafe: Encode URL safe
+    decodeUrlSafe: Decode URL safe
+    input:
+      label: String to encode
+      placeholder: Put your string here...
+    output:
+      label: Base64 of string
+      placeholder: The base64 encoding of your string will be here
+    b64input:
+      label: Base64 string to decode
+      placeholder: Your base64 string...
+    decoded:
+      label: Decoded string
+      placeholder: The decoded string will be here
+    button:
+      copyBase64: Copy base64
+      copyDecoded: Copy decoded string
+    copied:
+      base64: Base64 string copied to the clipboard
+      string: String copied to the clipboard
+    validation:
+      invalid: Invalid base64 string
 
   toml-to-yaml:
     title: TOML to YAML
@@ -284,6 +506,8 @@ tools:
   math-evaluator:
     title: Math evaluator
     description: A calculator for evaluating mathematical expressions. You can use functions like sqrt, cos, sin, abs, etc.
+    expressionPlaceholder: 'Your math expression (ex: 2*sqrt(6) )...'
+    result: 'Result '
 
   json-to-yaml-converter:
     title: JSON to YAML converter
@@ -295,18 +519,66 @@ tools:
   url-parser:
     title: URL parser
     description: Parse a URL into its separate constituent parts (protocol, origin, params, port, username-password, ...)
+    invalidUrl: Invalid url
+    properties:
+      protocol: Protocol
+      username: Username
+      password: Password
+      hostname: Hostname
+      port: Port
+      path: Path
+      params: Params
+    input:
+      label: 'Your url to parse:'
+      placeholder: Your url to parse...
 
   iban-validator-and-parser:
     title: IBAN validator and parser
     description: Validate and parse IBAN numbers. Check if an IBAN is valid and get the country, BBAN, if it is a QR-IBAN and the IBAN friendly format.
+    inputPlaceholder: Enter an IBAN to check for validity...
+    isValid: Is IBAN valid ?
+    errors: IBAN errors
+    isQrIban: Is IBAN a QR-IBAN ?
+    countryCode: Country code
+    bban: BBAN
+    friendlyFormat: IBAN friendly format
+    examplesTitle: Valid IBAN examples
 
   user-agent-parser:
     title: User-agent parser
     description: Detect and parse Browser, Engine, OS, CPU, and Device type/model from an user-agent string.
+    uaLabel: User agent string
+    uaPlaceholder: Put your user-agent here...
+    sections:
+      browser: Browser
+      engine: Engine
+      os: OS
+      device: Device
+      cpu: CPU
+    labels:
+      name: Name
+      version: Version
+      model: Model
+      type: Type
+      vendor: Vendor
+      architecture: Architecture
+    fallback:
+      browserName: No browser name available
+      browserVersion: No browser version available
+      engineName: No engine name available
+      engineVersion: No engine version available
+      osName: No OS name available
+      osVersion: No OS version available
+      deviceModel: No device model available
+      deviceType: No device type available
+      deviceVendor: No device vendor available
+      cpuArchitecture: No CPU architecture available
 
   numeronym-generator:
     title: Numeronym generator
     description: A numeronym is a word where a number is used to form an abbreviation. For example, "i18n" is a numeronym of "internationalization" where 18 stands for the number of letters between the first i and the last n in the word.
+    wordPlaceholder: Enter a word, e.g. 'internationalization'
+    numeronymPlaceholder: Your numeronym will be here, e.g. 'i18n'
 
   case-converter:
     title: Case converter
@@ -332,22 +604,71 @@ tools:
   html-entities:
     title: Escape HTML entities
     description: Escape or unescape HTML entities (replace characters like <,>, &, " and \' with their HTML version)
+    escape:
+      title: Escape html entities
+      inputLabel: 'Your string :'
+      inputPlaceholder: The string to escape
+      outputLabel: 'Your string escaped :'
+      outputPlaceholder: Your string escaped
+    unescape:
+      title: Unescape html entities
+      inputLabel: 'Your escaped string :'
+      inputPlaceholder: The string to unescape
+      outputLabel: 'Your string unescaped :'
+      outputPlaceholder: Your string unescaped
+    button:
+      copy: Copy
 
   json-prettify:
     title: JSON prettify and format
     description: Prettify your JSON string into a friendly, human-readable format.
+    invalidJson: Provided JSON is not valid.
+    sortKeysLabel: 'Sort keys :'
+    indentSizeLabel: 'Indent size :'
+    rawJsonLabel: Your raw JSON
+    rawJsonPlaceholder: Paste your raw JSON here...
+    prettifiedLabel: Prettified version of your JSON
 
   docker-run-to-docker-compose-converter:
     title: Docker run to Docker compose converter
     description: Transforms "docker run" commands into docker-compose files!
+    input:
+      label: 'Your docker run command:'
+      placeholder: Your docker run command to convert...
+    button:
+      download: Download docker-compose.yml
+    alert:
+      notComposable: This options are not translatable to docker-compose
+      notImplemented: This options are not yet implemented and therefore haven't been translated to docker-compose
+      errors: The following errors occured
 
   mac-address-lookup:
     title: MAC address lookup
     description: Find the vendor and manufacturer of a device by its MAC address.
+    macAddress:
+      label: 'MAC address:'
+      placeholder: Type a MAC address
+    vendorInfo: 'Vendor info:'
+    loading: Loading vendor database…
+    unknownVendor: Unknown vendor for this address
+    button:
+      copy: Copy vendor info
+    copied: Vendor info copied to the clipboard
 
   mime-types:
     title: MIME types
     description: Convert MIME types to file extensions and vice-versa.
+    mimeToExtensionTitle: Mime type to extension
+    mimeToExtensionDescription: Know which file extensions are associated to a mime-type
+    mimeTypePlaceholder: 'Select your mimetype here... (ex: application/pdf)'
+    extensionsOfFiles: Extensions of files with the
+    mimeTypeSuffix: 'mime-type:'
+    extensionToMimeTitle: File extension to mime type
+    extensionToMimeDescription: Know which mime type is associated to a file extension
+    mimeTypeAssociated: Mime type associated to the extension
+    fileExtensionSuffix: 'file extension:'
+    mimeTypesColumn: Mime types
+    extensionsColumn: Extensions
 
   toml-to-json:
     title: TOML to JSON
@@ -359,6 +680,15 @@ tools:
   lorem-ipsum-generator:
     title: Lorem ipsum generator
     description: Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content
+    copied: Lorem ipsum copied to the clipboard
+    paragraphs: Paragraphs
+    sentencesPerParagraph: Sentences per paragraph
+    wordsPerSentence: Words per sentence
+    startWithLoremIpsum: Start with lorem ipsum ?
+    asHtml: As html ?
+    outputPlaceholder: Your lorem ipsum...
+    copy: Copy
+    refresh: Refresh
 
   qrcode-generator:
     title: QR Code generator
@@ -373,6 +703,24 @@ tools:
   wifi-qrcode-generator:
     title: WiFi QR Code generator
     description: Generate and download QR codes for quick connections to WiFi networks.
+    encryptionMethod: Encryption method
+    noPassword: No password
+    wpaWpa2: WPA/WPA2
+    wep: WEP
+    wpa2Eap: WPA2-EAP
+    ssid: 'SSID:'
+    ssidPlaceholder: Your WiFi SSID...
+    hiddenSsid: Hidden SSID
+    password: 'Password:'
+    passwordPlaceholder: Your WiFi Password...
+    eapMethod: EAP method
+    identity: 'Identity:'
+    identityPlaceholder: Your EAP Identity...
+    anonymous: Anonymous?
+    eapPhase2Method: EAP Phase 2 method
+    foregroundColor: 'Foreground color:'
+    backgroundColor: 'Background color:'
+    downloadQrCode: Download qr-code
 
   xml-formatter:
     title: XML formatter
@@ -384,10 +732,26 @@ tools:
   temperature-converter:
     title: Temperature converter
     description: Degrees temperature conversions for Kelvin, Celsius, Fahrenheit, Rankine, Delisle, Newton, Réaumur, and Rømer.
+    kelvin: Kelvin
+    celsius: Celsius
+    fahrenheit: Fahrenheit
+    rankine: Rankine
+    delisle: Delisle
+    newton: Newton
+    reaumur: Réaumur
+    romer: Rømer
 
   chmod-calculator:
     title: Chmod calculator
     description: Compute your chmod permissions and commands with this online chmod calculator.
+    scopes:
+      read: Read (4)
+      write: Write (2)
+      execute: Execute (1)
+    headers:
+      owner: Owner (u)
+      group: Group (g)
+      public: Public (o)
 
   rsa-key-pair-generator:
     title: RSA key pair generator
@@ -401,6 +765,22 @@ tools:
   html-wysiwyg-editor:
     title: HTML WYSIWYG editor
     description: Online, feature-rich WYSIWYG HTML editor which generates the source code of the content immediately.
+    bold: Bold
+    italic: Italic
+    strike: Strike
+    inlineCode: Inline code
+    heading1: Heading 1
+    heading2: Heading 2
+    heading3: Heading 3
+    heading4: Heading 4
+    bulletList: Bullet list
+    orderedList: Ordered list
+    codeBlock: Code block
+    blockquote: Blockquote
+    hardBreak: Hard break
+    clearFormat: Clear format
+    undo: Undo
+    redo: Redo
 
   yaml-to-toml:
     title: YAML to TOML
@@ -427,30 +807,96 @@ tools:
   json-diff:
     title: JSON diff
     description: Compare two JSON objects and get the differences between them.
+    invalidJson: Invalid JSON format
+    firstJson:
+      label: Your first JSON
+      placeholder: Paste your first JSON here...
+    compareJson:
+      label: Your JSON to compare
+      placeholder: Paste your JSON to compare here...
+    onlyShowDifferences: Only show differences
+    jsonAreTheSame: The provided JSONs are the same
 
   jwt-parser:
     title: JWT parser
     description: Parse and decode your JSON Web Token (jwt) and display its content.
+    sections:
+      header: Header
+      payload: Payload
+    validation:
+      invalid: Invalid JWT
+    jwtLabel: JWT to decode
+    jwtPlaceholder: Put your token here...
 
   date-converter:
     title: Date-time converter
     description: Convert date and time into the various different formats
+    formats:
+      jsLocale: JS locale date string
+      iso8601: ISO 8601
+      iso9075: ISO 9075
+      rfc3339: RFC 3339
+      rfc7231: RFC 7231
+      unixTimestamp: Unix timestamp
+      timestamp: Timestamp
+      utc: UTC format
+      mongoObjectId: Mongo ObjectID
+      excel: Excel date/time
+    invalidDate: This date is invalid for this format
+    inputPlaceholder: Put your date string here...
+    invalidDatePlaceholder: Invalid date...
 
   phone-parser-and-formatter:
     title: Phone parser and formatter
     description: Parse, validate and format phone numbers. Get information about the phone number, like the country code, type, etc.
+    validation:
+      invalid: Invalid phone number
+    countryCodeLabel: 'Default country code:'
+    phonePlaceholder: Enter a phone number
+    phoneLabel: 'Phone number:'
+    unknown: Unknown
 
   ipv4-subnet-calculator:
     title: IPv4 subnet calculator
     description: Parse your IPv4 CIDR blocks and get all the info you need about your subnet.
+    cannotParse: We cannot parse this address, check the format
+    sections:
+      netmask: Netmask
+      networkAddress: Network address
+      networkMask: Network mask
+      networkMaskBinary: Network mask in binary
+      cidrNotation: CIDR notation
+      wildcardMask: Wildcard mask
+      networkSize: Network size
+      firstAddress: First address
+      lastAddress: Last address
+      broadcastAddress: Broadcast address
+      ipClass: IP class
+    noBroadcast: No broadcast address with this mask
+    unknownClass: Unknown class type
+    inputLabel: An IPv4 address with or without mask
+    inputPlaceholder: The ipv4 address...
+    previousBlock: Previous block
+    nextBlock: Next block
 
   og-meta-generator:
     title: Open graph meta generator
     description: Generate open-graph and socials HTML meta tags for your website.
+    metaTagsLabel: Your meta tags
 
   ipv6-ula-generator:
     title: IPv6 ULA generator
     description: Generate your own local, non-routable IP addresses for your network according to RFC4193.
+    alert:
+      title: Info
+      text: This tool uses the first method suggested by IETF using the current timestamp plus the mac address, sha1 hashed, and the lower 40 bits to generate your random ULA.
+    result:
+      ula: 'IPv6 ULA:'
+      firstBlock: 'First routable block:'
+      lastBlock: 'Last routable block:'
+    macAddress:
+      placeholder: Type a MAC address
+      label: 'MAC address:'
 
   hash-text:
     title: Hash text
@@ -474,6 +920,22 @@ tools:
   device-information:
     title: Device information
     description: Get information about your current device (screen size, pixel-ratio, user agent, ...)
+    sections:
+      screen: Screen
+      device: Device
+    screen:
+      size: Screen size
+      orientation: Orientation
+      orientationAngle: Orientation angle
+      colorDepth: Color depth
+      pixelRatio: Pixel ratio
+      windowSize: Window size
+    device:
+      browserVendor: Browser vendor
+      languages: Languages
+      platform: Platform
+      userAgent: User agent
+    unknownValue: unknown
 
   pdf-signature-checker:
     title: PDF signature checker
@@ -519,6 +981,11 @@ tools:
   string-obfuscator:
     title: String obfuscator
     description: Obfuscate a string (like a secret, an IBAN, or a token) to make it shareable and identifiable without revealing its content.
+    inputPlaceholder: Enter string to obfuscate
+    inputLabel: 'String to obfuscate:'
+    keepFirst: 'Keep first:'
+    keepLast: 'Keep last:'
+    keepSpaces: 'Keep spaces:'
 
   base-converter:
     title: Integer base converter
@@ -567,14 +1034,35 @@ tools:
   ipv4-address-converter:
     title: IPv4 address converter
     description: Convert an IP address into decimal, binary, hexadecimal, or even an IPv6 representation of it.
+    labels:
+      decimal: 'Decimal: '
+      hexadecimal: 'Hexadecimal: '
+      binary: 'Binary: '
+      ipv6: 'Ipv6: '
+      ipv6Short: 'Ipv6 (short): '
+    validation:
+      invalid: Invalid ipv4 address
+    addressLabel: 'The ipv4 address:'
+    addressPlaceholder: The ipv4 address...
+    correctPlaceholder: Set a correct ipv4 address
 
   text-statistics:
     title: Text statistics
     description: Get information about a text, the number of characters, the number of words, its size in bytes, ...
+    placeholder: Your text...
+    characterCount: Character count
+    wordCount: Word count
+    lineCount: Line count
+    byteSize: Byte size
 
   text-to-nato-alphabet:
     title: Text to NATO alphabet
     description: Transform text into the NATO phonetic alphabet for oral transmission.
+    copied: NATO alphabet string copied.
+    inputLabel: Your text to convert to NATO phonetic alphabet
+    inputPlaceholder: Put your text here...
+    outputLabel: Your text in NATO phonetic alphabet
+    copyButton: Copy NATO string
 
   basic-auth-generator:
     title: Basic auth generator
@@ -590,10 +1078,34 @@ tools:
   text-to-unicode:
     title: Text to Unicode
     description: Parse and convert text to unicode and vice-versa
+    textToUnicodeTitle: Text to Unicode
+    textInputPlaceholder: e.g. 'Hello Avengers'
+    textInputLabel: Enter text to convert to unicode
+    unicodeOutputLabel: Unicode from your text
+    unicodeOutputPlaceholder: The unicode representation of your text will be here
+    copyUnicode: Copy unicode to clipboard
+    unicodeToTextTitle: Unicode to Text
+    unicodeInputPlaceholder: Input Unicode
+    unicodeInputLabel: Enter unicode to convert to text
+    textOutputLabel: Text from your Unicode
+    textOutputPlaceholder: The text representation of your unicode will be here
+    copyText: Copy text to clipboard
 
   ipv4-range-expander:
     title: IPv4 range expander
     description: Given a start and an end IPv4 address, this tool calculates a valid IPv4 subnet along with its CIDR notation.
+    startAddress: Start address
+    endAddress: End address
+    addressesInRange: Addresses in range
+    cidr: CIDR
+    invalidIpv4: Invalid ipv4 address
+    startAddressPlaceholder: Start IPv4 address...
+    endAddressPlaceholder: End IPv4 address...
+    oldValue: old value
+    newValue: new value
+    invalidCombinationTitle: Invalid combination of start and end IPv4 address
+    invalidCombinationText: The end IPv4 address is lower than the start IPv4 address. This is not valid and no result could be calculated. In the most cases the solution to solve this problem is to change start and end address.
+    switchStartEnd: Switch start and end IPv4 address
 
   text-diff:
     title: Text diff
@@ -602,30 +1114,137 @@ tools:
   otp-generator:
     title: OTP code generator
     description: Generate and validate time-based OTP (one time password) for multi-factor authentication.
+    secretValidationBase32: Secret should be a base32 string
+    secretValidationRequired: Please set a secret
+    secretLabel: Secret
+    secretPlaceholder: Paste your TOTP secret...
+    generateTooltip: Generate a new random secret
+    nextIn: Next in {seconds}s
+    openKeyUri: Open Key URI in new tab
+    secretHexLabel: Secret in hexadecimal
+    secretHexPlaceholder: Secret in hex will be displayed here
+    epochLabel: Epoch
+    epochPlaceholder: Epoch in sec will be displayed here
+    iteration: Iteration
+    countLabel: 'Count:'
+    countPlaceholder: Iteration count will be displayed here
+    paddedHexLabel: 'Padded hex:'
+    paddedHexPlaceholder: Iteration count in hex will be displayed here
+    previous: Previous
+    currentOtp: Current OTP
+    next: Next
+    copied: Copied !
+    copyPrevious: Copy previous OTP
+    copyCurrent: Copy current OTP
+    copyNext: Copy next OTP
 
   url-encoder:
     title: Encode/decode URL-formatted strings
     description: Encode text to URL-encoded format (also known as "percent-encoded"), or decode from it.
+    encode:
+      title: Encode
+      inputLabel: 'Your string :'
+      inputPlaceholder: The string to encode
+      outputLabel: 'Your string encoded :'
+      outputPlaceholder: Your string encoded
+    decode:
+      title: Decode
+      inputLabel: 'Your encoded string :'
+      inputPlaceholder: The string to decode
+      outputLabel: 'Your string decoded :'
+      outputPlaceholder: Your string decoded
+    parseError: Impossible to parse this string
+    button:
+      copy: Copy
+    encodedCopied: Encoded string copied to the clipboard
+    decodedCopied: Decoded string copied to the clipboard
 
   text-to-binary:
     title: Text to ASCII binary
     description: Convert text to its ASCII binary representation and vice-versa.
+    textToBinaryTitle: Text to ASCII binary
+    textInputLabel: Enter text to convert to binary
+    binaryOutputLabel: Binary from your text
+    binaryOutputPlaceholder: The binary representation of your text will be here
+    copyBinary: Copy binary to clipboard
+    binaryToTextTitle: ASCII binary to text
+    binaryInputLabel: Enter binary to convert to text
+    validationMessage: Binary should be a valid ASCII binary string with multiples of 8 bits
+    textOutputLabel: Text from your binary
+    textOutputPlaceholder: The text representation of your binary will be here
+    copyText: Copy text to clipboard
 
   jwt-generator:
     title: JWT generator
     description: 'Sign and generate a JSON Web Token (JWT) from a payload and key - HS256/384/512, RS, PS, ES and EdDSA. Runs entirely in your browser; the key never leaves your device.'
+    options: Options
+    algorithm: Algorithm
+    secret: Secret
+    secretPlaceholder: Your HMAC secret
+    privateKey: Private key (PKCS#8, PEM)
+    payload: Payload
+    payloadPlaceholder: The JWT payload as a JSON object
+    token: Token
+    tokenPlaceholder: The signed JWT will appear here
+    copyToken: Copy token
+    tokenCopied: Token copied to the clipboard
 
   color-contrast-checker:
     title: Color contrast checker
     description: 'Check the WCAG contrast ratio between a text and a background color, and see which accessibility levels (AA / AAA) it passes.'
+    normalText: Normal text
+    largeText: Large text
+    sections:
+      colors: Colors
+      preview: Preview
+      contrastRatio: Contrast ratio
+    textColorLabel: Text color
+    backgroundColorLabel: Background color
+    invalidColors: Please enter two valid CSS colors.
+    previewLarge: Large text — the quick brown fox
+    previewNormal: Normal text — the quick brown fox jumps over the lazy dog.
+    ratioDescription: WCAG 2.1 contrast ratio (1:1 to 21:1)
+    table:
+      content: Content
+      aa: AA
+      aaa: AAA
+    pass: Pass
+    fail: Fail
+    largeTextNote: Large text is 18pt (24px) or 14pt (18.66px) bold and above.
 
   data-storage-converter:
     title: Data storage converter
     description: 'Convert digital storage sizes between bits, bytes and their decimal (kB, MB, GB…) and binary (KiB, MiB, GiB…) multiples.'
+    valueToConvert: Value to convert
+    from: From
+    to: To
+    result: Result
 
   text-line-tools:
     title: Text line tools
     description: 'Sort, deduplicate, reverse, shuffle, number, trim and filter the lines of a block of text.'
+    sort:
+      none: No sorting
+      asc: Ascending (A→Z)
+      desc: Descending (Z→A)
+      shuffle: Shuffle
+      label: Sort
+    copied: Result copied to the clipboard
+    input:
+      label: Your text
+      placeholder: Paste your lines of text here...
+    operations:
+      title: Operations
+      trim: Trim each line
+      removeEmpty: Remove empty lines
+      unique: Remove duplicates
+      reverse: Reverse order
+      number: Number lines
+    output:
+      label: Result
+      placeholder: The transformed lines will appear here...
+    button:
+      copy: Copy result
 
   json-to-typescript:
     title: JSON to TypeScript
@@ -647,6 +1266,11 @@ tools:
   duration-converter:
     title: Duration converter
     description: 'Convert a duration between nanoseconds, microseconds, milliseconds, seconds, minutes, hours, days and weeks, with a human-readable breakdown.'
+    durationLabel: Duration to convert
+    fromLabel: From
+    toLabel: To
+    resultLabel: Result
+    humanReadableLabel: Human readable
 
   html-to-markdown:
     title: HTML to Markdown
@@ -658,18 +1282,58 @@ tools:
   string-escape:
     title: String escape / unescape
     description: 'Escape or unescape a string using backslash sequences (\n, \t, \", \uXXXX…), as used in JSON, JavaScript and many programming languages.'
+    escape: Escape
+    unescape: Unescape
+    stringToEscape: String to escape
+    stringToUnescape: String to unescape
+    escapePlaceholder: 'Enter a raw string, e.g. a line
+
+      break...'
+    unescapePlaceholder: Enter an escaped string, e.g. a line\nbreak...
+    result: Result
+    resultPlaceholder: The result will appear here...
+    copyResult: Copy result
+    copied: Result copied to the clipboard
 
   number-to-words:
     title: Number to words
     description: 'Spell out a number in English words (e.g. 1234 becomes "one thousand two hundred thirty-four"), with support for negatives and decimals.'
+    copied: Words copied to the clipboard
+    numberLabel: Number
+    numberPlaceholder: Enter a number, e.g. 1234.56
+    inWords: In words
+    copyWords: Copy words
 
   unicode-inspector:
     title: Unicode inspector
     description: 'Inspect a string character by character: Unicode code point, decimal value, HTML entity, and UTF-8 / UTF-16 byte sequences.'
+    inputLabel: Text to inspect
+    inputPlaceholder: Type or paste text to inspect its characters...
+    table:
+      char: Char
+      unicode: Unicode
+      decimal: Decimal
+      html: HTML
+      utf8: UTF-8
+      utf16: UTF-16
+      name: Name
+    characterCount: '{n} character | {n} characters'
 
   markdown-toc-generator:
     title: Markdown TOC generator
     description: 'Generate a nested table of contents with GitHub-style anchor links from the headings of a Markdown document.'
+    bulletDash: Dash (-)
+    bulletAsterisk: Asterisk (*)
+    bulletOrdered: Ordered (1.)
+    levelOption: H1–H{n}
+    copied: Table of contents copied to the clipboard
+    markdownLabel: Your Markdown
+    markdownPlaceholder: Paste your Markdown here...
+    listStyleLabel: List style
+    includeUpToLabel: Include up to
+    tocLabel: Table of contents
+    tocPlaceholder: The generated table of contents will appear here...
+    copyButton: Copy table of contents
 
   json-sort-keys:
     title: JSON sort keys
@@ -684,10 +1348,26 @@ tools:
   ascii-text-drawer:
     title: ASCII Art Text Generator
     description: 'Create ASCII art text with many fonts and styles.'
+    textLabel: 'Your text:'
+    textPlaceholder: Your text to draw
+    fontLabel: 'Font:'
+    fontPlaceholder: Select font to use
+    widthLabel: 'Width:'
+    widthPlaceholder: Width of the text
+    loadingFont: Loading font...
+    errorMessage: Current settings resulted in error.
+    outputLabel: 'Ascii Art text:'
 
   email-normalizer:
     title: Email normalizer
     description: 'Normalize email addresses to a standard format for easier comparison. Useful for deduplication and data cleaning.'
+    rawLabel: 'Raw emails to normalize:'
+    rawPlaceholder: Put your emails here (one per line)...
+    normalizedLabel: 'Normalized emails:'
+    normalizedPlaceholder: Normalized emails will appear here...
+    clear: Clear emails
+    copyButton: Copy normalized emails
+    copied: Normalized emails copied to the clipboard
 
   json-to-xml:
     title: JSON to XML
@@ -699,10 +1379,58 @@ tools:
   markdown-to-html:
     title: Markdown to HTML
     description: 'Convert Markdown to Html and allow to print (as PDF)'
+    input:
+      placeholder: Your Markdown content...
+      label: 'Your Markdown to convert:'
+    output:
+      label: 'Output HTML:'
+    button:
+      print: Print as PDF
 
   ocr-image-to-text:
     title: Image to text (OCR)
     description: 'Extract text from images and PDFs (photos, screenshots, scans) with Tesseract OCR, in 30+ languages, in batches. Runs entirely in your browser - files are never uploaded.'
+    warning:
+      skipped: 'Skipped {n} unsupported file(s): {files}'
+      noFiles: Please add at least one image or PDF
+      noLanguage: Please select at least one language
+    status:
+      processing: Processing…
+      noText: No text detected
+      characters: '{n} characters'
+      error: 'Error: {error}'
+      pdfReady: PDF · ready
+      ready: Ready
+    copied: Extracted text copied to the clipboard
+    progress:
+      loadingEngine: Loading OCR engine…
+      position: File {current}/{total} · {name}
+      renderingPdf: '{position} · rendering PDF…'
+      page: '{position} · page {current}/{total}'
+    info:
+      noTextDetected: No text was detected
+    error:
+      ocrFailed: 'OCR failed: {error}'
+    section:
+      files: Files
+      options: Options
+      extractedText: Extracted text
+    upload:
+      title: Drag and drop images or PDFs here, or click to select
+    button:
+      clearAll: Clear all
+      extract: Extract text
+      copy: Copy text
+    languages:
+      label: Languages
+      placeholder: Select one or more languages
+    quality:
+      label: Quality
+      best: Best
+      fast: Fast
+      hint: Best is more accurate but slower and downloads larger language data.
+    output:
+      placeholder: The extracted text will appear here
 
   regex-memo:
     title: Regex cheatsheet
@@ -711,10 +1439,44 @@ tools:
   regex-tester:
     title: Regex Tester
     description: 'Test your regular expressions with sample text.'
+    invalidRegex: Invalid regex
+    regexTitle: Regex
+    regexToTest: 'Regex to test:'
+    regexPlaceholder: Put the regex to test
+    cheatsheet: See Regular Expression Cheatsheet
+    flags:
+      global: Global search.
+      globalTitle: Global search
+      ignoreCase: Case-insensitive search.
+      ignoreCaseTitle: Case-insensitive search
+      multiline: Multiline
+      multilineTitle: Allows ^ and $ to match next to newline characters.
+      singleline: Singleline
+      singlelineTitle: Allows . to match newline characters.
+      unicode: Unicode
+      unicodeTitle: Unicode; treat a pattern as a sequence of Unicode code points.
+      unicodeSets: Unicode Sets
+      unicodeSetsTitle: An upgrade to the u mode with more Unicode features.
+    textToMatch: 'Text to match:'
+    textPlaceholder: Put the text to match
+    matchesTitle: Matches
+    table:
+      indexInText: Index in text
+      value: Value
+      captures: Captures
+      groups: Groups
+    noMatch: No match
+    sampleTitle: Sample matching text
+    diagramTitle: Regex Diagram
 
   safelink-decoder:
     title: Outlook Safelink decoder
     description: 'Decode Outlook SafeLink links'
+    input:
+      placeholder: Your input Outlook SafeLink Url...
+      label: 'Your input Outlook SafeLink Url:'
+    output:
+      label: 'Output decoded URL:'
 
   xml-to-json:
     title: XML to JSON

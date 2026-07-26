@@ -3,6 +3,8 @@ import { useEventListener } from '@vueuse/core';
 
 import InputCopyable from '../../components/InputCopyable.vue';
 
+const { t } = useI18n();
+
 const event = ref<KeyboardEvent>();
 
 useEventListener(document, 'keydown', (e) => {
@@ -16,28 +18,28 @@ const fields = computed(() => {
 
   return [
     {
-      label: 'Key :',
+      label: t('tools.keycode-info.key'),
       value: event.value.key,
-      placeholder: 'Key name...',
+      placeholder: t('tools.keycode-info.keyPlaceholder'),
     },
     {
-      label: 'Keycode :',
+      label: t('tools.keycode-info.keycode'),
       value: String(event.value.keyCode),
-      placeholder: 'Keycode...',
+      placeholder: t('tools.keycode-info.keycodePlaceholder'),
     },
     {
-      label: 'Code :',
+      label: t('tools.keycode-info.code'),
       value: event.value.code,
-      placeholder: 'Code...',
+      placeholder: t('tools.keycode-info.codePlaceholder'),
     },
     {
-      label: 'Location :',
+      label: t('tools.keycode-info.location'),
       value: String(event.value.location),
-      placeholder: 'Code...',
+      placeholder: t('tools.keycode-info.codePlaceholder'),
     },
 
     {
-      label: 'Modifiers :',
+      label: t('tools.keycode-info.modifiers'),
       value: [
         event.value.metaKey && 'Meta',
         event.value.shiftKey && 'Shift',
@@ -46,7 +48,7 @@ const fields = computed(() => {
       ]
         .filter(Boolean)
         .join(' + '),
-      placeholder: 'None',
+      placeholder: t('tools.keycode-info.modifiersPlaceholder'),
     },
   ];
 });
@@ -59,7 +61,7 @@ const fields = computed(() => {
         {{ event.key }}
       </div>
       <span lh-1 op-70>
-        Press the key on your keyboard you want to get info about this key
+        {{ t('tools.keycode-info.prompt') }}
       </span>
     </c-card>
 
