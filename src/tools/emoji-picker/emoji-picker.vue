@@ -6,6 +6,8 @@ import emojiUnicodeData from 'unicode-emoji-json';
 import useDebouncedRef from '@/composable/debouncedref';
 import { useFuzzySearch } from '@/composable/fuzzySearch';
 
+const { t } = useI18n();
+
 const escapeUnicode = ({ emoji }: { emoji: string }) => emoji.split('').map(unit => `\\u${unit.charCodeAt(0).toString(16).padStart(4, '0')}`).join('');
 const getEmojiCodePoints = ({ emoji }: { emoji: string }) => emoji.codePointAt(0) ? `0x${emoji.codePointAt(0)?.toString(16)}` : undefined;
 
@@ -43,7 +45,7 @@ const { searchResult } = useFuzzySearch({
     <div flex items-center gap-3>
       <c-input-text
         v-model:value="searchQuery"
-        placeholder="Search emojis (e.g. 'smile')..."
+        :placeholder="t('tools.emoji-picker.searchPlaceholder')"
         mx-auto max-w-600px
       >
         <template #prefix>
@@ -59,12 +61,12 @@ const { searchResult } = useFuzzySearch({
         text-20px
         font-bold
       >
-        No results
+        {{ t('tools.emoji-picker.noResults') }}
       </div>
 
       <div v-else>
         <div mt-4 text-20px font-bold>
-          Search result
+          {{ t('tools.emoji-picker.searchResult') }}
         </div>
 
         <emoji-grid :emoji-infos="searchResult" />

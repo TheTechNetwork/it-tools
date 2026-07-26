@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { inspectString } from './unicode-inspector.service';
 
+const { t } = useI18n();
+
 const input = ref('Hi 👋');
 
 const characters = computed(() => inspectString(input.value));
@@ -10,8 +12,8 @@ const characters = computed(() => inspectString(input.value));
   <div>
     <c-input-text
       v-model:value="input"
-      label="Text to inspect"
-      placeholder="Type or paste text to inspect its characters..."
+      :label="t('tools.unicode-inspector.inputLabel')"
+      :placeholder="t('tools.unicode-inspector.inputPlaceholder')"
       multiline
       rows="3"
       raw-text
@@ -22,13 +24,13 @@ const characters = computed(() => inspectString(input.value));
       <n-table :bordered="false" :single-line="false" size="small">
         <thead>
           <tr>
-            <th>Char</th>
-            <th>Unicode</th>
-            <th>Decimal</th>
-            <th>HTML</th>
-            <th>UTF-8</th>
-            <th>UTF-16</th>
-            <th>Name</th>
+            <th>{{ t('tools.unicode-inspector.table.char') }}</th>
+            <th>{{ t('tools.unicode-inspector.table.unicode') }}</th>
+            <th>{{ t('tools.unicode-inspector.table.decimal') }}</th>
+            <th>{{ t('tools.unicode-inspector.table.html') }}</th>
+            <th>{{ t('tools.unicode-inspector.table.utf8') }}</th>
+            <th>{{ t('tools.unicode-inspector.table.utf16') }}</th>
+            <th>{{ t('tools.unicode-inspector.table.name') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -60,7 +62,7 @@ const characters = computed(() => inspectString(input.value));
     </c-card>
 
     <div mt-3 op-70>
-      {{ characters.length }} character{{ characters.length === 1 ? '' : 's' }}
+      {{ t('tools.unicode-inspector.characterCount', { n: characters.length }, characters.length) }}
     </div>
   </div>
 </template>

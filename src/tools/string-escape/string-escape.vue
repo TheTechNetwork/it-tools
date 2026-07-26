@@ -3,13 +3,15 @@ import { useCopy } from '@/composable/copy';
 import { withDefaultOnError } from '@/utils/defaults';
 import { escapeString, unescapeString } from './string-escape.service';
 
+const { t } = useI18n();
+
 const mode = ref<'escape' | 'unescape'>('escape');
 const input = ref('');
 
-const modeOptions = [
-  { label: 'Escape', value: 'escape' },
-  { label: 'Unescape', value: 'unescape' },
-];
+const modeOptions = computed(() => [
+  { label: t('tools.string-escape.escape'), value: 'escape' },
+  { label: t('tools.string-escape.unescape'), value: 'unescape' },
+]);
 
 const output = computed(() =>
   withDefaultOnError(
@@ -18,7 +20,7 @@ const output = computed(() =>
   ),
 );
 
-const { copy } = useCopy({ source: output, text: 'Result copied to the clipboard' });
+const { copy } = useCopy({ source: output, text: t('tools.string-escape.copied') });
 </script>
 
 <template>
@@ -33,8 +35,8 @@ const { copy } = useCopy({ source: output, text: 'Result copied to the clipboard
 
     <c-input-text
       v-model:value="input"
-      :label="mode === 'escape' ? 'String to escape' : 'String to unescape'"
-      :placeholder="mode === 'escape' ? 'Enter a raw string, e.g. a line\nbreak...' : 'Enter an escaped string, e.g. a line\\nbreak...'"
+      :label="mode === 'escape' ? t('tools.string-escape.stringToEscape') : t('tools.string-escape.stringToUnescape')"
+      :placeholder="mode === 'escape' ? t('tools.string-escape.escapePlaceholder') : t('tools.string-escape.unescapePlaceholder')"
       multiline
       rows="6"
       raw-text
@@ -43,8 +45,8 @@ const { copy } = useCopy({ source: output, text: 'Result copied to the clipboard
 
     <c-input-text
       :value="output"
-      label="Result"
-      placeholder="The result will appear here..."
+      :label="t('tools.string-escape.result')"
+      :placeholder="t('tools.string-escape.resultPlaceholder')"
       multiline
       rows="6"
       readonly
@@ -55,7 +57,7 @@ const { copy } = useCopy({ source: output, text: 'Result copied to the clipboard
 
     <div mt-4 flex justify-center>
       <c-button :disabled="output === ''" @click="copy()">
-        Copy result
+        {{ t('tools.string-escape.copyResult') }}
       </c-button>
     </div>
   </div>

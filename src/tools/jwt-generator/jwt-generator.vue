@@ -3,6 +3,8 @@ import type { JwtAlgorithm } from './jwt-generator.service';
 import { useCopy } from '@/composable/copy';
 import { isSymmetric, signJwt, SUPPORTED_ALGORITHMS } from './jwt-generator.service';
 
+const { t } = useI18n();
+
 const algorithmOptions = SUPPORTED_ALGORITHMS.map(value => ({ label: value, value }));
 const algorithm = ref<JwtAlgorithm>('HS256');
 
@@ -37,27 +39,27 @@ watchEffect(async () => {
   }
 });
 
-const { copy } = useCopy({ source: token, text: 'Token copied to the clipboard' });
+const { copy } = useCopy({ source: token, text: t('tools.jwt-generator.tokenCopied') });
 </script>
 
 <template>
   <div flex flex-col gap-4>
-    <c-card title="Options">
-      <n-form-item label="Algorithm" :show-feedback="false">
+    <c-card :title="t('tools.jwt-generator.options')">
+      <n-form-item :label="t('tools.jwt-generator.algorithm')" :show-feedback="false">
         <n-select v-model:value="algorithm" :options="algorithmOptions" filterable />
       </n-form-item>
 
       <c-input-text
         v-if="symmetric"
         v-model:value="secret"
-        label="Secret"
-        placeholder="Your HMAC secret"
+        :label="t('tools.jwt-generator.secret')"
+        :placeholder="t('tools.jwt-generator.secretPlaceholder')"
         mt-3
       />
       <c-input-text
         v-else
         v-model:value="privateKey"
-        label="Private key (PKCS#8, PEM)"
+        :label="t('tools.jwt-generator.privateKey')"
         placeholder="-----BEGIN PRIVATE KEY-----&#10;...&#10;-----END PRIVATE KEY-----"
         multiline
         rows="6"
@@ -66,17 +68,17 @@ const { copy } = useCopy({ source: token, text: 'Token copied to the clipboard' 
       />
     </c-card>
 
-    <c-card title="Payload">
+    <c-card :title="t('tools.jwt-generator.payload')">
       <c-input-text
         v-model:value="payload"
-        placeholder="The JWT payload as a JSON object"
+        :placeholder="t('tools.jwt-generator.payloadPlaceholder')"
         multiline
         rows="8"
         monospace
       />
     </c-card>
 
-    <c-card title="Token">
+    <c-card :title="t('tools.jwt-generator.token')">
       <n-alert v-if="error" type="error" :show-icon="false">
         {{ error }}
       </n-alert>
@@ -87,11 +89,11 @@ const { copy } = useCopy({ source: token, text: 'Token copied to the clipboard' 
           multiline
           rows="5"
           monospace
-          placeholder="The signed JWT will appear here"
+          :placeholder="t('tools.jwt-generator.tokenPlaceholder')"
         />
         <div mt-3 flex justify-center>
           <c-button :disabled="token === ''" @click="copy()">
-            Copy token
+            {{ t('tools.jwt-generator.copyToken') }}
           </c-button>
         </div>
       </template>
