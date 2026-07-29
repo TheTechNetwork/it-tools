@@ -46,8 +46,28 @@ describe('unicode-inspector', () => {
     expect(result[0].utf8.split(' ')).toHaveLength(4);
   });
 
-  it('names common control characters', () => {
-    expect(inspectString('\n')[0].name).toBe('LINE FEED (newline)');
-    expect(inspectString('\t')[0].name).toBe('CHARACTER TABULATION (tab)');
+  it('names control characters that have dedicated names', () => {
+    expect(inspectString(String.fromCharCode(0x0A))[0].name).toBe('LINE FEED (newline)');
+    expect(inspectString(String.fromCharCode(0x09))[0].name).toBe('CHARACTER TABULATION (tab)');
+    expect(inspectString(String.fromCharCode(0x00))[0].name).toBe('NULL');
+    expect(inspectString(String.fromCharCode(0x20))[0].name).toBe('SPACE');
+    expect(inspectString(String.fromCharCode(0x7F))[0].name).toBe('DELETE');
+    expect(inspectString(String.fromCharCode(0x1B))[0].name).toBe('ESCAPE');
+  });
+
+  it('labels unnamed C0 control characters generically', () => {
+    // U+0001 is a control character with no dedicated name in the lookup table.
+    expect(inspectString(String.fromCharCode(0x01))[0].name).toBe('CONTROL CHARACTER');
+    expect(inspectString(String.fromCharCode(0x1F))[0].name).toBe('CONTROL CHARACTER');
+  });
+
+  it('labels C1 control characters (U+0080-U+009F) generically', () => {
+    expect(inspectString(String.fromCharCode(0x80))[0].name).toBe('CONTROL CHARACTER');
+    expect(inspectString(String.fromCharCode(0x9F))[0].name).toBe('CONTROL CHARACTER');
+  });
+
+  it('leaves printable characters unnamed', () => {
+    expect(inspectString('A')[0].name).toBe('');
+    expect(inspectString('é')[0].name).toBe('');
   });
 });

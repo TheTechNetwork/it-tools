@@ -47,5 +47,23 @@ describe('number-to-words', () => {
   it('throws on invalid input', () => {
     expect(() => numberToWords('abc')).toThrow('Please enter a valid number.');
     expect(() => numberToWords('')).toThrow('Please enter a valid number.');
+    expect(() => numberToWords('   ')).toThrow('Please enter a valid number.');
+    expect(() => numberToWords('1.2.3')).toThrow('Please enter a valid number.');
+  });
+
+  it('accepts a leading plus sign and a bare fractional value', () => {
+    expect(numberToWords('+42')).toBe('forty-two');
+    expect(numberToWords('.5')).toBe('zero point five');
+  });
+
+  it('reads out large short-scale groups up to quintillion', () => {
+    expect(numberToWords('1000000000000')).toBe('one trillion');
+    expect(numberToWords('1000000000000000')).toBe('one quadrillion');
+    expect(numberToWords('1000000000000000000')).toBe('one quintillion');
+  });
+
+  it('throws when the number exceeds the supported short-scale range', () => {
+    // 22 digits => 8 three-digit groups, one beyond quintillion.
+    expect(() => numberToWords('1000000000000000000000')).toThrow('Number is too large to convert.');
   });
 });

@@ -33,6 +33,19 @@ describe('string-escape', () => {
       expect(unescapeString('line1\\nline2\\ttab')).toBe('line1\nline2\ttab');
     });
 
+    it('unescapes backspace, form-feed and carriage-return escapes', () => {
+      expect(unescapeString('\\b\\f\\r')).toBe('\b\f\r');
+    });
+
+    it('unescapes escaped single quotes and forward slashes', () => {
+      expect(unescapeString('it\\\'s')).toBe('it\'s');
+      expect(unescapeString('a\\/b')).toBe('a/b');
+    });
+
+    it('leaves characters without a preceding backslash untouched', () => {
+      expect(unescapeString('plain text 123')).toBe('plain text 123');
+    });
+
     it('unescapes \\uXXXX and \\xXX sequences', () => {
       expect(unescapeString('\\u0041\\u0042')).toBe('AB');
       expect(unescapeString('\\x41')).toBe('A');
@@ -48,6 +61,17 @@ describe('string-escape', () => {
 
     it('leaves malformed unicode escapes as-is', () => {
       expect(unescapeString('\\uZZZZ')).toBe('uZZZZ');
+      expect(unescapeString('\\u12')).toBe('u12');
+    });
+
+    it('unescapes mixed-case hex in \\uXXXX and \\xXX sequences', () => {
+      expect(unescapeString('\\u00E9')).toBe('é');
+      expect(unescapeString('\\xE9')).toBe('é');
+    });
+
+    it('leaves malformed hex escapes as-is', () => {
+      expect(unescapeString('\\xZZ')).toBe('xZZ');
+      expect(unescapeString('\\x4')).toBe('x4');
     });
   });
 

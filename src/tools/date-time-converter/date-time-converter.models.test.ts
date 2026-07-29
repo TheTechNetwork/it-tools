@@ -127,6 +127,17 @@ describe('date-time-converter models', () => {
       expect(isUTCDateString('foo')).toBe(false);
       expect(isUTCDateString('')).toBe(false);
     });
+
+    it('should return false for a nil date', () => {
+      expect(isUTCDateString()).toBe(false);
+      expect(isUTCDateString(undefined)).toBe(false);
+    });
+
+    it('should return false (not throw) when the date cannot be coerced', () => {
+      // A Symbol throws when the Date constructor coerces it to a primitive;
+      // the function must swallow that and return false.
+      expect(isUTCDateString(Symbol('nope') as unknown as string)).toBe(false);
+    });
   });
 
   describe('isMongoObjectId', () => {

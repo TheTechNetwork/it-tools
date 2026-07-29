@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { Base64 } from 'js-base64';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { base64ToText, isValidBase64, removePotentialDataAndMimePrefix, textToBase64 } from './base64';
 
 describe('base64 utils', () => {
@@ -43,6 +44,21 @@ describe('base64 utils', () => {
       expect(() => base64ToText('é')).to.throw('Incorrect base64 string');
       // missing final '='
       expect(() => base64ToText('bG9yZW0gaXBzdW0')).to.throw('Incorrect base64 string');
+    });
+
+    it('throws when the string passes validation but the underlying decode fails', () => {
+      const decodeSpy = vi.spyOn(Base64, 'decode').mockImplementation(() => {
+        throw new Error('decode failure');
+      });
+
+      // 'YQ==' is a valid base64 string, so validation passes and the failure
+      // surfaces from the Base64.decode() catch block instead.
+      expect(() => base64ToText('YQ==')).to.throw('Incorrect base64 string');
+      expect(decodeSpy).toHaveBeenCalled();
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
     });
   });
 

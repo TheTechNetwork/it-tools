@@ -72,5 +72,59 @@ describe('list-converter', () => {
 </ul>`;
       expect(convert(input, options)).toEqual(expected);
     });
+
+    const baseOptions: ConvertOptions = {
+      separator: ', ',
+      trimItems: false,
+      removeDuplicates: false,
+      itemPrefix: '',
+      itemSuffix: '',
+      listPrefix: '',
+      listSuffix: '',
+      reverseList: false,
+      sortList: null,
+      lowerCase: false,
+      keepLineBreaks: false,
+    };
+
+    it('lowercases every item when lowerCase is enabled', () => {
+      expect(convert('Foo\nBAR', { ...baseOptions, lowerCase: true })).toEqual('foo, bar');
+    });
+
+    it('leaves the case untouched when lowerCase is disabled', () => {
+      expect(convert('Foo\nBAR', { ...baseOptions, lowerCase: false })).toEqual('Foo, BAR');
+    });
+
+    it('reverses the list when reverseList is enabled', () => {
+      expect(convert('a\nb\nc', { ...baseOptions, reverseList: true })).toEqual('c, b, a');
+    });
+
+    it('sorts the list ascending', () => {
+      expect(convert('c\na\nb', { ...baseOptions, sortList: 'asc' })).toEqual('a, b, c');
+    });
+
+    it('sorts the list descending', () => {
+      expect(convert('a\nc\nb', { ...baseOptions, sortList: 'desc' })).toEqual('c, b, a');
+    });
+
+    it('trims each item when trimItems is enabled', () => {
+      expect(convert('  a  \n  b  ', { ...baseOptions, trimItems: true })).toEqual('a, b');
+    });
+
+    it('keeps untrimmed items when trimItems is disabled', () => {
+      expect(convert('a\nb', { ...baseOptions, trimItems: false })).toEqual('a, b');
+    });
+
+    it('wraps items and the list with prefixes and suffixes without line breaks', () => {
+      expect(
+        convert('a\nb', {
+          ...baseOptions,
+          itemPrefix: '[',
+          itemSuffix: ']',
+          listPrefix: '<',
+          listSuffix: '>',
+        }),
+      ).toEqual('<[a], [b]>');
+    });
   });
 });

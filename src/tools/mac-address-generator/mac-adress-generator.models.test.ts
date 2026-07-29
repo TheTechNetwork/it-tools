@@ -39,5 +39,25 @@ describe('mac-adress-generator models', () => {
       expect(generateRandomMacAddress({ prefix: 'ff-ee:aa', separator: '-', getRandomByte: createRandomByteGenerator() })).toBe('ff-ee-aa-00-01-02');
       expect(generateRandomMacAddress({ prefix: 'ff ee:aa', separator: '-', getRandomByte: createRandomByteGenerator() })).toBe('ff-ee-aa-00-01-02');
     });
+
+    it('uses default options (real random byte generator, colon separator, no prefix) when called with no arguments', () => {
+      const mac = generateRandomMacAddress();
+
+      expect(mac).toMatch(/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/);
+      expect(mac.split(':')).toHaveLength(6);
+    });
+
+    it('uses defaults when called with an empty options object', () => {
+      const mac = generateRandomMacAddress({});
+
+      expect(mac).toMatch(/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/);
+    });
+
+    it('produces the full six bytes with the default byte generator even with a prefix', () => {
+      const mac = generateRandomMacAddress({ prefix: 'aa:bb' });
+
+      expect(mac).toMatch(/^aa:bb(:[0-9a-f]{2}){4}$/);
+      expect(mac.split(':')).toHaveLength(6);
+    });
   });
 });

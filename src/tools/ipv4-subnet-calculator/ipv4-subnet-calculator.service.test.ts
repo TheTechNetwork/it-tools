@@ -128,9 +128,23 @@ describe('ipv4-subnet-calculator', () => {
       expect(getIPClass({ ip: '255.255.255.255' })).toBe('E');
     });
 
+    it('handles the class boundaries exactly', () => {
+      expect(getIPClass({ ip: '127.0.0.0' })).toBe('A');
+      expect(getIPClass({ ip: '128.0.0.0' })).toBe('B');
+      expect(getIPClass({ ip: '191.0.0.0' })).toBe('B');
+      expect(getIPClass({ ip: '192.0.0.0' })).toBe('C');
+      expect(getIPClass({ ip: '223.0.0.0' })).toBe('C');
+      expect(getIPClass({ ip: '224.0.0.0' })).toBe('D');
+      expect(getIPClass({ ip: '239.0.0.0' })).toBe('D');
+      expect(getIPClass({ ip: '240.0.0.0' })).toBe('E');
+      expect(getIPClass({ ip: '255.0.0.0' })).toBe('E');
+    });
+
     it('returns undefined for out-of-range or invalid values', () => {
       expect(getIPClass({ ip: '256.0.0.0' })).toBeUndefined();
+      expect(getIPClass({ ip: '300.0.0.0' })).toBeUndefined();
       expect(getIPClass({ ip: 'not-an-ip' })).toBeUndefined();
+      expect(getIPClass({ ip: '' })).toBe('A');
     });
   });
 });
