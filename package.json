@@ -45,9 +45,9 @@
     "@regexper/render": "1.0.0",
     "@sindresorhus/slugify": "3.0.0",
     "@tabler/icons-vue": "3.45.0",
-    "@tiptap/pm": "3.28.0",
-    "@tiptap/starter-kit": "3.28.0",
-    "@tiptap/vue-3": "3.28.0",
+    "@tiptap/pm": "3.29.0",
+    "@tiptap/starter-kit": "3.29.0",
+    "@tiptap/vue-3": "3.29.0",
     "@types/figlet": "1.7.0",
     "@types/markdown-it": "14.1.2",
     "@vicons/material": "0.13.0",
@@ -115,11 +115,11 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "9.2.0",
-    "@cloudflare/workers-types": "5.20260724.1",
+    "@cloudflare/workers-types": "5.20260726.1",
     "@eslint/eslintrc": "3.3.6",
     "@iconify-json/mdi": "1.2.3",
     "@intlify/unplugin-vue-i18n": "11.2.4",
-    "@playwright/test": "1.61.1",
+    "@playwright/test": "1.62.0",
     "@rushstack/eslint-patch": "1.16.1",
     "@tsconfig/node24": "24.0.4",
     "@types/crypto-js": "4.2.2",
@@ -165,7 +165,7 @@
     "workbox-window": "7.4.1",
     "zx": "8.8.5"
   },
-  "packageManager": "pnpm@11.16.0",
+  "packageManager": "pnpm@11.17.0",
   "engines": {
     "node": ">=22.18.0"
   }
