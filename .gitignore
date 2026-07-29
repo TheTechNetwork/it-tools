@@ -48,3 +48,5 @@ src/pages/Home.page.vue
 
 # Cloudflare Wrangler local state
 .wrangler/
+/blob-report/
+/all-blob-reports/

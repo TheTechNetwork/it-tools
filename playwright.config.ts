@@ -25,8 +25,18 @@ export default defineConfig({
    * 4); locally let Playwright pick. Expressed as a percentage so it scales if
    * the runner size changes. */
   workers: isCI ? '75%' : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  /* On CI emit a blob report per shard (merged into one HTML report by the
+     e2e-report job); locally generate the HTML report directly. */
+  reporter: isCI ? [['blob'], ['list']] : 'html',
+  /* Visual-regression defaults: a small tolerance absorbs anti-aliasing and
+     font-hinting noise while still catching real layout changes. */
+  expect: {
+    toHaveScreenshot: {
+      maxDiffPixelRatio: 0.02,
+      animations: 'disabled',
+      caret: 'hide',
+    },
+  },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */

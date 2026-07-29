@@ -28,6 +28,7 @@
     "test:unit": "vitest --environment jsdom --run",
     "test:e2e": "playwright test",
     "test:e2e:dev": "BASE_URL=http://localhost:5173 NO_WEB_SERVER=true playwright test",
+    "test:e2e:visual": "VISUAL=1 playwright test src/visual-regression.e2e.spec.ts --project=chromium",
     "coverage": "vitest run --coverage --environment jsdom",
     "typecheck": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint src scripts worker *.ts *.mjs --no-warn-ignored",
