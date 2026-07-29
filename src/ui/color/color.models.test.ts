@@ -36,5 +36,15 @@ describe('color models', () => {
     it('sets the opacity of a color with alpha', () => {
       expect(setOpacity('#00000000', 0.5)).toBe('#00000080');
     });
+
+    it('clamps opacity to the 0-1 range', () => {
+      expect(setOpacity('#000000', 0)).toBe('#00000000');
+      expect(setOpacity('#000000', 1)).toBe('#000000ff');
+    });
+
+    it('throws for a hex color of invalid length', () => {
+      expect(() => setOpacity('#000', 0.5)).toThrow('Invalid hex color');
+      expect(() => setOpacity('', 0.5)).toThrow('Invalid hex color');
+    });
   });
 });

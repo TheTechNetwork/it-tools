@@ -3,7 +3,9 @@ import {
   base32toHex,
   buildKeyUri,
   generateHOTP,
+  generateSecret,
   generateTOTP,
+  getCounterFromTime,
   hexToBytes,
   verifyHOTP,
   verifyTOTP,
@@ -19,6 +21,10 @@ describe('otp functions', () => {
       expect(hexToBytes('063679ca')).toEqual([6, 54, 121, 202]);
       expect(hexToBytes('0102030405060708090a0b0c0d0e0f')).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
     });
+
+    it('returns an empty array for an empty string', () => {
+      expect(hexToBytes('')).toEqual([]);
+    });
   });
   describe('base32toHex', () => {
     it('convert a base32 to hex string', () => {
@@ -30,6 +36,22 @@ describe('otp functions', () => {
     it('case does not matter', () => {
       expect(base32toHex('ABC')).to.eql(base32toHex('abc'));
     });
+
+    it('ignores trailing base32 padding', () => {
+      expect(base32toHex('ABCDEF===')).to.eql(base32toHex('ABCDEF'));
+    });
+
+    it('returns an empty string for an empty input', () => {
+      expect(base32toHex('')).to.eql('');
+    });
+  });
+
+  describe('getCounterFromTime', () => {
+    it('derives the counter from the current time and step', () => {
+      expect(getCounterFromTime({ now: 0, timeStep: 30 })).toBe(0);
+      expect(getCounterFromTime({ now: 59_000, timeStep: 30 })).toBe(1);
+      expect(getCounterFromTime({ now: 60_000, timeStep: 30 })).toBe(2);
+    });
   });
 
   describe('generateHOTP', () => {
@@ -40,6 +62,13 @@ describe('otp functions', () => {
       for (const [counter, code] of hotpCodes.entries()) {
         expect(generateHOTP({ key, counter })).to.eql(code);
       }
+    });
+
+    it('defaults the counter to 0', () => {
+      const key = 'JBSWY3DPEHPK3PXP';
+
+      expect(generateHOTP({ key })).to.eql('282760');
+      expect(generateHOTP({ key })).to.eql(generateHOTP({ key, counter: 0 }));
     });
   });
 
@@ -77,6 +106,17 @@ describe('otp functions', () => {
       for (const { token, now } of codes) {
         expect(generateTOTP({ key, now })).to.eql(token);
       }
+    });
+
+    it('defaults now and timeStep, producing a verifiable code', () => {
+      const key = 'JBSWY3DPEHPK3PXP';
+
+      // With defaulted now (Date.now) and timeStep (30), the generated code must
+      // verify against the same defaults.
+      const code = generateTOTP({ key });
+
+      expect(code).toMatch(/^\d{6}$/);
+      expect(verifyTOTP({ key, token: code })).toBe(true);
     });
   });
 
@@ -123,6 +163,25 @@ describe('otp functions', () => {
       ).to.eql(
         'otpauth://totp/app-name:account?issuer=app-name&secret=JBSWY3DPEHPK3PXP&algorithm=algo&digits=7&period=10',
       );
+    });
+
+    it('url-encodes the app and account names', () => {
+      expect(buildKeyUri({ secret: 'ABC', app: 'My App', account: 'a b' })).to.eql(
+        'otpauth://totp/My%20App:a%20b?issuer=My%20App&secret=ABC&algorithm=SHA1&digits=6&period=30',
+      );
+    });
+  });
+
+  describe('generateSecret', () => {
+    it('generates a 16-character base32 secret', () => {
+      const secret = generateSecret();
+
+      expect(secret).toHaveLength(16);
+      expect(secret).toMatch(/^[A-Z2-7]{16}$/);
+    });
+
+    it('generates a different secret on each call', () => {
+      expect(generateSecret()).not.toBe(generateSecret());
     });
   });
 });

@@ -98,4 +98,29 @@ describe('ocr-image-to-text', () => {
     // The worker is never started when the data can't be fetched.
     expect(createWorker).not.toHaveBeenCalled();
   });
+
+  it('reports a connection error when the preflight fetch itself rejects', async () => {
+    createWorker.mockClear();
+    fetchMock.mockRejectedValue(new Error('network down'));
+
+    await expect(recognizeText({ image: 'x', languages: ['eng'] })).rejects.toThrow(/could not reach the ocr data for "eng"/i);
+    expect(createWorker).not.toHaveBeenCalled();
+  });
+
+  it('forwards worker log messages to the onProgress callback', async () => {
+    createWorker.mockClear();
+    let capturedLogger: ((message: { status: string; progress: number }) => void) | undefined;
+    createWorker.mockImplementationOnce(async (..._args: unknown[]) => {
+      const options = _args[2] as { logger: (message: { status: string; progress: number }) => void };
+      capturedLogger = options.logger;
+      return { recognize, terminate };
+    });
+
+    const onProgress = vi.fn();
+    await recognizeText({ image: 'x', languages: ['eng'], onProgress });
+
+    // The worker emits a log event; the service maps it to onProgress.
+    capturedLogger?.({ status: 'recognizing text', progress: 0.5 });
+    expect(onProgress).toHaveBeenCalledWith({ status: 'recognizing text', progress: 0.5 });
+  });
 });

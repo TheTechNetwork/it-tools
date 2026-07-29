@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { arabicToRoman } from './roman-numeral-converter.service';
+import { arabicToRoman, isValidRomanNumber, romanToArabic } from './roman-numeral-converter.service';
 
 describe('roman-numeral-converter', () => {
   describe('arabicToRoman', () => {
@@ -70,6 +70,70 @@ describe('roman-numeral-converter', () => {
       expect(arabicToRoman(999)).toEqual('CMXCIX');
       expect(arabicToRoman(1000)).toEqual('M');
       expect(arabicToRoman(2000)).toEqual('MM');
+    });
+
+    it('converts the maximum and minimum in-range values', () => {
+      expect(arabicToRoman(1)).toEqual('I');
+      expect(arabicToRoman(3999)).toEqual('MMMCMXCIX');
+    });
+  });
+
+  describe('isValidRomanNumber', () => {
+    it('accepts well-formed roman numbers', () => {
+      expect(isValidRomanNumber('I')).toBe(true);
+      expect(isValidRomanNumber('IV')).toBe(true);
+      expect(isValidRomanNumber('MCMXCIV')).toBe(true);
+      expect(isValidRomanNumber('MMMCMXCIX')).toBe(true);
+      // The regex treats an empty string as a valid (zero-length) roman number.
+      expect(isValidRomanNumber('')).toBe(true);
+    });
+
+    it('rejects malformed roman numbers', () => {
+      expect(isValidRomanNumber('IIII')).toBe(false);
+      expect(isValidRomanNumber('VV')).toBe(false);
+      expect(isValidRomanNumber('IC')).toBe(false);
+      expect(isValidRomanNumber('MMMM')).toBe(false);
+      expect(isValidRomanNumber('abc')).toBe(false);
+      expect(isValidRomanNumber('XIauie')).toBe(false);
+    });
+  });
+
+  describe('romanToArabic', () => {
+    it('returns null for invalid roman numbers', () => {
+      expect(romanToArabic('IIII')).toBeNull();
+      expect(romanToArabic('foobar')).toBeNull();
+      expect(romanToArabic('VX')).toBeNull();
+    });
+
+    it('converts additive roman numbers', () => {
+      expect(romanToArabic('I')).toBe(1);
+      expect(romanToArabic('III')).toBe(3);
+      expect(romanToArabic('VI')).toBe(6);
+      expect(romanToArabic('MMXXIII')).toBe(2023);
+    });
+
+    it('converts subtractive roman numbers', () => {
+      expect(romanToArabic('IV')).toBe(4);
+      expect(romanToArabic('IX')).toBe(9);
+      expect(romanToArabic('XL')).toBe(40);
+      expect(romanToArabic('XC')).toBe(90);
+      expect(romanToArabic('CD')).toBe(400);
+      expect(romanToArabic('CM')).toBe(900);
+      expect(romanToArabic('MCMXCIV')).toBe(1994);
+    });
+
+    it('converts the maximum roman number', () => {
+      expect(romanToArabic('MMMCMXCIX')).toBe(3999);
+    });
+
+    it('treats an empty (valid) roman number as zero', () => {
+      expect(romanToArabic('')).toBe(0);
+    });
+
+    it('round-trips every in-range value', () => {
+      for (let n = 1; n <= 3999; n++) {
+        expect(romanToArabic(arabicToRoman(n))).toBe(n);
+      }
     });
   });
 });

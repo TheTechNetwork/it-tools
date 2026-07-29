@@ -82,6 +82,53 @@ describe('jwt-parser', () => {
       });
     });
 
+    it('leaves a nil date claim without a friendly value', () => {
+      // exp present but null: dateFormatter should short-circuit to undefined.
+      const jwt = `${btoa(JSON.stringify({ alg: 'none' }))}.${btoa(JSON.stringify({ exp: null }))}.`;
+
+      const { payload } = decodeJwt({ jwt });
+      const exp = payload.find(({ claim }) => claim === 'exp');
+
+      expect(exp).toEqual({
+        claim: 'exp',
+        claimDescription: 'Expiration Time',
+        value: '',
+        friendlyValue: undefined,
+      });
+    });
+
+    it('formats exp and nbf date claims', () => {
+      const jwt = `${btoa(JSON.stringify({ alg: 'none' }))}.${btoa(JSON.stringify({ exp: 1516239022, nbf: 1516239022 }))}.`;
+
+      const { payload } = decodeJwt({ jwt });
+
+      expect(payload.find(({ claim }) => claim === 'exp')!.friendlyValue).toMatch(/2018/);
+      expect(payload.find(({ claim }) => claim === 'nbf')!.friendlyValue).toMatch(/2018/);
+    });
+
+    it('does not add an algorithm description when alg is not a string', () => {
+      const jwt = `${btoa(JSON.stringify({ alg: 123 }))}.${btoa(JSON.stringify({ sub: 'x' }))}.`;
+
+      const { header } = decodeJwt({ jwt });
+      const alg = header.find(({ claim }) => claim === 'alg');
+
+      expect(alg).toEqual({
+        claim: 'alg',
+        claimDescription: 'Algorithm',
+        value: '123',
+        friendlyValue: undefined,
+      });
+    });
+
+    it('stringifies nested object claim values', () => {
+      const jwt = `${btoa(JSON.stringify({ alg: 'none' }))}.${btoa(JSON.stringify({ cnf: { jkt: 'abc' } }))}.`;
+
+      const { payload } = decodeJwt({ jwt });
+      const cnf = payload.find(({ claim }) => claim === 'cnf');
+
+      expect(cnf!.value).toBe(JSON.stringify({ jkt: 'abc' }, null, 3));
+    });
+
     it('throws on an invalid jwt', () => {
       expect(() => decodeJwt({ jwt: 'not-a-jwt' })).toThrow();
       expect(() => decodeJwt({ jwt: '' })).toThrow();

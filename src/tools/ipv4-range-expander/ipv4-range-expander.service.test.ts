@@ -28,5 +28,39 @@ describe('ipv4RangeExpander', () => {
     it('should return empty result for invalid input', () => {
       expect(calculateCidr({ startIp: '192.168.7.1', endIp: '192.168.6.255' })).not.toBeDefined();
     });
+
+    it('should handle a range of a single address (start equals end)', () => {
+      const result = calculateCidr({ startIp: '10.0.0.5', endIp: '10.0.0.5' });
+
+      expect(result).toBeDefined();
+      expect(result?.oldSize).toEqual(1);
+      expect(result?.newSize).toEqual(1);
+      expect(result?.newStart).toEqual('10.0.0.5');
+      expect(result?.newEnd).toEqual('10.0.0.5');
+      expect(result?.newCidr).toEqual('10.0.0.5/32');
+    });
+
+    it('should expand a range that already aligns to a full block unchanged', () => {
+      const result = calculateCidr({ startIp: '192.168.0.0', endIp: '192.168.0.255' });
+
+      expect(result).toBeDefined();
+      expect(result?.oldSize).toEqual(256);
+      expect(result?.newSize).toEqual(256);
+      expect(result?.newStart).toEqual('192.168.0.0');
+      expect(result?.newEnd).toEqual('192.168.0.255');
+      expect(result?.newCidr).toEqual('192.168.0.0/24');
+    });
+
+    it('should return undefined when start ip is greater than end ip', () => {
+      expect(calculateCidr({ startIp: '10.0.0.10', endIp: '10.0.0.1' })).toBeUndefined();
+    });
+
+    it('should treat invalid ips as 0.0.0.0 yielding a full range', () => {
+      const result = calculateCidr({ startIp: 'invalid', endIp: 'also-invalid' });
+
+      expect(result).toBeDefined();
+      expect(result?.newCidr).toEqual('0.0.0.0/32');
+      expect(result?.oldSize).toEqual(1);
+    });
   });
 });

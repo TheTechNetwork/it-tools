@@ -26,5 +26,21 @@ describe('error util', () => {
 
       expect(getErrorMessageIfThrows(() => {})).to.equal(undefined);
     });
+
+    it('returns a generic message when the thrown value is neither a string, an error, nor an object with a message', () => {
+      expect(
+        getErrorMessageIfThrows(() => {
+          // eslint-disable-next-line no-throw-literal
+          throw 42;
+        }),
+      ).to.equal('An error as occurred.');
+
+      expect(
+        getErrorMessageIfThrows(() => {
+          // eslint-disable-next-line no-throw-literal
+          throw {};
+        }),
+      ).to.equal('An error as occurred.');
+    });
   });
 });

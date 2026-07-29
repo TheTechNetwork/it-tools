@@ -1,5 +1,5 @@
 import { pki } from 'node-forge';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { generateKeyPair } from './rsa-key-pair-generator.service';
 
 describe('rsa-key-pair-generator', () => {
@@ -32,5 +32,27 @@ describe('rsa-key-pair-generator', () => {
 
       expect(first.privateKeyPem).not.toBe(second.privateKeyPem);
     }, 30000);
+
+    it('rejects when key generation fails (invalid bit length)', async () => {
+      await expect(generateKeyPair({ bits: -8 })).rejects.toBeDefined();
+    }, 30000);
+
+    it('rejects with the error node-forge passes to its callback', async () => {
+      const error = new Error('key generation failed');
+      // node-forge reports async failures through the callback's error argument;
+      // the service must forward that as a rejection.
+      const spy = vi.spyOn(pki.rsa, 'generateKeyPair').mockImplementation((...args: unknown[]) => {
+        const callback = args.find(arg => typeof arg === 'function') as (err: Error | null) => void;
+        callback(error);
+        return undefined as never;
+      });
+
+      await expect(generateKeyPair({ bits: 512 })).rejects.toBe(error);
+      expect(spy).toHaveBeenCalled();
+    });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 });

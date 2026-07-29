@@ -159,7 +159,13 @@ export default defineConfig({
         'src/**/*.d.ts',
         // App wiring, not meaningfully unit-testable
         'src/main.ts',
+        'src/router.ts',
+        'src/config.ts',
+        'src/themes.ts',
         'src/plugins/**',
+        // Tool definitions (defineTool metadata) and barrel/registry index
+        // files: declarations with no branches or logic to unit-test.
+        'src/**/index.ts',
         // Browser-only Node global shims (global/process); the guarded branches
         // never execute under Node/jsdom where those globals already exist.
         'src/polyfills/**',
@@ -176,10 +182,10 @@ export default defineConfig({
       // get locked in as the new floor. Commit the bumped values.
       thresholds: {
         autoUpdate: true,
-        lines: 69.33,
-        statements: 69.91,
-        functions: 68.15,
-        branches: 77.42,
+        lines: 97.06,
+        statements: 97.06,
+        functions: 98.58,
+        branches: 93.99,
       },
     },
   },
