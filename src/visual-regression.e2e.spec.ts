@@ -8,13 +8,9 @@ import { expect, test } from '@playwright/test';
 // excludes the sidebar — the sidebar carries date-based "new" badges that would
 // make full-page snapshots drift over time.
 test.describe('Visual regression', () => {
-  // Opt-in pilot. Golden snapshots are Chromium- and version-specific, so they
-  // must be (re)generated on the same browser CI uses before this is wired into
-  // the pipeline. Until then it stays off the default e2e run so it can't red CI.
-  //   pnpm test:e2e:visual                     # compare against goldens
-  //   pnpm test:e2e:visual --update-snapshots  # refresh goldens on this browser
-  test.skip(!process.env.VISUAL, 'Set VISUAL=1 to run the visual-regression pilot');
-  test.skip(({ browserName }) => browserName !== 'chromium', 'Chromium goldens only (pilot)');
+  // Goldens are maintained for Chromium only (the browser Playwright pins for
+  // this project); refresh them with `pnpm test:e2e:visual --update-snapshots`.
+  test.skip(({ browserName }) => browserName !== 'chromium', 'Chromium goldens only');
 
   async function waitForStableRender(page: import('@playwright/test').Page) {
     // Ensure web fonts are loaded so text metrics are stable before snapshotting.
