@@ -17,6 +17,10 @@ export default defineConfig({
   forbidOnly: isCI,
   /* Retry on CI only */
   retries: isCI ? 2 : 0,
+  /* Defer retries to the end and run them one-by-one in a single worker, so a
+     retry reflects the test itself rather than contention with the parallel
+     suite (Playwright >= 1.62). Inert when retries is 0. */
+  retryStrategy: 'isolated',
   /* On CI use most of the runner's cores per shard (GitHub ubuntu runners have
    * 4); locally let Playwright pick. Expressed as a percentage so it scales if
    * the runner size changes. */
