@@ -788,6 +788,16 @@ configured. The Image-to-text (OCR) tool fetches these assets same-origin-free a
 runtime, which is why the CSP allows `assets.thetech.network` on
 `script-src`/`connect-src`.
 
+#### 8. **visual-regression-update.yml** - Visual Golden Refresh
+
+Manual (`workflow_dispatch`) job that regenerates the visual-regression golden
+snapshots (`src/visual-regression.e2e.spec.ts`) on CI's pinned Chromium and
+commits them back to the dispatched branch (with a `[skip ci]` message; also
+uploads them as an artifact in case the branch is protected). Run it after an
+intentional UI change to a covered tool, or when adding new visual cases whose
+goldens must be generated on the CI browser rather than a local one. Needs
+`contents: write`.
+
 > Static analysis (SAST) runs via GitHub code-scanning **default setup**
 > (configured in repo settings), not a workflow file in this repo. The Trivy
 > image SARIF (from **ci.yml**'s docker-image job) is uploaded into the same
