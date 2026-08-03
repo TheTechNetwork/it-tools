@@ -18,8 +18,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@tabler/icons-vue':
-        specifier: 3.45.0
-        version: 3.45.0(vue@3.5.40(typescript@6.0.3))
+        specifier: 3.46.0
+        version: 3.46.0(vue@3.5.40(typescript@6.0.3))
       '@tiptap/pm':
         specifier: 3.29.2
         version: 3.29.2
@@ -2047,13 +2047,13 @@ packages:
   '@svgdotjs/svg.js@3.2.7':
     resolution: {integrity: sha512-pxpRccS8zrBl97JkkTzQNqohJ4c3L+xuWH6ulMW9E6yknZ5lp4z+n6MprHNsykFvFj6O8TQJfpsXaTUAJfcUfw==}
 
-  '@tabler/icons-vue@3.45.0':
-    resolution: {integrity: sha512-Q/cmDsx0zrzBScIL6Xxwevg7JqvkrteFW2R+NGTN9pwOrgJMzBLhyz/7ONvktjuwDn6eUKhFSM66CNAR8u3tRw==}
+  '@tabler/icons-vue@3.46.0':
+    resolution: {integrity: sha512-RkYlrGx8NY5ePXk0fTJJaDYQpjbi0ys33Cvswnvn83X04IVOCEaEqS2S3GANcp1dgEu9Fs7c6kd2sdJbwOZQtw==}
     peerDependencies:
       vue: '>=3.0.1'
 
-  '@tabler/icons@3.45.0':
-    resolution: {integrity: sha512-jiATwV8+zGYLTZ7gMLGivCic+KtsMZXcDmufIG8umlLxoHhI6902hGYIEt0Oa9Y9SXblNzUlrisHm5jOFMxOQA==}
+  '@tabler/icons@3.46.0':
+    resolution: {integrity: sha512-f2RYFl3fzPwj5WO82x6en0dmkjefxEfOm16D1ByM6cj/McNiwOkL4VaPUoP9VVIrXAD9WnTSVFr70px703b//A==}
 
   '@tiptap/core@3.29.2':
     resolution: {integrity: sha512-oKUkiPUB7noilVYxI9lNzUD4rX17sHub+PYjMfHMWHG9A3nvIy+FdePIVIIhThKWF7ijhr3eIqHY51Bn+GAFtw==}
@@ -7964,12 +7964,12 @@ snapshots:
 
   '@svgdotjs/svg.js@3.2.7': {}
 
-  '@tabler/icons-vue@3.45.0(vue@3.5.40(typescript@6.0.3))':
+  '@tabler/icons-vue@3.46.0(vue@3.5.40(typescript@6.0.3))':
     dependencies:
-      '@tabler/icons': 3.45.0
+      '@tabler/icons': 3.46.0
       vue: 3.5.40(typescript@6.0.3)
 
-  '@tabler/icons@3.45.0': {}
+  '@tabler/icons@3.46.0': {}
 
   '@tiptap/core@3.29.2(@tiptap/pm@3.29.2)':
     dependencies:
