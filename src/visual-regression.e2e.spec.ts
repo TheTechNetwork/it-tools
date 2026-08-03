@@ -1,70 +1,103 @@
-import type { Page } from '@playwright/test';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 
-// Visual-regression checks. Golden snapshots are browser- and platform-specific;
-// only Chromium-on-Linux goldens are maintained (the browser Playwright pins for
-// this project), so other browsers are skipped. Refresh the goldens with
-// `pnpm test:e2e:visual --update-snapshots` (on the CI browser, or via the
-// visual-regression-update workflow).
+// Full-catalogue visual regression: one golden per tool, scoped to the tool's
+// own content area (`.tool-content`, which excludes the date-badged sidebar).
 //
-// Each case screenshots the tool's own content area (`.tool-content`), which
-// excludes the sidebar — the sidebar carries date-based "new" badges that would
-// make full-page snapshots drift over time. Inputs are fixed (or a deterministic
-// default is asserted first) so the rendered output never varies between runs.
+// Golden snapshots are browser- and platform-specific; only Chromium-on-Linux
+// goldens are maintained (the browser Playwright pins for this project), so
+// other browsers are skipped. Refresh with `pnpm test:e2e:visual
+// --update-snapshots` (locally on the CI browser, or via the
+// visual-regression-update workflow).
+
+// Enumerate every tool and its primary route straight from its index.ts, so new
+// tools are covered automatically the next time goldens are refreshed.
+const TOOLS_DIR = resolve(import.meta.dirname, 'tools');
+const tools = readdirSync(TOOLS_DIR, { withFileTypes: true })
+  .filter(entry => entry.isDirectory() && existsSync(resolve(TOOLS_DIR, entry.name, 'index.ts')))
+  .map((entry) => {
+    const source = readFileSync(resolve(TOOLS_DIR, entry.name, 'index.ts'), 'utf8');
+    const path = /path:\s*['"`]([^'"`]+)/.exec(source)?.[1];
+    return path ? { name: entry.name, path } : undefined;
+  })
+  .filter((tool): tool is { name: string; path: string } => tool !== undefined)
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+// Tools excluded from visual regression because their default render can't be
+// made deterministic: live hardware, or content generated asynchronously over
+// seconds whose height/state depends on capture timing (frozen RNG makes the
+// value deterministic, but not when generation finishes).
+const EXCLUDED = new Set([
+  'camera-recorder', // live webcam stream
+  'device-information', // real hardware / screen probing
+  'rsa-key-pair-generator', // multi-second async key generation; content height varies by capture timing
+  'mime-types', // ~1000-row table renders progressively; capture is intermittently unstable
+]);
+
+// Runs in the page before any app script: pin every source of runtime
+// non-determinism (clock, RNG, crypto) so tools that show generated output on
+// load — uuids, tokens, OTPs, dates, random ports … — render identically each
+// run. Kept as a self-contained function because Playwright serialises it.
+function freezeRuntime() {
+  const FIXED = 1577836800000; // 2020-01-01T00:00:00Z
+  const RealDate = Date;
+  class FrozenDate extends RealDate {
+    constructor(...args: ConstructorParameters<typeof Date>) {
+      super(...(args.length > 0 ? args : [FIXED]));
+    }
+
+    static now() {
+      return FIXED;
+    }
+  }
+  globalThis.Date = FrozenDate as DateConstructor;
+
+  let seed = 123456789;
+  const next = () => {
+    seed = (seed * 1103515245 + 12345) & 0x7FFFFFFF;
+    return seed;
+  };
+  Math.random = () => next() / 0x7FFFFFFF;
+
+  if (globalThis.crypto) {
+    globalThis.crypto.getRandomValues = (<T extends ArrayBufferView | null>(array: T): T => {
+      if (array) {
+        const bytes = new Uint8Array(array.buffer, array.byteOffset, array.byteLength);
+        for (let i = 0; i < bytes.length; i++) {
+          bytes[i] = next() & 0xFF;
+        }
+      }
+      return array;
+    }) as Crypto['getRandomValues'];
+    globalThis.crypto.randomUUID = (() => '00000000-0000-4000-8000-000000000000') as Crypto['randomUUID'];
+  }
+}
+
 test.describe('Visual regression', () => {
   test.skip(({ browserName }) => browserName !== 'chromium', 'Chromium goldens only');
 
-  async function waitForStableRender(page: Page) {
-    // Ensure web fonts are loaded so text metrics are stable before snapshotting.
-    await page.evaluate(async () => {
-      await document.fonts.ready;
+  for (const tool of tools) {
+    test(tool.name, async ({ page }) => {
+      test.skip(EXCLUDED.has(tool.name), 'excluded from visual regression (see EXCLUDED)');
+
+      await page.addInitScript(freezeRuntime);
+      await page.goto(tool.path);
+      // Ensure web fonts are loaded and let any debounced/async output settle so
+      // the rendered content is stable before snapshotting.
+      await page.evaluate(async () => {
+        await document.fonts.ready;
+      });
+      await page.waitForTimeout(1000);
+
+      await expect(page.locator('.tool-content')).toHaveScreenshot(`${tool.name}.png`, {
+        // Generous timeout for tools with very tall content (full emoji grid,
+        // complete mime-type table).
+        timeout: 30_000,
+        // Absorb sub-pixel anti-aliasing / rendering jitter across runs while
+        // still catching real layout and content changes.
+        maxDiffPixelRatio: 0.05,
+      });
     });
   }
-
-  async function snapshot(page: Page, name: string) {
-    await waitForStableRender(page);
-    await expect(page.locator('.tool-content')).toHaveScreenshot(name);
-  }
-
-  test('case-converter renders consistently', async ({ page }) => {
-    await page.goto('/case-converter');
-    await page.getByLabel('Your string:').fill('The quick brown fox');
-    await expect(page.getByLabel('Camelcase:')).toHaveValue('theQuickBrownFox');
-    await snapshot(page, 'case-converter.png');
-  });
-
-  test('roman-numeral-converter renders consistently', async ({ page }) => {
-    await page.goto('/roman-numeral-converter');
-    // Default state (42 <-> XLII) is deterministic.
-    await expect(page.locator('.tool-content')).toContainText('XLII');
-    await snapshot(page, 'roman-numeral-converter.png');
-  });
-
-  test('integer-base-converter renders consistently', async ({ page }) => {
-    await page.goto('/base-converter');
-    // Default input is 42; assert a converted value before snapshotting.
-    await expect(page.getByLabel('Binary (2)')).toHaveValue('101010');
-    await snapshot(page, 'integer-base-converter.png');
-  });
-
-  test('chmod-calculator renders consistently', async ({ page }) => {
-    await page.goto('/chmod-calculator');
-    // Default permissions render as `chmod 000 path`.
-    await expect(page.locator('input[readonly]').first()).toHaveValue('chmod 000 path');
-    await snapshot(page, 'chmod-calculator.png');
-  });
-
-  test('docker-run-to-docker-compose-converter renders consistently', async ({ page }) => {
-    await page.goto('/docker-run-to-docker-compose-converter');
-    await page.getByPlaceholder('Your docker run command to convert...').fill('docker run -p 80:80 nginx');
-    await expect(page.locator('.tool-content')).toContainText('services:');
-    await snapshot(page, 'docker-run-to-docker-compose-converter.png');
-  });
-
-  test('text-to-nato-alphabet renders consistently', async ({ page }) => {
-    await page.goto('/text-to-nato-alphabet');
-    await page.getByPlaceholder('Put your text here...').fill('abc');
-    await expect(page.locator('.tool-content')).toContainText('Alpha');
-    await snapshot(page, 'text-to-nato-alphabet.png');
-  });
 });
