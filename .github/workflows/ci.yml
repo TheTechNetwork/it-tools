@@ -454,6 +454,12 @@ jobs:
       # The blocking gate below is what actually fails the build.
       - name: Trivy full audit (SARIF)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        env:
+          # Allow-list the JWT parser tool's public example-token placeholder so
+          # the jwt-token secret rule doesn't flag it in the built bundle. The
+          # `--severity` filter does not apply to secret findings, hence the
+          # config-level allow-rule. See trivy-secret.yaml.
+          TRIVY_SECRET_CONFIG: trivy-secret.yaml
         with:
           image-ref: it-tools:${{ matrix.target }}
           severity: 'HIGH,CRITICAL'
@@ -473,6 +479,10 @@ jobs:
       # image rebuild or base-image bump can actually resolve.
       - name: Scan image with Trivy (fails on fixable HIGH/CRITICAL)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        env:
+          # Same allow-list as the audit step above, so a secret finding can
+          # never trip this gate either. See trivy-secret.yaml.
+          TRIVY_SECRET_CONFIG: trivy-secret.yaml
         with:
           image-ref: it-tools:${{ matrix.target }}
           severity: 'HIGH,CRITICAL'
