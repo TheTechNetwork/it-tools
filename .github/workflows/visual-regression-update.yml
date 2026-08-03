@@ -22,7 +22,9 @@ permissions:
 jobs:
   update-goldens:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    # Regenerating ~95 screenshots across all three browsers takes a while;
+    # give it generous headroom over the ~15 min the e2e job uses per browser.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -60,10 +62,16 @@ jobs:
       - name: Build app
         run: pnpm build
 
+      # --retries=0 is essential here: with the config's CI retries, Playwright
+      # treats each rewritten snapshot as a "failure" and retries it, tripling
+      # the run. We just want one write per snapshot. The step may still exit
+      # non-zero because updated snapshots are reported as failures, so the
+      # commit step below runs with `if: always()`.
       - name: Regenerate goldens on the CI browsers (all projects)
-        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --update-snapshots
+        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --update-snapshots --retries=0
 
       - name: Upload regenerated goldens
+        if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: visual-goldens
@@ -72,6 +80,7 @@ jobs:
           retention-days: 7
 
       - name: Commit updated goldens
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
