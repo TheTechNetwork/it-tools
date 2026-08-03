@@ -11,6 +11,10 @@ const useWebServer = process.env.NO_WEB_SERVER !== 'true';
 export default defineConfig({
   testDir: './src',
   testMatch: /\.e2e\.(spec\.)?ts$/,
+  /* Group visual-regression goldens into a per-browser subfolder
+     (…-snapshots/<browser>/<name>-<platform>.png) instead of a single flat
+     directory, so the ~95-per-browser snapshots stay navigable. */
+  snapshotPathTemplate: '{testFileDir}/{testFileName}-snapshots/{projectName}/{arg}{-platform}{ext}',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

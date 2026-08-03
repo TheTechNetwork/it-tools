@@ -151,7 +151,8 @@ jobs:
           retention-days: 1
 
   # E2E tests reuse the dist/ artifact from the build job.
-  # PRs: Chromium only. Pushes to main: Chromium + Firefox + WebKit.
+  # PRs: full suite on Chromium + the visual-regression spec on Firefox/WebKit.
+  # Pushes to main: full suite on Chromium + Firefox + WebKit.
   # Two shards, each using ~75% of the runner's cores (see playwright.config.ts),
   # which covers the ~350-test suite well within the timeout.
   e2e:
