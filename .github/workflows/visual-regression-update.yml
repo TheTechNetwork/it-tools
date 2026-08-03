@@ -5,14 +5,13 @@
 # change to a tool covered by src/visual-regression.e2e.spec.ts, or when adding
 # new visual cases whose goldens must be generated on the CI browsers. Pick a
 # feature/PR branch when dispatching — if the selected branch is protected the
-# final push is rejected (the regenerated PNGs are still available as run
-# artifacts for download).
+# push is rejected (the regenerated PNGs are still available as run artifacts).
 #
 # Structure: one shared build, then a per-browser matrix regenerates that
-# browser's goldens in parallel (each on its own runner, so no single job hits
-# a timeout), uploading them as an artifact. A final job downloads all three
-# and commits them together — three parallel jobs can't each push to the same
-# branch without racing, so the commit is centralised.
+# browser's goldens in parallel — each on its own runner, so no single job hits
+# a timeout — and commits just its own `<browser>/` snapshot subfolder straight
+# back to the branch. Because the legs touch disjoint subfolders, the only
+# contention is the ref update, which a fetch+rebase+retry loop absorbs.
 name: visual-regression-update
 
 on:
@@ -53,11 +52,13 @@ jobs:
           path: dist
           retention-days: 1
 
-  # Regenerate one browser's goldens per matrix leg, in parallel.
+  # Regenerate + commit one browser's goldens per matrix leg, in parallel.
   regenerate:
     needs: build
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    # Serialise nothing at the job level; the push step self-serialises via a
+    # fetch+rebase+retry loop so the three legs can commit concurrently.
     strategy:
       fail-fast: false
       matrix:
@@ -104,19 +105,46 @@ jobs:
 
       # --retries=0 is essential: with the config's CI retries, Playwright
       # treats each rewritten snapshot as a "failure" and retries it, tripling
-      # the run. We want exactly one write per snapshot. The step may still
-      # exit non-zero because updated snapshots are reported as failures, so the
-      # upload below runs with `if: always()`.
+      # the run. continue-on-error keeps the job green (updated snapshots make
+      # the run exit non-zero) while letting the commit step below run.
       - name: Regenerate goldens on the CI browser
+        continue-on-error: true
         run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --project=${{ matrix.project }} --update-snapshots --retries=0
 
-      - name: Upload regenerated goldens for this browser
+      - name: Commit this browser's goldens
+        env:
+          BRANCH: ${{ github.ref_name }}
+          DIR: src/visual-regression.e2e.spec.ts-snapshots/${{ matrix.project }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$DIR"
+          if git diff --cached --quiet; then
+            echo "No golden changes for ${{ matrix.project }} — nothing to commit."
+            exit 0
+          fi
+          git commit -m "test(e2e): refresh ${{ matrix.project }} visual goldens [skip ci]"
+          # The three legs push to the same branch; rebase our single
+          # snapshot-only commit onto the latest ref and retry on rejection.
+          # Disjoint subfolders mean the rebase never conflicts.
+          for attempt in 1 2 3 4 5; do
+            if git push origin "HEAD:$BRANCH"; then
+              echo "Pushed ${{ matrix.project }} goldens on attempt $attempt."
+              exit 0
+            fi
+            echo "Push rejected; rebasing onto latest $BRANCH (attempt $attempt)."
+            git pull --rebase origin "$BRANCH"
+          done
+          echo "Failed to push ${{ matrix.project }} goldens after 5 attempts."
+          exit 1
+
+      - name: Upload regenerated goldens (fallback if push is blocked)
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: visual-goldens-${{ matrix.project }}
           path: src/visual-regression.e2e.spec.ts-snapshots/${{ matrix.project }}
-          if-no-files-found: error
+          if-no-files-found: ignore
           retention-days: 7
 
       - name: Save Playwright browser cache
@@ -125,42 +153,3 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-24.04-${{ matrix.project }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
-
-  # Download every browser's freshly generated goldens and commit them together.
-  commit:
-    needs: regenerate
-    if: always()
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Download Chromium goldens
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: visual-goldens-chromium
-          path: src/visual-regression.e2e.spec.ts-snapshots/chromium
-
-      - name: Download Firefox goldens
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: visual-goldens-firefox
-          path: src/visual-regression.e2e.spec.ts-snapshots/firefox
-
-      - name: Download WebKit goldens
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: visual-goldens-webkit
-          path: src/visual-regression.e2e.spec.ts-snapshots/webkit
-
-      - name: Commit updated goldens
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "Goldens already match this branch — nothing to commit."
-          else
-            git commit -m "test(e2e): refresh visual-regression goldens [skip ci]"
-            git push
-          fi
