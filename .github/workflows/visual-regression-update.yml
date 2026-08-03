@@ -1,12 +1,18 @@
 # Manually refresh the visual-regression golden snapshots on CI's pinned
-# Chromium, then commit them back to the branch the workflow was dispatched on.
+# browsers, then commit them back to the branch the workflow was dispatched on.
 #
 # Run this from the Actions tab (workflow_dispatch) after an intentional UI
 # change to a tool covered by src/visual-regression.e2e.spec.ts, or when adding
-# new visual cases whose goldens must be generated on the CI browser. Pick a
+# new visual cases whose goldens must be generated on the CI browsers. Pick a
 # feature/PR branch when dispatching — if the selected branch is protected the
-# final push will be rejected (the regenerated PNGs are still available in the
-# run for download).
+# final push is rejected (the regenerated PNGs are still available as run
+# artifacts for download).
+#
+# Structure: one shared build, then a per-browser matrix regenerates that
+# browser's goldens in parallel (each on its own runner, so no single job hits
+# a timeout), uploading them as an artifact. A final job downloads all three
+# and commits them together — three parallel jobs can't each push to the same
+# branch without racing, so the commit is centralised.
 name: visual-regression-update
 
 on:
@@ -20,11 +26,42 @@ permissions:
   contents: write
 
 jobs:
-  update-goldens:
+  # Single production build, shared with every browser's regeneration job.
+  build:
     runs-on: ubuntu-24.04
-    # Regenerating ~95 screenshots across all three browsers takes a while;
-    # give it generous headroom over the ~15 min the e2e job uses per browser.
-    timeout-minutes: 30
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - run: corepack enable
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build app
+        run: pnpm build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
+
+  # Regenerate one browser's goldens per matrix leg, in parallel.
+  regenerate:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -42,45 +79,81 @@ jobs:
         id: playwright-version
         run: echo "PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")" >> "$GITHUB_OUTPUT"
 
-      - name: Restore Playwright browsers cache
+      - name: Restore Playwright browser cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-24.04-all-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+          key: playwright-${{ runner.os }}-24.04-${{ matrix.project }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
 
-      - name: Install Playwright browsers + system dependencies
+      - name: Install Playwright browser and system dependencies
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: pnpm exec playwright install --with-deps chromium firefox webkit
-        timeout-minutes: 8
+        run: pnpm exec playwright install --with-deps ${{ matrix.project }}
+        timeout-minutes: 5
 
       - name: Install Playwright system dependencies only
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm exec playwright install-deps chromium firefox webkit
+        run: pnpm exec playwright install-deps ${{ matrix.project }}
         timeout-minutes: 10
 
-      - name: Build app
-        run: pnpm build
+      - name: Download build artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist
 
-      # --retries=0 is essential here: with the config's CI retries, Playwright
+      # --retries=0 is essential: with the config's CI retries, Playwright
       # treats each rewritten snapshot as a "failure" and retries it, tripling
-      # the run. We just want one write per snapshot. The step may still exit
-      # non-zero because updated snapshots are reported as failures, so the
-      # commit step below runs with `if: always()`.
-      - name: Regenerate goldens on the CI browsers (all projects)
-        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --update-snapshots --retries=0
+      # the run. We want exactly one write per snapshot. The step may still
+      # exit non-zero because updated snapshots are reported as failures, so the
+      # upload below runs with `if: always()`.
+      - name: Regenerate goldens on the CI browser
+        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --project=${{ matrix.project }} --update-snapshots --retries=0
 
-      - name: Upload regenerated goldens
+      - name: Upload regenerated goldens for this browser
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: visual-goldens
-          path: src/**/*-snapshots/**
-          if-no-files-found: ignore
+          name: visual-goldens-${{ matrix.project }}
+          path: src/visual-regression.e2e.spec.ts-snapshots/${{ matrix.project }}
+          if-no-files-found: error
           retention-days: 7
 
+      - name: Save Playwright browser cache
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-24.04-${{ matrix.project }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+
+  # Download every browser's freshly generated goldens and commit them together.
+  commit:
+    needs: regenerate
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download Chromium goldens
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: visual-goldens-chromium
+          path: src/visual-regression.e2e.spec.ts-snapshots/chromium
+
+      - name: Download Firefox goldens
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: visual-goldens-firefox
+          path: src/visual-regression.e2e.spec.ts-snapshots/firefox
+
+      - name: Download WebKit goldens
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: visual-goldens-webkit
+          path: src/visual-regression.e2e.spec.ts-snapshots/webkit
+
       - name: Commit updated goldens
-        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
