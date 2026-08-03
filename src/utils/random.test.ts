@@ -93,6 +93,12 @@ describe('random utils', () => {
       vi.spyOn(Math, 'random').mockReturnValue(0);
       expect(shuffleArrayMutate([1, 2, 3])).toEqual([2, 3, 1]);
     });
+
+    it('leaves a pair untouched when an element is undefined', () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0);
+      // i=1, j=0: temp=array[1]=undefined, so the swap guard is skipped.
+      expect(shuffleArrayMutate([1, undefined])).toEqual([1, undefined]);
+    });
   });
 
   describe('shuffleArray', () => {

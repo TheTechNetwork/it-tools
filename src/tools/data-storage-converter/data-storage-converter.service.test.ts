@@ -28,5 +28,9 @@ describe('data-storage-converter', () => {
     it('throws on an unknown unit', () => {
       expect(() => convertDataSize({ value: 1, from: 'byte', to: 'furlong' })).toThrow('Unknown data unit: furlong');
     });
+
+    it('throws naming the source unit when it is unknown', () => {
+      expect(() => convertDataSize({ value: 1, from: 'furlong', to: 'byte' })).toThrow('Unknown data unit: furlong');
+    });
   });
 });

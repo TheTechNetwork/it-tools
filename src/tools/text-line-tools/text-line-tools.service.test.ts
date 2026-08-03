@@ -70,5 +70,12 @@ describe('text-line-tools', () => {
       // A shuffle keeps the same set of lines.
       expect(first.split('\n').sort()).toEqual(input.split('\n').sort());
     });
+
+    it('shuffles deterministically when an empty line makes the seed fall back to 1', () => {
+      // A leading empty line makes charCodeAt(0) NaN, so the computed seed is
+      // NaN and the `|| 1` fallback kicks in. The result is still deterministic.
+      const input = '\na\nb\nc';
+      expect(applyLineOperations(input, { ...noOps, sort: 'shuffle' })).toBe('c\na\n\nb');
+    });
   });
 });

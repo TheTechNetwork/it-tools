@@ -62,6 +62,18 @@ describe('bip39-generator', () => {
     it('throws for an invalid entropy', () => {
       expect(() => convertEntropyToMnemonic({ entropy: 'abcd', language: 'English' })).toThrow();
     });
+
+    it('throws for an entropy longer than 32 characters', () => {
+      expect(() => convertEntropyToMnemonic({ entropy: 'a'.repeat(36), language: 'English' })).toThrow('should be <= 32');
+    });
+
+    it('throws for an entropy length that is not a multiple of 4', () => {
+      expect(() => convertEntropyToMnemonic({ entropy: 'a'.repeat(18), language: 'English' })).toThrow('multiple of 4');
+    });
+
+    it('throws for a valid-length entropy that is not hexadecimal', () => {
+      expect(() => convertEntropyToMnemonic({ entropy: '!'.repeat(16), language: 'English' })).toThrow('hexadecimal');
+    });
   });
 
   describe('convertMnemonicToEntropy', () => {
@@ -85,6 +97,12 @@ describe('bip39-generator', () => {
 
     it('throws for a mnemonic with words outside of the word list', () => {
       expect(() => convertMnemonicToEntropy({ mnemonic: 'not a valid mnemonic', language: 'English' })).toThrow();
+    });
+
+    it('throws for a mnemonic too short to carry any entropy bits', () => {
+      // A single word yields 11 bits (< 33), so the entropy slice is empty (the
+      // 8-bit match returns no chunks) and the checksum cannot match.
+      expect(() => convertMnemonicToEntropy({ mnemonic: 'abandon', language: 'English' })).toThrow();
     });
   });
 

@@ -1,3 +1,4 @@
+import type { UuidVersion } from './uuid-generator.service';
 import { describe, expect, it } from 'vitest';
 import { generateUuids, isValidUuid, uuidVersions } from './uuid-generator.service';
 
@@ -100,6 +101,13 @@ describe('uuid-generator', () => {
       }
 
       expect(new Set(uuids).size).toBe(50);
+    });
+
+    it('falls back to the nil uuid for an unknown version', () => {
+      expect(generateUuids({ version: 'v9' as UuidVersion, count: 2 })).toEqual([
+        '00000000-0000-0000-0000-000000000000',
+        '00000000-0000-0000-0000-000000000000',
+      ]);
     });
 
     it('throws when generating a v3 or v5 uuid with an invalid namespace', () => {

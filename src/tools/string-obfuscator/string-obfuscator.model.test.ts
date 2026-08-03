@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { obfuscateString } from './string-obfuscator.model';
+import { obfuscateString, useObfuscateString } from './string-obfuscator.model';
 
 describe('string-obfuscator model', () => {
   describe('obfuscateString', () => {
@@ -15,6 +15,20 @@ describe('string-obfuscator model', () => {
     it('by default, the spaces are kept, they can be removed with the keepSpace option', () => {
       expect(obfuscateString('12345 67890')).toBe('1234* *****');
       expect(obfuscateString('12345 67890', { keepSpace: false })).toBe('1234*******');
+    });
+  });
+
+  describe('useObfuscateString', () => {
+    it('obfuscates using the default options when the config argument is omitted', () => {
+      const result = useObfuscateString('1234567890');
+
+      expect(result.value).toBe('1234******');
+    });
+
+    it('unwraps the provided reactive config options', () => {
+      const result = useObfuscateString('1234567890', { keepFirst: 2, keepLast: 2, replacementChar: 'x' });
+
+      expect(result.value).toBe('12xxxxxx90');
     });
   });
 });

@@ -92,6 +92,36 @@ const regexesData = [
       },
     ],
   },
+  {
+    // Optional numbered and named groups that don't participate in the match
+    // exercise the non-participating-capture branches (undefined indices are
+    // skipped for both numbered captures and named groups).
+    regex: '(?<x>a)(?<y>b)?c',
+    text: 'ac',
+    flags: 'g',
+    result: [
+      {
+        captures: [
+          {
+            end: 1,
+            name: '1',
+            start: 0,
+            value: 'a',
+          },
+        ],
+        groups: [
+          {
+            end: 1,
+            name: 'x',
+            start: 0,
+            value: 'a',
+          },
+        ],
+        index: 0,
+        value: 'ac',
+      },
+    ],
+  },
 ];
 
 describe('regex-tester', () => {

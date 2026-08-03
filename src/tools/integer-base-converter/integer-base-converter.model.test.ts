@@ -16,5 +16,12 @@ describe('integer-base-converter', () => {
         expect(convertBase({ value: '20010db8000085a300000000ac1f8908', fromBase: 16, toBase: 10 })).toEqual('42540766411283223938465490632011909384');
       });
     });
+
+    describe('when the value contains a digit outside the source base', () => {
+      it('should throw an explicit error naming the invalid digit and base', () => {
+        expect(() => convertBase({ value: '9', fromBase: 2, toBase: 10 })).toThrow('Invalid digit "9" for base 2.');
+        expect(() => convertBase({ value: 'g', fromBase: 16, toBase: 10 })).toThrow('Invalid digit "g" for base 16.');
+      });
+    });
   });
 });
