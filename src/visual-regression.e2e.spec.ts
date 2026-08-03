@@ -33,6 +33,7 @@ const EXCLUDED = new Set([
   'device-information', // real hardware / screen probing
   'rsa-key-pair-generator', // multi-second async key generation; content height varies by capture timing
   'mime-types', // ~1000-row table renders progressively; capture is intermittently unstable
+  'ascii-text-drawer', // figlet font is fetched from a CDN at load; output height depends on network timing
 ]);
 
 // Runs in the page before any app script: pin every source of runtime
