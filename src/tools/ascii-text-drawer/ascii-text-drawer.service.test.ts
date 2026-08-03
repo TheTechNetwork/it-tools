@@ -1,12 +1,16 @@
 import figlet from 'figlet';
 import standardFontData from 'figlet/importable-fonts/Standard.js';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { drawAsciiArtText } from './ascii-text-drawer.service';
 
 describe('ascii-text-drawer', () => {
   beforeAll(() => {
     // Preload the font from the figlet package so tests do not depend on network or filesystem font loading
     figlet.parseFont('Standard', standardFontData);
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   describe('drawAsciiArtText', () => {
@@ -48,6 +52,22 @@ describe('ascii-text-drawer', () => {
       await expect(
         drawAsciiArtText({ text: 'Hi', font: 'ThisFontDoesNotExist', width: 80 }),
       ).rejects.toThrow();
+    });
+
+    it('resolves to an empty string when figlet yields no text', async () => {
+      // figlet types the callback result as optional (string | undefined); when
+      // it reports success without any drawn text, the service falls back to ''.
+      vi.spyOn(figlet, 'text').mockImplementation(((
+        _text: string,
+        _options: unknown,
+        callback: (error: Error | null, drawnText?: string) => void,
+      ) => {
+        callback(null, undefined);
+      }) as unknown as typeof figlet.text);
+
+      const drawn = await drawAsciiArtText({ text: 'Hi', font: 'Standard', width: 80 });
+
+      expect(drawn).toBe('');
     });
   });
 });

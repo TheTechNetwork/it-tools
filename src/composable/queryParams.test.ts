@@ -99,6 +99,19 @@ describe('useQueryParam', () => {
     expect(result.value).toBe(5);
     wrapper.unmount();
   });
+
+  it('falls back to the string transformer for an unmapped default value type', async () => {
+    // `typeof undefined` is 'undefined', which is not one of the mapped
+    // transformer keys, so the string (identity) transformer is used and the
+    // raw query string is returned unchanged.
+    const { result, wrapper } = await withSetup(
+      () => useQueryParam<string>({ name: 'q', defaultValue: undefined as unknown as string }),
+      { initialQuery: { q: 'raw-string' } },
+    );
+
+    expect(result.value).toBe('raw-string');
+    wrapper.unmount();
+  });
 });
 
 describe('useQueryParamOrStorage', () => {
@@ -162,6 +175,19 @@ describe('useQueryParamOrStorage', () => {
     );
 
     expect(result.value).toBe(33);
+    wrapper.unmount();
+  });
+
+  it('falls back to the string transformer for an unmapped default value type', async () => {
+    // `typeof undefined` is 'undefined', which is not one of the mapped
+    // transformer keys, so the string (identity) transformer is used and the
+    // raw query string is returned unchanged.
+    const { result, wrapper } = await withSetup(
+      () => useQueryParamOrStorage<string>({ name: 'p', storageName: 'test-storage-f', defaultValue: undefined as unknown as string }),
+      { initialQuery: { p: 'raw-string' } },
+    );
+
+    expect(result.value).toBe('raw-string');
     wrapper.unmount();
   });
 });
