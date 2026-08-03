@@ -45,23 +45,23 @@ jobs:
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-24.04-chromium-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+          key: playwright-${{ runner.os }}-24.04-all-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
 
-      - name: Install Playwright Chromium + system dependencies
+      - name: Install Playwright browsers + system dependencies
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: pnpm exec playwright install --with-deps chromium
-        timeout-minutes: 5
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+        timeout-minutes: 8
 
       - name: Install Playwright system dependencies only
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: pnpm exec playwright install-deps chromium
+        run: pnpm exec playwright install-deps chromium firefox webkit
         timeout-minutes: 10
 
       - name: Build app
         run: pnpm build
 
-      - name: Regenerate goldens on the CI browser
-        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --project=chromium --update-snapshots
+      - name: Regenerate goldens on the CI browsers (all projects)
+        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --update-snapshots
 
       - name: Upload regenerated goldens
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
