@@ -6,6 +6,11 @@ import { decodeJwt } from './jwt-parser.service';
 
 const { t } = useI18n();
 
+// Public jwt.io example token used as a placeholder so the tool shows a decoded
+// result out of the box. It decodes to {"sub":"1234567890","name":"John Doe",
+// "iat":1516239022} signed with the public sample secret "your-256-bit-secret" -
+// not a real credential. It is allow-listed in trivy-secret.yaml so the secret
+// scanner doesn't flag it in the built bundle.
 const rawJwt = ref(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
 );
