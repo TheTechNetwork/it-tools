@@ -79,7 +79,7 @@ describe('token-generator', () => {
       });
 
       expect(token).toHaveLength(256);
-      expect(token).toMatch(/^[.,;:!?/\-"'#([-|@)=}*+]+$/);
+      expect(token).toMatch(/^[.,;:!?/\-"'#{([|\\@)\]=}*+]+$/);
     });
 
     it('should generate a random string with just letters (case incensitive) with withLowercase and withUppercase', () => {
