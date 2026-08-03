@@ -43,8 +43,15 @@ function freezeRuntime() {
   const FIXED = 1577836800000; // 2020-01-01T00:00:00Z
   const RealDate = Date;
   class FrozenDate extends RealDate {
-    constructor(...args: ConstructorParameters<typeof Date>) {
-      super(...(args.length > 0 ? args : [FIXED]));
+    constructor(...args: [] | ConstructorParameters<typeof Date>) {
+      // No args → freeze to FIXED; otherwise defer to the real Date. Split into
+      // two branches so neither call spreads a union type (TS2556).
+      if (args.length === 0) {
+        super(FIXED);
+      }
+      else {
+        super(...args);
+      }
     }
 
     static now() {
