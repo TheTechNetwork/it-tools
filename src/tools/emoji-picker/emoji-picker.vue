@@ -5,11 +5,9 @@ import _ from 'lodash';
 import emojiUnicodeData from 'unicode-emoji-json';
 import useDebouncedRef from '@/composable/debouncedref';
 import { useFuzzySearch } from '@/composable/fuzzySearch';
+import { escapeUnicode, getEmojiCodePoints } from './emoji-picker.service';
 
 const { t } = useI18n();
-
-const escapeUnicode = ({ emoji }: { emoji: string }) => emoji.split('').map(unit => `\\u${unit.charCodeAt(0).toString(16).padStart(4, '0')}`).join('');
-const getEmojiCodePoints = ({ emoji }: { emoji: string }) => emoji.codePointAt(0) ? `0x${emoji.codePointAt(0)?.toString(16)}` : undefined;
 
 const emojis = _.map(emojiUnicodeData, (emojiInfo, emoji) => ({
   ...emojiInfo,

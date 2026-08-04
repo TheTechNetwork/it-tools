@@ -2,6 +2,7 @@
 import { useEventListener } from '@vueuse/core';
 
 import InputCopyable from '../../components/InputCopyable.vue';
+import { getKeyCodeInfo } from './keycode-info.service';
 
 const { t } = useI18n();
 
@@ -16,38 +17,33 @@ const fields = computed(() => {
     return [];
   }
 
+  const info = getKeyCodeInfo(event.value);
+
   return [
     {
       label: t('tools.keycode-info.key'),
-      value: event.value.key,
+      value: info.key,
       placeholder: t('tools.keycode-info.keyPlaceholder'),
     },
     {
       label: t('tools.keycode-info.keycode'),
-      value: String(event.value.keyCode),
+      value: info.keyCode,
       placeholder: t('tools.keycode-info.keycodePlaceholder'),
     },
     {
       label: t('tools.keycode-info.code'),
-      value: event.value.code,
+      value: info.code,
       placeholder: t('tools.keycode-info.codePlaceholder'),
     },
     {
       label: t('tools.keycode-info.location'),
-      value: String(event.value.location),
+      value: info.location,
       placeholder: t('tools.keycode-info.codePlaceholder'),
     },
 
     {
       label: t('tools.keycode-info.modifiers'),
-      value: [
-        event.value.metaKey && 'Meta',
-        event.value.shiftKey && 'Shift',
-        event.value.ctrlKey && 'Ctrl',
-        event.value.altKey && 'Alt',
-      ]
-        .filter(Boolean)
-        .join(' + '),
+      value: info.modifiers,
       placeholder: t('tools.keycode-info.modifiersPlaceholder'),
     },
   ];
