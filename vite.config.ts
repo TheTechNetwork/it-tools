@@ -84,10 +84,34 @@ export default defineConfig({
     markdown(),
     svgLoader(),
     VitePWA({
-      registerType: 'autoUpdate',
+      // 'prompt' lets a new service worker wait until the user chooses to
+      // reload (surfaced by <PwaReloadPrompt />), instead of silently
+      // auto-reloading - so an in-progress tool session is never interrupted.
+      registerType: 'prompt',
       strategies: 'generateSW',
       workbox: {
         maximumFileSizeToCacheInBytes: 8388608, // 8 MB
+        // The first-party asset host serves version-pinned, immutable assets
+        // (OCR Tesseract engine/traineddata under /tesseract/, figlet fonts
+        // under /figlet/). CacheFirst lets them work offline after first use and
+        // avoids re-downloading them on every visit. They are not precached
+        // (they are large and only some tools need them); this caches on demand.
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/assets\.thetech\.network\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'thetech-first-party-assets',
+              expiration: {
+                maxEntries: 400,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+        ],
       },
       manifest: {
         id: baseUrl,
@@ -231,6 +255,32 @@ export default defineConfig({
     chunkSizeWarningLimit: 900,
     commonjsOptions: {
       transformMixedEsModules: true,
+    },
+    rollupOptions: {
+      output: {
+        // Split the large, eager framework vendors into their own stable chunks
+        // so they stay cached across app releases (they change far less often
+        // than tool code). Only naive-ui and the Vue runtime are grouped - both
+        // load on every page. Heavy tool-only libraries (Monaco, tesseract.js,
+        // mathjs, pdfjs, figlet, ...) are intentionally NOT grouped here so they
+        // remain in their own lazily-loaded per-tool chunks.
+        manualChunks(id) {
+          if (!id.includes('node_modules')) {
+            return undefined;
+          }
+          if (id.includes('naive-ui') || id.includes('/css-render/') || id.includes('/@css-render/')
+            || id.includes('/vooks/') || id.includes('/vdirs/') || id.includes('/seemly/')
+            || id.includes('/treemate/') || id.includes('/evtd/')) {
+            return 'vendor-naive-ui';
+          }
+          if (id.includes('/vue/') || id.includes('/@vue/') || id.includes('/vue-router/')
+            || id.includes('/pinia/') || id.includes('/@vueuse/') || id.includes('/vue-i18n/')
+            || id.includes('/@intlify/')) {
+            return 'vendor-vue';
+          }
+          return undefined;
+        },
+      },
     },
   },
 });
