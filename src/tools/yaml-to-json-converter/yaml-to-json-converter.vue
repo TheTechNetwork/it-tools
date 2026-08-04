@@ -3,7 +3,7 @@ import type { UseValidationRule } from '@/composable/validation';
 import { parse as parseYaml } from 'yaml';
 import { isNotThrowing } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
-import { convertYamlToJson } from './yaml-to-json.service';
+import { convertYamlToJson } from './yaml-to-json-converter.service';
 
 const { t } = useI18n();
 

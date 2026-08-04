@@ -2,7 +2,7 @@
 import type { UseValidationRule } from '@/composable/validation';
 import { isNotThrowing } from '@/utils/boolean';
 import { withDefaultOnError } from '@/utils/defaults';
-import { convertJsonToYaml } from './json-to-yaml.service';
+import { convertJsonToYaml } from './json-to-yaml-converter.service';
 
 const { t } = useI18n();
 

@@ -5,7 +5,7 @@ import InputCopyable from '@/components/InputCopyable.vue';
 import { computedRefreshable } from '@/composable/computedRefreshable';
 import { useStyleStore } from '@/stores/style.store';
 import { useQRCode } from '../qr-code-generator/useQRCode';
-import { base32toHex, buildKeyUri, generateSecret, generateTOTP, getCounterFromTime } from './otp.service';
+import { base32toHex, buildKeyUri, generateSecret, generateTOTP, getCounterFromTime } from './otp-code-generator-and-validator.service';
 import TokenDisplay from './token-display.vue';
 
 const { t } = useI18n();

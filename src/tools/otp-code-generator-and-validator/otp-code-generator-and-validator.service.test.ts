@@ -9,7 +9,7 @@ import {
   hexToBytes,
   verifyHOTP,
   verifyTOTP,
-} from './otp.service';
+} from './otp-code-generator-and-validator.service';
 
 describe('otp functions', () => {
   describe('hexToBytes', () => {
