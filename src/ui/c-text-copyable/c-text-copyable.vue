@@ -8,18 +8,8 @@ const { copy, isJustCopied } = useCopy({ source: value, createToast: false });
 </script>
 
 <template>
-  <c-tooltip :tooltip="isJustCopied ? 'Copied!' : 'Copy to clipboard'" cursor-pointer>
-    <span
-      flex
-      items-center
-      gap-2
-      role="button"
-      tabindex="0"
-      :aria-label="`Copy to clipboard: ${displayedValue ?? value}`"
-      @click="() => copy()"
-      @keydown.enter.prevent="() => copy()"
-      @keydown.space.prevent="() => copy()"
-    >
+  <c-tooltip :tooltip="isJustCopied ? 'Copied!' : 'Copy to clipboard'" cursor-pointer @click="copy">
+    <span flex items-center gap-2>
       {{ displayedValue ?? value }}
       <icon-mdi-content-copy v-if="showIcon" op-40 />
     </span>
