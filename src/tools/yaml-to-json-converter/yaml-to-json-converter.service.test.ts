@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { convertYamlToJson } from './yaml-to-json.service';
+import { convertYamlToJson } from './yaml-to-json-converter.service';
 
 describe('yaml-to-json service', () => {
   describe('convertYamlToJson', () => {
