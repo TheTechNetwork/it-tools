@@ -108,23 +108,8 @@ jobs:
       # the run. continue-on-error keeps the job green (updated snapshots make
       # the run exit non-zero) while letting the commit step below run.
       - name: Regenerate goldens on the CI browser
-        id: regen
         continue-on-error: true
-        run: |
-          set +e
-          pnpm exec playwright test src/visual-regression.e2e.spec.ts --project=${{ matrix.project }} --update-snapshots --retries=0
-          echo "playwright_exit=$?" >> "$GITHUB_OUTPUT"
-
-      - name: Diagnose golden changes
-        env:
-          DIR: src/visual-regression.e2e.spec.ts-snapshots/${{ matrix.project }}
-        run: |
-          echo "Playwright exit code: ${{ steps.regen.outputs.playwright_exit }}"
-          echo "Golden files present: $(find "$DIR" -name '*.png' 2>/dev/null | wc -l)"
-          echo "--- git status (porcelain) for $DIR ---"
-          git status --porcelain "$DIR" || true
-          echo "--- git diff --stat for $DIR ---"
-          git diff --stat "$DIR" || true
+        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --project=${{ matrix.project }} --update-snapshots --retries=0
 
       - name: Commit this browser's goldens
         env:
