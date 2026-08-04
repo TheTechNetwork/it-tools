@@ -11,6 +11,14 @@ const useWebServer = process.env.NO_WEB_SERVER !== 'true';
 export default defineConfig({
   testDir: './src',
   testMatch: /\.e2e\.(spec\.)?ts$/,
+  /* Group visual-regression goldens into a per-browser subfolder
+     (…-snapshots/<browser>/<name>-<platform>.png) instead of a single flat
+     directory, so the ~95-per-browser snapshots stay navigable. Anchor on
+     {snapshotDir} (defaults to testDir) exactly like Playwright's built-in
+     template — starting with {testFileDir} breaks when the spec sits directly
+     in testDir, where {testFileDir} is empty and the path becomes root-relative
+     (`/…-snapshots/…`, EACCES on CI). */
+  snapshotPathTemplate: '{snapshotDir}/{testFileDir}/{testFileName}-snapshots/{projectName}/{arg}{-platform}{ext}',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

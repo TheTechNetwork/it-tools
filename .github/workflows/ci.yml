@@ -6,8 +6,9 @@
 #   (their results do not vary across Node versions).
 # - The production build runs once and its dist/ artifact is shared with E2E,
 #   instead of each workflow rebuilding.
-# - PRs run E2E on Chromium only (2 shards); pushes to main run the full
-#   Chromium + Firefox + WebKit matrix.
+# - PRs run the full E2E suite on Chromium only (2 shards) plus the
+#   visual-regression spec on Firefox + WebKit (so cross-browser goldens are
+#   validated pre-merge); pushes to main run the full suite on all three.
 # - Node compatibility (22/25/26 build + test) gates PRs only when they touch
 #   dependencies, build tooling or workflows; it always runs on pushes to main
 #   and on manual dispatch. Ordinary tool-code PRs stay off that critical path.
@@ -150,7 +151,8 @@ jobs:
           retention-days: 1
 
   # E2E tests reuse the dist/ artifact from the build job.
-  # PRs: Chromium only. Pushes to main: Chromium + Firefox + WebKit.
+  # PRs: full suite on Chromium + the visual-regression spec on Firefox/WebKit.
+  # Pushes to main: full suite on Chromium + Firefox + WebKit.
   # Two shards, each using ~75% of the runner's cores (see playwright.config.ts),
   # which covers the ~350-test suite well within the timeout.
   e2e:
@@ -160,7 +162,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: ${{ github.event_name == 'pull_request' && fromJSON('["chromium"]') || fromJSON('["chromium", "firefox", "webkit"]') }}
+        project: [chromium, firefox, webkit]
         shard: [1/2, 2/2]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -202,8 +204,20 @@ jobs:
         run: pnpm exec playwright install-deps ${{ matrix.project }}
         timeout-minutes: 10
 
+      # On PRs, Firefox/WebKit run only the visual-regression spec (functional
+      # e2e stays Chromium-only for speed); Chromium always runs the full suite,
+      # and pushes to main run the full suite on every browser.
       - name: Run Playwright tests
-        run: pnpm run test:e2e --project=${{ matrix.project }} --shard=${{ matrix.shard }}
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PROJECT: ${{ matrix.project }}
+          SHARD: ${{ matrix.shard }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ] && [ "$PROJECT" != "chromium" ]; then
+            pnpm run test:e2e --project="$PROJECT" --shard="$SHARD" src/visual-regression.e2e.spec.ts
+          else
+            pnpm run test:e2e --project="$PROJECT" --shard="$SHARD"
+          fi
 
       - name: Upload blob report
         if: ${{ !cancelled() }}

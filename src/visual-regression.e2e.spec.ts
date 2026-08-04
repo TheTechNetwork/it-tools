@@ -5,11 +5,11 @@ import { expect, test } from '@playwright/test';
 // Full-catalogue visual regression: one golden per tool, scoped to the tool's
 // own content area (`.tool-content`, which excludes the date-badged sidebar).
 //
-// Golden snapshots are browser- and platform-specific; only Chromium-on-Linux
-// goldens are maintained (the browser Playwright pins for this project), so
-// other browsers are skipped. Refresh with `pnpm test:e2e:visual
-// --update-snapshots` (locally on the CI browser, or via the
-// visual-regression-update workflow).
+// Golden snapshots are browser- and platform-specific; Chromium-, Firefox- and
+// WebKit-on-Linux goldens are all maintained (named `<tool>-<browser>-linux.png`).
+// They must be generated on the exact browser builds Playwright pins for this
+// version, so always refresh via the visual-regression-update workflow (which
+// runs on CI's pinned browsers) rather than a local browser of a different build.
 
 // Enumerate every tool and its primary route straight from its index.ts, so new
 // tools are covered automatically the next time goldens are refreshed.
@@ -83,8 +83,6 @@ function freezeRuntime() {
 }
 
 test.describe('Visual regression', () => {
-  test.skip(({ browserName }) => browserName !== 'chromium', 'Chromium goldens only');
-
   for (const tool of tools) {
     test(tool.name, async ({ page }) => {
       test.skip(EXCLUDED.has(tool.name), 'excluded from visual regression (see EXCLUDED)');
