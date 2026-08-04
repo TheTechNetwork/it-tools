@@ -167,6 +167,9 @@ defineExpose({
           :readonly="readonly"
           :disabled="disabled"
           :data-test-id="testId"
+          :aria-label="label ? undefined : placeholder"
+          :aria-invalid="!validation.isValid || undefined"
+          :aria-describedby="!validation.isValid ? `${id}-feedback` : undefined"
           :autocapitalize="autocapitalize ?? (rawText ? 'off' : undefined)"
           :autocomplete="autocomplete ?? (rawText ? 'off' : undefined)"
           :autocorrect="autocorrect ?? (rawText ? 'off' : undefined)"
@@ -189,23 +192,26 @@ defineExpose({
           :readonly="readonly"
           :disabled="disabled"
           :data-test-id="testId"
+          :aria-label="label ? undefined : placeholder"
+          :aria-invalid="!validation.isValid || undefined"
+          :aria-describedby="!validation.isValid ? `${id}-feedback` : undefined"
           :autocapitalize="autocapitalize ?? (rawText ? 'off' : undefined)"
           :autocomplete="autocomplete ?? (rawText ? 'off' : undefined)"
           :autocorrect="autocorrect ?? (rawText ? 'off' : undefined)"
           :spellcheck="spellcheck ?? (rawText ? false : undefined)"
         >
 
-        <c-button v-if="clearable && value" variant="text" circle size="small" @click="value = ''">
+        <c-button v-if="clearable && value" variant="text" circle size="small" aria-label="Clear" @click="value = ''">
           <icon-mdi-close />
         </c-button>
 
-        <c-button v-if="type === 'password'" variant="text" circle size="small" @click="showPassword = !showPassword">
+        <c-button v-if="type === 'password'" variant="text" circle size="small" :aria-label="showPassword ? 'Hide password' : 'Show password'" @click="showPassword = !showPassword">
           <icon-mdi-eye v-if="!showPassword" />
           <icon-mdi-eye-off v-if="showPassword" />
         </c-button>
         <slot name="suffix" />
       </div>
-      <span v-if="!validation.isValid" class="feedback"> {{ validation.message }} </span>
+      <span v-if="!validation.isValid" :id="`${id}-feedback`" class="feedback" role="alert"> {{ validation.message }} </span>
     </div>
   </div>
 </template>

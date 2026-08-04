@@ -54,9 +54,12 @@ const size = computed(() => theme.value.size[sizeName.value]);
 <template>
   <component
     :is="tag"
+    :type="tag === 'button' ? 'button' : undefined"
     :href="href ?? to"
     class="c-button"
     :class="{ disabled, round, circle }"
+    :disabled="tag === 'button' && disabled ? true : undefined"
+    :aria-disabled="disabled ? 'true' : undefined"
     :to="to"
     @click="handleClick"
   >

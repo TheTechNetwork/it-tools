@@ -43,12 +43,18 @@ onClickOutside(modal, () => {
     close();
   }
 });
+
+useEventListener(document, 'keydown', (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && isOpen.value) {
+    close();
+  }
+});
 </script>
 
 <template>
   <transition>
     <div v-if="isOpen" class="c-modal--overlay" fixed left-0 top-0 z-10 h-full w-full flex justify-center px-2 :class="{ 'items-center': centered }">
-      <div ref="modal" class="c-modal--container" v-bind="$attrs" max-w-xl w-full flex-grow rounded-md pa-24px>
+      <div ref="modal" class="c-modal--container" role="dialog" aria-modal="true" v-bind="$attrs" max-w-xl w-full flex-grow rounded-md pa-24px>
         <slot />
       </div>
     </div>

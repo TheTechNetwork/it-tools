@@ -33,6 +33,8 @@ const tools = computed<ToolCategory[]>(() => [
 <template>
   <MenuLayout class="menu-layout" :class="{ isSmallScreen: styleStore.isSmallScreen }">
     <template #sider>
+      <a href="#main-content" class="skip-link">{{ $t('home.skipToContent') }}</a>
+
       <RouterLink to="/" class="hero-wrapper">
         <HeroGradient class="gradient" />
         <div class="text-wrapper">
@@ -55,7 +57,9 @@ const tools = computed<ToolCategory[]>(() => [
           </div>
         </div>
 
-        <CollapsibleToolMenu :tools-by-category="tools" />
+        <nav :aria-label="$t('home.toolsNavigation')">
+          <CollapsibleToolMenu :tools-by-category="tools" />
+        </nav>
 
         <div class="footer">
           <div>
@@ -132,7 +136,9 @@ const tools = computed<ToolCategory[]>(() => [
           </c-button>
         </c-tooltip>
       </div>
-      <slot />
+      <main id="main-content" tabindex="-1">
+        <slot />
+      </main>
     </template>
   </MenuLayout>
 </template>
@@ -148,6 +154,26 @@ const tools = computed<ToolCategory[]>(() => [
 //     background-position: 0 0, @position @position;
 //     background-size: @size @size;
 // }
+
+#main-content:focus {
+  outline: none;
+}
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -60px;
+  z-index: 100;
+  padding: 8px 16px;
+  border-radius: 4px;
+  background-color: v-bind('themeVars.primaryColor');
+  color: #fff;
+  transition: top 0.2s ease-in-out;
+
+  &:focus {
+    top: 8px;
+  }
+}
 
 .support-button {
   background: rgb(37, 99, 108);
