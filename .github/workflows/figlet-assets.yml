@@ -1,0 +1,101 @@
+# Publish the figlet font definitions to the first-party R2 bucket behind
+# assets.thetech.network, under a path versioned by the installed figlet version
+# (figlet/<version>/fonts/). The ascii-text-drawer tool fetches them from there
+# at runtime, so no third-party CDN is involved and the fonts stay in lockstep
+# with the bundled figlet engine.
+#
+# The version-pinned path is immutable, so a given version only needs publishing
+# ONCE. This runs on manual dispatch and whenever the figlet version (package.json
+# / lockfile) or the asset scripts change on main; a `check` step reads the
+# published manifest and skips prepare + upload when the current version is
+# already published, so re-runs don't re-upload for nothing. Use the `force`
+# dispatch input to re-publish regardless. It no-ops (does not fail) until the
+# R2_* secrets are configured, so it stays green before the bucket is set up.
+#
+# When the figlet dependency is bumped (e.g. by Renovate), this workflow runs on
+# the merge to main and publishes the new version's fonts, so the tool keeps
+# working without any manual step.
+name: figlet-assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Re-publish even if this version is already synced'
+        type: boolean
+        default: false
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'scripts/prepare-figlet-fonts.mjs'
+      - 'scripts/sync-figlet-assets.mjs'
+      - '.github/workflows/figlet-assets.yml'
+
+concurrency:
+  group: figlet-assets
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check R2 credentials are configured
+        id: cfg
+        run: echo "configured=${{ secrets.R2_ACCOUNT_ID != '' }}" >> "$GITHUB_OUTPUT"
+
+      - name: Note when unconfigured
+        if: steps.cfg.outputs.configured != 'true'
+        run: echo "R2_* secrets are not set; skipping figlet asset sync. Configure R2_ACCOUNT_ID, R2_ACCESS_KEY_ID and R2_SECRET_ACCESS_KEY to enable it."
+
+      - run: corepack enable
+        if: steps.cfg.outputs.configured == 'true'
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        if: steps.cfg.outputs.configured == 'true'
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        if: steps.cfg.outputs.configured == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Check whether this version is already published
+        id: check
+        if: steps.cfg.outputs.configured == 'true'
+        env:
+          FORCE: ${{ inputs.force && '1' || '' }}
+        run: |
+          result=$(node scripts/sync-figlet-assets.mjs --check || echo not-synced)
+          echo "check: $result"
+          if [ "$result" = "synced" ]; then
+            echo "synced=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "synced=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Already published - nothing to do
+        if: steps.cfg.outputs.configured == 'true' && steps.check.outputs.synced == 'true'
+        run: echo "This figlet version is already published to R2; skipping prepare + upload."
+
+      - name: Prepare fonts
+        if: steps.cfg.outputs.configured == 'true' && steps.check.outputs.synced != 'true'
+        run: pnpm script:figlet:fonts
+
+      - name: Upload to R2
+        if: steps.cfg.outputs.configured == 'true' && steps.check.outputs.synced != 'true'
+        env:
+          FORCE: ${{ inputs.force && '1' || '' }}
+        run: pnpm script:figlet:sync

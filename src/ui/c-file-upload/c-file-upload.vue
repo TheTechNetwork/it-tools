@@ -74,6 +74,7 @@ function handleUpload(files: FileList | null | undefined) {
       class="hidden"
       :multiple="multiple"
       :accept="accept"
+      :aria-label="title"
       @change="handleFileInput"
     >
     <slot>

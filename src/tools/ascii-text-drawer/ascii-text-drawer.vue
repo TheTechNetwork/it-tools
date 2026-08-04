@@ -6,19 +6,35 @@ import { drawAsciiArtText } from './ascii-text-drawer.service';
 const { t } = useI18n();
 
 const input = ref('Ascii ART');
+// Debounce only the (potentially CDN-fetching) figlet render, not the input
+// binding itself, so typed characters stay responsive while rapid typing no
+// longer triggers a render + font fetch on every keystroke.
+const debouncedInput = refDebounced(input, 250);
 const font = useStorage('ascii-text-drawer:font', 'Standard');
 const width = useStorage('ascii-text-drawer:width', 80);
 const output = ref('');
 const errored = ref(false);
 const processing = ref(false);
 
-figlet.defaults({ fontPath: '//unpkg.com/figlet@1.6.0/fonts/' });
+// Load figlet font definitions from the first-party R2 host
+// (assets.thetech.network), under a path versioned by the installed figlet
+// version so the fonts never drift from the bundled engine and no third-party
+// CDN is involved (assets.thetech.network is already allowed by the CSP
+// connect-src). Mirrors the OCR tool's asset-base resolution: prod uses the
+// asset host; dev/offline builds serve same-origin from public/figlet (populated
+// by `pnpm script:figlet:fonts`). An explicit VITE_FIGLET_ASSETS_BASE_URL
+// override always wins - that origin must then be allowed by the CSP.
+const figletAssetsBase = (
+  import.meta.env.VITE_FIGLET_ASSETS_BASE_URL
+    ?? (import.meta.env.PROD ? 'https://assets.thetech.network' : '')
+).replace(/\/+$/, '');
+figlet.defaults({ fontPath: `${figletAssetsBase}/figlet/${import.meta.env.FIGLET_VERSION}/fonts/` });
 
 watchEffect(async () => {
   processing.value = true;
   try {
     output.value = await drawAsciiArtText({
-      text: input.value,
+      text: debouncedInput.value,
       font: font.value,
       width: width.value,
     });

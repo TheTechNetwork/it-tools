@@ -6,6 +6,8 @@ home:
     favoritesDndToolTip: 'Drag and drop to reorder favorites'
   subtitle: 'Handy tools for developers'
   toggleMenu: 'Toggle menu'
+  skipToContent: 'Skip to content'
+  toolsNavigation: 'Tools navigation'
   home: Home
   uiLib: 'UI Lib'
   support: 'Support IT-Tools development'

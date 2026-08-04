@@ -1,6 +1,8 @@
 <script setup lang="ts">
-// @ts-nocheck
+// @ts-nocheck -- c-table's slot props are typed `unknown`; the cert-formatting
+// logic itself is typed and tested in ../pdf-signature-checker.service.ts.
 import type { SignatureInfo } from '../pdf-signature-checker.types';
+import { formatCertificates } from '../pdf-signature-checker.service';
 
 const props = defineProps<{ signature: SignatureInfo }>();
 const { signature } = toRefs(props);
@@ -14,15 +16,11 @@ const tableHeaders = computed(() => ({
   pemCertificate: t('tools.pdf-signature-checker.details.pemCertificate'),
 }));
 
-const certs = computed(() => signature.value.meta.certs.map((certificate, index) => ({
-  ...certificate,
-  validityPeriod: {
-    notBefore: new Date(certificate.validityPeriod.notBefore).toLocaleString(),
-    notAfter: new Date(certificate.validityPeriod.notAfter).toLocaleString(),
-  },
-  certificateName: t('tools.pdf-signature-checker.details.certificateName', { number: index + 1 }),
-})),
-);
+const certs = computed(() => formatCertificates({
+  certs: signature.value.meta.certs,
+  formatDate: date => new Date(date).toLocaleString(),
+  formatCertificateName: ({ number }) => t('tools.pdf-signature-checker.details.certificateName', { number }),
+}));
 </script>
 
 <template>
