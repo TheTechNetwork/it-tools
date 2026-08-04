@@ -788,6 +788,27 @@ configured. The Image-to-text (OCR) tool fetches these assets same-origin-free a
 runtime, which is why the CSP allows `assets.thetech.network` on
 `script-src`/`connect-src`.
 
+#### 7b. **figlet-assets.yml** - Figlet Font Publishing
+
+The same pattern as `ocr-assets.yml`, for the ASCII Art Text Generator
+(`ascii-text-drawer`). It publishes figlet's font definitions (`.flf`) to the
+same R2 bucket under a path versioned by the installed **figlet** version
+(`figlet/<version>/fonts/`), and the tool fetches them from
+`assets.thetech.network` at runtime (`connect-src`; no new CSP origin - the host
+is already allowed for OCR). The font-path URL is built from the figlet version
+injected into the app (`import.meta.env.FIGLET_VERSION`, resolved in
+`vite.config.ts`), so it can never drift from the bundled engine - the earlier
+breakage was a hard-coded `figlet@1.6.0` unpkg URL that mismatched the installed
+version and was CSP-blocked. Runs on manual dispatch and when the figlet version
+(`package.json`/lockfile) or the asset scripts change on main; a `check` step
+skips prepare + upload when the version is already published. So when Renovate
+bumps figlet, the merge to main republishes the new version's fonts automatically.
+Scripts: `scripts/prepare-figlet-fonts.mjs` (stages `node_modules/figlet/fonts`
+into `public/figlet/<version>/`) and `scripts/sync-figlet-assets.mjs` (mirrors to
+R2 via the `aws` CLI, writes the manifest). Same `R2_*` secrets; no-ops until
+configured. A `VITE_FIGLET_ASSETS_BASE_URL` env override forces a specific host
+(e.g. same-origin for an offline build).
+
 #### 8. **visual-regression-update.yml** - Visual Golden Refresh
 
 Manual (`workflow_dispatch`) job that regenerates the visual-regression golden
@@ -950,11 +971,13 @@ const value = useVModel(props, 'value', emit);
   config in `docker/sws.toml`) set `X-Content-Type-Options`, `X-Frame-Options`,
   `Referrer-Policy`, a `Permissions-Policy` and a **Content-Security-Policy**.
   The app ships **no tracking or ads**, so the CSP allows **no third-party
-  origins**. The single allowance beyond `'self'` is the **first-party** OCR
-  asset host `https://assets.thetech.network` (an R2 bucket serving the
-  Tesseract engine + language data for the Image-to-text tool): it is on
-  `script-src` (the tesseract.js worker/core load via `importScripts`) and
-  `connect-src` (the wasm + `.traineddata` fetches). The other relaxations are
+  origins**. The single allowance beyond `'self'` is the **first-party** asset
+  host `https://assets.thetech.network` (an R2 bucket): it serves the Tesseract
+  engine + language data for the Image-to-text tool - on `script-src` (the
+  tesseract.js worker/core load via `importScripts`) and `connect-src` (the wasm
+  + `.traineddata` fetches) - and the figlet font definitions for the ASCII Art
+  Text Generator, on `connect-src` (see `figlet-assets.yml`). The other
+  relaxations are
   `'unsafe-eval'` (mathjs evaluates expressions at runtime) and `style-src
   'unsafe-inline'` (naive-ui's runtime CSS-in-JS); `worker-src 'self' blob:`
   covers Monaco. Note `script-src` carries **no** `'unsafe-inline'`, and

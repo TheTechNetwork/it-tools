@@ -34,7 +34,7 @@ Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 # Tesseract engine + language data for the OCR tool. No tracking/ads origins.
 # 'unsafe-eval' (mathjs), style 'unsafe-inline' (naive-ui CSS-in-JS), and
 # worker/blob (Monaco) are the only other relaxations.
-Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval' https://assets.thetech.network; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://assets.thetech.network https://unpkg.com; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval' https://assets.thetech.network; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://assets.thetech.network; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
 
 # Content-hashed assets can be cached for a year.
 [[advanced.headers]]
