@@ -6,19 +6,26 @@ import { drawAsciiArtText } from './ascii-text-drawer.service';
 const { t } = useI18n();
 
 const input = ref('Ascii ART');
+// Debounce only the (potentially CDN-fetching) figlet render, not the input
+// binding itself, so typed characters stay responsive while rapid typing no
+// longer triggers a render + font fetch on every keystroke.
+const debouncedInput = refDebounced(input, 250);
 const font = useStorage('ascii-text-drawer:font', 'Standard');
 const width = useStorage('ascii-text-drawer:width', 80);
 const output = ref('');
 const errored = ref(false);
 const processing = ref(false);
 
-figlet.defaults({ fontPath: '//unpkg.com/figlet@1.6.0/fonts/' });
+// Load figlet font definitions from the unpkg CDN, pinned to the installed
+// figlet version so the fetched fonts stay in lockstep with the bundled engine.
+// The CDN origin is whitelisted on the CSP connect-src of every deploy target.
+figlet.defaults({ fontPath: `https://unpkg.com/figlet@${import.meta.env.FIGLET_VERSION}/fonts/` });
 
 watchEffect(async () => {
   processing.value = true;
   try {
     output.value = await drawAsciiArtText({
-      text: input.value,
+      text: debouncedInput.value,
       font: font.value,
       width: width.value,
     });

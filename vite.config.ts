@@ -1,5 +1,6 @@
+import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import process from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
 
@@ -23,6 +24,28 @@ const baseUrl = process.env.BASE_URL ?? '/';
 // The OCR tool's self-hosted assets live under a path versioned by the
 // tesseract.js version, so the engine can never drift from its WASM core.
 const tesseractVersion = createRequire(import.meta.url)('tesseract.js/package.json').version;
+
+// The ascii-text-drawer tool loads figlet font definitions from the unpkg CDN at
+// runtime. Pin the URL to the installed figlet version so the fetched fonts never
+// drift from the bundled figlet engine (and so the CSP allowance stays exact).
+// figlet's package.json is not exposed via its `exports` map, so resolve the
+// package root from its entrypoint and read the version from there.
+const figletVersion = (() => {
+  let dir = dirname(createRequire(import.meta.url).resolve('figlet'));
+  for (let depth = 0; depth < 6; depth++) {
+    try {
+      const pkg = JSON.parse(readFileSync(resolve(dir, 'package.json'), 'utf8'));
+      if (pkg.name === 'figlet') {
+        return pkg.version as string;
+      }
+    }
+    catch {
+      // keep walking up until a figlet package.json is found
+    }
+    dir = dirname(dir);
+  }
+  throw new Error('Could not resolve the installed figlet version');
+})();
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -67,10 +90,14 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 8388608, // 8 MB
       },
       manifest: {
+        id: baseUrl,
         name: 'IT Tools',
+        short_name: 'IT Tools',
         description: 'Aggregated set of useful tools for developers.',
         display: 'standalone',
-        lang: 'fr-FR',
+        lang: 'en',
+        dir: 'ltr',
+        categories: ['utilities', 'productivity', 'developer'],
         start_url: baseUrl,
         orientation: 'any',
         theme_color: '#18a058',
@@ -85,6 +112,11 @@ export default defineConfig({
             src: '/favicon-32x32.png',
             type: 'image/png',
             sizes: '32x32',
+          },
+          {
+            src: '/apple-touch-icon.png',
+            sizes: '180x180',
+            type: 'image/png',
           },
           {
             src: '/android-chrome-192x192.png',
@@ -124,6 +156,7 @@ export default defineConfig({
   define: {
     'import.meta.env.PACKAGE_VERSION': JSON.stringify(process.env.npm_package_version),
     'import.meta.env.TESSERACT_VERSION': JSON.stringify(tesseractVersion),
+    'import.meta.env.FIGLET_VERSION': JSON.stringify(figletVersion),
   },
   optimizeDeps: {
     rolldownOptions: {
@@ -191,6 +224,11 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
+    // The heaviest tools (Monaco, OCR/tesseract, mathjs) are each isolated into
+    // their own lazily-loaded chunk, so large-chunk warnings for them are
+    // expected and not actionable. Raise the limit above their known size to
+    // keep the build output free of noise.
+    chunkSizeWarningLimit: 900,
     commonjsOptions: {
       transformMixedEsModules: true,
     },

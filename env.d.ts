@@ -7,6 +7,9 @@ interface ImportMetaEnv {
   PROD: boolean;
   // Injected in vite.config.ts from the installed tesseract.js version.
   TESSERACT_VERSION: string;
+  // Injected in vite.config.ts from the installed figlet version; pins the
+  // ascii-text-drawer tool's CDN font URL to the bundled figlet engine.
+  FIGLET_VERSION: string;
   // Optional override for the OCR asset host (defaults to same-origin).
   VITE_OCR_ASSETS_BASE_URL?: string;
 }
