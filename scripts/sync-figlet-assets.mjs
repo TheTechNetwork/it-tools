@@ -17,8 +17,7 @@
 // font count (so the workflow can skip prepare + upload entirely), else
 // "not-synced". A successful sync writes that manifest.
 import { execFileSync } from 'node:child_process';
-import { existsSync, statSync } from 'node:fs';
-import { readdir } from 'node:fs/promises';
+import { existsSync, readdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import process from 'node:process';
@@ -59,20 +58,6 @@ const checkOnly = process.argv.includes('--check');
 // Content-hashed, version-pinned path -> immutable, cache for a year.
 const CACHE_CONTROL = 'public, max-age=31536000, immutable';
 
-async function walk(dir) {
-  const out = [];
-  for (const entry of await readdir(dir, { withFileTypes: true })) {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      out.push(...(await walk(full)));
-    }
-    else if (entry.isFile()) {
-      out.push(full);
-    }
-  }
-  return out;
-}
-
 function requireEnv() {
   const missing = ['R2_ACCOUNT_ID', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY'].filter(k => !process.env[k]);
   if (missing.length > 0) {
@@ -112,16 +97,11 @@ function aws(args, { allowFail = false } = {}) {
   }
 }
 
-function objectExists(key) {
-  const result = aws(['s3api', 'head-object', '--bucket', bucket, '--key', key], { allowFail: true });
-  return result !== null;
-}
-
 function countLocalFonts() {
   if (!existsSync(path.join(localDir, 'fonts'))) {
     return 0;
   }
-  return require('node:fs').readdirSync(path.join(localDir, 'fonts')).filter(f => f.endsWith('.flf')).length;
+  return readdirSync(path.join(localDir, 'fonts')).filter(f => f.endsWith('.flf')).length;
 }
 
 // The manifest records how many fonts were published for this version, so
@@ -181,51 +161,36 @@ async function runSync() {
     throw new Error(`No assets at ${localDir} - run \`pnpm script:figlet:fonts\` first.`);
   }
 
-  const files = await walk(localDir);
-  console.log(`Syncing ${files.length} file(s) from public/figlet/${version}/ to s3://${bucket}/${keyPrefix}/${dryRun ? ' (dry run)' : ''}`);
+  const count = countLocalFonts();
+  console.log(`Syncing ${count} figlet font(s) from public/figlet/${version}/ to s3://${bucket}/${keyPrefix}/${dryRun ? ' (dry run)' : ''}`);
 
-  if (!dryRun) {
-    requireEnv();
+  if (dryRun) {
+    console.log(`  would sync ${count} file(s) to s3://${bucket}/${keyPrefix}/fonts/`);
+    return;
   }
 
-  let uploaded = 0;
-  let skipped = 0;
-  let bytes = 0;
-  for (const file of files) {
-    const rel = path.relative(localDir, file).split(path.sep).join('/');
-    const key = `${keyPrefix}/${rel}`;
-    const size = statSync(file).size;
+  requireEnv();
 
-    if (dryRun) {
-      console.log(`  would upload ${key} (${(size / 1048576).toFixed(3)} MB)`);
-      continue;
-    }
+  // `aws s3 sync` uploads the whole directory in parallel and skips objects that
+  // are already present/unchanged, so it is both fast (the previous per-file loop
+  // ran ~2 aws CLI invocations per file and overran the job timeout on the first
+  // ~330-font publish) and idempotent - a partial earlier run is simply
+  // completed. All figlet fonts are .flf text, so a single content-type applies
+  // to every uploaded object. The manifest is written only after a clean sync.
+  aws([
+    's3',
+    'sync',
+    localDir,
+    `s3://${bucket}/${keyPrefix}`,
+    '--content-type',
+    'text/plain; charset=utf-8',
+    '--cache-control',
+    CACHE_CONTROL,
+    '--no-progress',
+  ]);
 
-    if (!force && objectExists(key)) {
-      skipped++;
-      continue;
-    }
-
-    aws([
-      's3',
-      'cp',
-      file,
-      `s3://${bucket}/${key}`,
-      '--content-type',
-      'text/plain; charset=utf-8',
-      '--cache-control',
-      CACHE_CONTROL,
-      '--only-show-errors',
-    ]);
-    uploaded++;
-    bytes += size;
-    console.log(`  uploaded ${key}`);
-  }
-
-  if (!dryRun) {
-    writeManifest(countLocalFonts());
-    console.log(`Done: ${uploaded} uploaded (${(bytes / 1048576).toFixed(1)} MB), ${skipped} already present.`);
-  }
+  writeManifest(count);
+  console.log(`Done: synced ${count} figlet font(s).`);
 }
 
 async function main() {
