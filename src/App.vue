@@ -29,6 +29,7 @@ syncRef(
         <component :is="layout">
           <RouterView />
         </component>
+        <PwaReloadPrompt />
       </NNotificationProvider>
     </NMessageProvider>
   </n-config-provider>

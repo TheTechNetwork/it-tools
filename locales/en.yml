@@ -1,3 +1,8 @@
+pwa:
+  newContent: 'A new version is available.'
+  reload: 'Reload'
+  dismiss: 'Dismiss'
+  offlineReady: 'App ready to work offline.'
 home:
   categories:
     newestTools: Newest tools

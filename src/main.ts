@@ -1,6 +1,5 @@
 import { createHead } from '@vueuse/head';
 import { createPinia } from 'pinia';
-import { registerSW } from 'virtual:pwa-register';
 import { createApp } from 'vue';
 
 import shadow from 'vue-shadow-dom';
@@ -18,7 +17,9 @@ import router from './router';
 import './polyfills/node-globals';
 import 'virtual:uno.css';
 
-registerSW();
+// The service worker is registered and its update lifecycle handled by the
+// <PwaReloadPrompt /> component (via useRegisterSW), which surfaces a
+// user-controlled reload prompt instead of the previous silent auto-update.
 
 const app = createApp(App);
 
