@@ -24,11 +24,16 @@ const processing = ref(false);
 // asset host; dev/offline builds serve same-origin from public/figlet (populated
 // by `pnpm script:figlet:fonts`). An explicit VITE_FIGLET_ASSETS_BASE_URL
 // override always wins - that origin must then be allowed by the CSP.
+//
+// The fontPath must NOT end in a slash: figlet builds the request as
+// `${fontPath}/${fontName}.flf`, so a trailing slash yields `fonts//Name.flf`,
+// a double slash that R2 serves as a distinct (missing) key -> 404 -> the tool
+// errors. Keeping no trailing slash produces the correct `fonts/Name.flf`.
 const figletAssetsBase = (
   import.meta.env.VITE_FIGLET_ASSETS_BASE_URL
     ?? (import.meta.env.PROD ? 'https://assets.thetech.network' : '')
 ).replace(/\/+$/, '');
-figlet.defaults({ fontPath: `${figletAssetsBase}/figlet/${import.meta.env.FIGLET_VERSION}/fonts/` });
+figlet.defaults({ fontPath: `${figletAssetsBase}/figlet/${import.meta.env.FIGLET_VERSION}/fonts` });
 
 watchEffect(async () => {
   processing.value = true;
