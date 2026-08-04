@@ -10,6 +10,16 @@
     "enabled": true,
     "automerge": true
   },
+  "customManagers": [
+    {
+      "description": "Track versions hard-coded in source (e.g. CDN URLs) that the standard managers can't see. Annotate the line above the version with: // renovate: datasource=<ds> depName=<pkg> [versioning=<v>]",
+      "customType": "regex",
+      "managerFilePatterns": ["/\\.(?:ts|mjs|cjs|js|vue)$/"],
+      "matchStrings": [
+        "\\/\\/\\s*renovate:\\s*datasource=(?<datasource>[a-z0-9-]+?)\\s+depName=(?<depName>[^\\s]+?)(?:\\s+versioning=(?<versioning>[^\\s]+?))?\\s*[\\r\\n]+[^\\r\\n]*?(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ]
+    }
+  ],
   "packageRules": [
     {
       "description": "Never pin engines - .npmrc engine-strict and Vercel require a version range",
