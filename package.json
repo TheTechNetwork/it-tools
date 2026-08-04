@@ -127,7 +127,7 @@
     "@tsconfig/node24": "24.0.4",
     "@types/crypto-js": "4.2.2",
     "@types/jsdom": "28.0.3",
-    "@types/lodash": "4.17.24",
+    "@types/lodash": "4.17.25",
     "@types/mime-types": "3.0.1",
     "@types/netmask": "2.0.6",
     "@types/node": "24.13.3",
