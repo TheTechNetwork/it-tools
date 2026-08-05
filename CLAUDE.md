@@ -706,11 +706,16 @@ inputs change (everything runs on pushes to main and manual dispatch):
   → gates **checks**, **build** and **e2e**;
 - `toolchain` — dependencies + build/test tooling (not workflow files) → gates
   **node-compat**;
-- `docker` — `Dockerfile`, `docker/`, `.dockerignore` (+ `ci.yml`) → gates
+- `docker` — `Dockerfile`, `docker/`, `.dockerignore`, `ci.yml`, **and
+  dependencies/lockfile/pnpm config** (the image's builder stage runs `pnpm i
+  --frozen-lockfile && pnpm build`, so a dep bump changes the image) → gates
   **docker-image**.
 
 So a docker-only or workflow-only PR skips the whole app-test path (checks +
-build + e2e); an ordinary tool-code PR skips node-compat and docker-image.
+build + e2e); an ordinary tool-code PR skips node-compat and docker-image; and a
+**dependency PR (e.g. Renovate) runs the entire pipeline** — checks, build, e2e,
+node-compat, docker-image, dependency-review, plus the full visual-regression
+suite (see below) — so a green Renovate PR really means green.
 
 Jobs:
 1. **checks**: Lint (ESLint with caching, over `src`, `scripts` and the root
@@ -829,11 +834,15 @@ configured. A `VITE_FIGLET_ASSETS_BASE_URL` env override forces a specific host
 #### 8. **visual-regression-goldens.yml** - Visual Regression (validate + auto-create)
 
 The workflow that owns visual regression (`src/visual-regression.e2e.spec.ts`)
-so `ci.yml` doesn't run it. It runs **only when tool code changes** (path-filtered
-to `src/tools/**` plus the spec/config/workflow), and a `scope` step reads the
-diff to test **only the added/modified tools** (`--grep`), not the whole
-catalogue — so it stays cheap. (A change to the spec, Playwright config, or the
-workflow itself validates the full suite, since those can affect every tool.)
+so `ci.yml` doesn't run it. It runs when tool code changes (path-filtered to
+`src/tools/**` plus the spec/config/**deps**/workflow), and a `scope` step reads
+the diff to test **only the added/modified tools** (`--grep`), not the whole
+catalogue — so it stays cheap. (A change to the spec, Playwright config,
+**dependencies** (`package.json`/`pnpm-lock.yaml` — a rendering lib or
+Playwright/browser bump can shift every golden), or the workflow itself
+validates the full suite, since those can affect every tool. A dep bump that
+shifts existing goldens fails here — never a silent rewrite — which is the
+signal to refresh via the manual workflow.)
 The scoped tools run across a per-browser matrix (Chromium + Firefox + WebKit);
 each leg validates, and only if that fails does it create any missing goldens
 (`--update-snapshots=missing`, which never rewrites an existing golden) and

@@ -29,12 +29,16 @@ on:
       - 'src/tools/**'
       - 'src/visual-regression.e2e.spec.ts'
       - 'playwright.config.ts'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
       - '.github/workflows/visual-regression-goldens.yml'
   pull_request:
     paths:
       - 'src/tools/**'
       - 'src/visual-regression.e2e.spec.ts'
       - 'playwright.config.ts'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
       - '.github/workflows/visual-regression-goldens.yml'
 
 concurrency:
@@ -83,10 +87,14 @@ jobs:
           echo "Changed files:"
           echo "$changed"
 
-          # A change to the spec, the Playwright config, or this workflow can
-          # affect every tool's render, so validate the whole suite (empty grep).
-          if echo "$changed" | grep -qE '^(src/visual-regression\.e2e\.spec\.ts|playwright\.config\.ts|\.github/workflows/visual-regression-goldens\.yml)$'; then
-            echo "Visual harness changed → validating the full suite."
+          # A change to the spec, the Playwright config, the dependencies (a
+          # rendering lib — naive-ui, unocss, Monaco … — or Playwright/its
+          # browsers can shift output), or this workflow can affect every tool's
+          # render, so validate the whole suite (empty grep). A bump that shifts
+          # existing goldens fails here (never a silent rewrite) — the red is the
+          # signal to refresh via the manual visual-regression-update workflow.
+          if echo "$changed" | grep -qE '^(src/visual-regression\.e2e\.spec\.ts|playwright\.config\.ts|package\.json|pnpm-lock\.yaml|\.github/workflows/visual-regression-goldens\.yml)$'; then
+            echo "Visual harness or dependencies changed → validating the full suite."
             {
               echo "run=true"
               echo "grep="

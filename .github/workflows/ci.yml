@@ -302,8 +302,10 @@ jobs:
   #   - toolchain: dependencies + build/test tooling → the Node-compat matrix.
   #                Deliberately NOT workflow files: a workflow edit can't change
   #                Node compatibility.
-  #   - docker:    Dockerfile/docker//.dockerignore (+ ci.yml, which defines the
-  #                image test) → the Docker image build+scan.
+  #   - docker:    Dockerfile/docker//.dockerignore, ci.yml (defines the image
+  #                test), AND dependencies/lockfile/pnpm config (the image's
+  #                builder stage installs+builds them) → the Docker image
+  #                build+scan. So a dependency bump runs the whole pipeline.
   # Ordinary tool-code PRs thus skip node-compat and docker-image; non-app PRs
   # (docker-only, workflow-only, …) additionally skip checks/build/e2e.
   changes:
@@ -332,20 +334,25 @@ jobs:
 
           # Anything that affects the built app, unit/e2e tests, lint or types.
           # ci.yml is included so edits to the pipeline itself get a full run.
-          if grep -qE '^(src/|locales/|public/|scripts/|index\.html|package\.json|pnpm-lock\.yaml|\.npmrc|\.nvmrc|vite\.config\.ts|vitest\.setup\.ts|playwright\.config\.ts|uno\.config\.ts|tsconfig[^/]*\.json|eslint\.config\.mjs|\.github/workflows/ci\.yml)' <<<"$changed_files"; then
+          if grep -qE '^(src/|locales/|public/|scripts/|index\.html|package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|\.npmrc|\.nvmrc|vite\.config\.ts|vitest\.setup\.ts|playwright\.config\.ts|uno\.config\.ts|tsconfig[^/]*\.json|eslint\.config\.mjs|\.github/workflows/ci\.yml)' <<<"$changed_files"; then
             emit app true
           else
             emit app false
           fi
 
           # Dependencies + build/test tooling (no workflows).
-          if grep -qE '^(package\.json|pnpm-lock\.yaml|\.npmrc|\.nvmrc|vite\.config\.ts|vitest\.setup\.ts|tsconfig[^/]*\.json)' <<<"$changed_files"; then
+          if grep -qE '^(package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|\.npmrc|\.nvmrc|vite\.config\.ts|vitest\.setup\.ts|tsconfig[^/]*\.json)' <<<"$changed_files"; then
             emit toolchain true
           else
             emit toolchain false
           fi
 
-          if grep -qE '^(Dockerfile|\.dockerignore|docker/|\.github/workflows/ci\.yml)' <<<"$changed_files"; then
+          # Docker image inputs. Includes dependencies/lockfile/pnpm config: the
+          # image's builder stage runs `pnpm i --frozen-lockfile && pnpm build`,
+          # so a dependency bump changes the image and must rebuild + re-scan it.
+          # This is what makes a Renovate dependency PR exercise the FULL pipeline
+          # (checks, build, e2e, node-compat AND docker-image) — so green means green.
+          if grep -qE '^(Dockerfile|\.dockerignore|docker/|package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|\.npmrc|\.github/workflows/ci\.yml)' <<<"$changed_files"; then
             emit docker true
           else
             emit docker false
@@ -395,8 +402,9 @@ jobs:
   # the shared serving contract that keeps the variants in lockstep. Also scans
   # each image with Trivy: findings are uploaded to GitHub code scanning (the
   # Security tab) and a blocking gate fails the job on a fixable HIGH/CRITICAL
-  # (ignore-unfixed keeps un-actionable base-image CVEs from blocking). Gated to
-  # Docker changes (via the `changes` job) so ordinary PRs skip the image
+  # (ignore-unfixed keeps un-actionable base-image CVEs from blocking). Gated
+  # (via the `changes` job) to PRs that touch Docker files OR dependencies (the
+  # image builds from the lockfile) so ordinary tool-code PRs skip the image
   # builds; always on main.
   docker-image:
     needs: changes
