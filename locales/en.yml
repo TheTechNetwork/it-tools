@@ -1147,7 +1147,8 @@ tools:
 
   text-diff:
     title: Text diff
-    description: Compare two texts and see the differences between them.
+    description: Compare two texts or code snippets and see the differences between them, with syntax highlighting for JSON, XML, YAML and more.
+    language: Language
 
   otp-generator:
     title: OTP code generator
