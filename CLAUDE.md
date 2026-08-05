@@ -706,9 +706,10 @@ Jobs:
    threshold that auto-ratchets upward. Coverage is added to the job summary
    and uploaded as an artifact. Runs once on the primary Node version.
 2. **build**: Production build, uploads `dist/` as an artifact.
-3. **e2e**: Playwright tests reusing the `dist/` artifact from **build**.
-   PRs run Chromium only (3 shards); pushes to main run the full
-   Chromium + Firefox + WebKit matrix.
+3. **e2e**: Functional Playwright tests reusing the `dist/` artifact from
+   **build** (2 shards). PRs run Chromium only; pushes to main run
+   Chromium + Firefox + WebKit. The visual-regression spec is excluded here and
+   owned by the **visual-regression-goldens** workflow (see below).
 4. **node-compat**: Build + unit tests across the other supported Node versions
    (22/25/26; the primary version from `.nvmrc` is already covered above).
    Gates PRs only when they touch dependencies, build tooling or workflows
@@ -809,14 +810,36 @@ R2 via the `aws` CLI, writes the manifest). Same `R2_*` secrets; no-ops until
 configured. A `VITE_FIGLET_ASSETS_BASE_URL` env override forces a specific host
 (e.g. same-origin for an offline build).
 
-#### 8. **visual-regression-update.yml** - Visual Golden Refresh
+#### 8. **visual-regression-goldens.yml** - Visual Regression (validate + auto-create)
 
-Manual (`workflow_dispatch`) job that regenerates the visual-regression golden
-snapshots (`src/visual-regression.e2e.spec.ts`) on CI's pinned Chromium and
+The workflow that owns visual regression (`src/visual-regression.e2e.spec.ts`)
+end to end, so `ci.yml` doesn't run it. Runs on PRs and pushes to main, one
+per-browser matrix leg (Chromium + Firefox + WebKit), each using Playwright's
+`--update-snapshots=missing`:
+
+- **existing** goldens are compared normally — a real rendering change **fails**
+  the job, so regressions stay caught pre-merge on all three browsers;
+- a tool with **no golden yet** (e.g. a brand-new tool) has its golden
+  **created** on the spot and is *not* treated as a failure, so the check goes
+  green in the same run — no manual dispatch needed.
+
+Newly created goldens are then committed straight back to the PR branch (only
+*new*, untracked files — an existing golden is never rewritten here), with a
+`[skip ci]` message; disjoint per-browser subfolders + a fetch+rebase+retry
+push loop let the three legs commit concurrently. Same-repo PRs only auto-commit
+(a fork head branch isn't writable — its goldens are uploaded as an artifact
+instead). Needs `contents: write`. Deliberately updating a *changed* golden
+after an intentional UI change stays the job of the manual workflow below.
+
+#### 8b. **visual-regression-update.yml** - Visual Golden Refresh (manual bulk overwrite)
+
+Manual (`workflow_dispatch`) job that **overwrites** the visual-regression golden
+snapshots on CI's pinned browsers (Chromium + Firefox + WebKit matrix) and
 commits them back to the dispatched branch (with a `[skip ci]` message; also
 uploads them as an artifact in case the branch is protected). Run it after an
-intentional UI change to a covered tool, or when adding new visual cases whose
-goldens must be generated on the CI browser rather than a local one. Needs
+**intentional UI change** to a covered tool, to refresh the goldens the diff
+would otherwise fail on. (New tools no longer need this — the auto workflow above
+creates their missing goldens; this is only for *rewriting* existing ones.) Needs
 `contents: write`.
 
 > Static analysis (SAST) runs via GitHub code-scanning **default setup**

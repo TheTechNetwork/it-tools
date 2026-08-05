@@ -1,0 +1,196 @@
+# Own visual regression end to end, automatically.
+#
+# This workflow both *validates* and *self-heals* the golden snapshots in
+# src/visual-regression.e2e.spec.ts, on CI's pinned browsers, so adding a new
+# tool no longer needs a manual golden-refresh dispatch:
+#
+#   * Existing goldens are compared normally — a real rendering change fails the
+#     job, so regressions are still caught pre-merge (all three browsers).
+#   * A tool that has no golden yet (e.g. a brand-new tool) has its golden
+#     *created* on the spot (`--update-snapshots=missing`) and is NOT treated as
+#     a failure, so the check goes green in the same run.
+#
+# Any newly created goldens are then committed straight back to the PR branch so
+# they persist for future runs (and land on main at merge). Only *new* files are
+# committed — an existing golden is never rewritten here; deliberately updating a
+# changed golden stays the job of the manual `visual-regression-update`
+# workflow (which overwrites in bulk after an intentional UI change).
+#
+# Structure mirrors visual-regression-update.yml: one shared build, then a
+# per-browser matrix regenerates + commits just its own `<browser>/` subfolder,
+# so the legs touch disjoint paths and the only contention is the ref update,
+# which a fetch+rebase+retry loop absorbs.
+name: visual-regression-goldens
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - '.gitignore'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'LICENSE'
+      - '.gitignore'
+
+concurrency:
+  group: visual-regression-goldens-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# contents: write lets the matrix push newly created goldens back to the PR
+# branch. The push step is additionally gated to same-repo PRs (a fork PR still
+# gets full validation, just no auto-commit — its head branch isn't writable).
+permissions:
+  contents: write
+
+jobs:
+  # Single production build, shared with every browser's job.
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - run: corepack enable
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Cache Vite build
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            node_modules/.vite
+            .vite
+          key: ${{ runner.os }}-vite-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Build app
+        run: pnpm build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
+
+  # Validate existing goldens + create any missing ones, one browser per leg.
+  goldens:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # Check out the PR head branch (not the detached merge ref) so the commit
+        # step below can push newly created goldens straight back to it.
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+
+      - run: corepack enable
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")" >> "$GITHUB_OUTPUT"
+
+      - name: Restore Playwright browser cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-24.04-${{ matrix.project }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+
+      - name: Install Playwright browser and system dependencies
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm exec playwright install --with-deps ${{ matrix.project }}
+        timeout-minutes: 5
+
+      - name: Install Playwright system dependencies only
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps ${{ matrix.project }}
+        timeout-minutes: 10
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist
+
+      # --update-snapshots=missing is the crux: a missing golden is created and
+      # NOT treated as a failure (so a new tool's first run is green), while an
+      # existing golden that differs still fails (so regressions are caught).
+      - name: Validate + create missing goldens on the CI browser
+        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --project=${{ matrix.project }} --update-snapshots=missing
+
+      # Persist only *newly created* goldens (untracked files). An existing
+      # golden is never rewritten by this workflow, so nothing already tracked is
+      # committed here. Same-repo PRs only — a fork head branch isn't writable.
+      - name: Commit newly created goldens
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          DIR: src/visual-regression.e2e.spec.ts-snapshots/${{ matrix.project }}
+        run: |
+          new_files=$(git ls-files --others --exclude-standard -- "$DIR")
+          if [ -z "$new_files" ]; then
+            echo "No new ${{ matrix.project }} goldens to commit."
+            exit 0
+          fi
+          echo "New ${{ matrix.project }} goldens:"
+          echo "$new_files"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Stage only the untracked new files, never a modified existing golden.
+          echo "$new_files" | xargs git add --
+          git commit -m "test(e2e): add ${{ matrix.project }} visual goldens for new tools [skip ci]"
+          # The three legs push to the same branch; rebase our snapshot-only
+          # commit onto the latest ref and retry on rejection. Disjoint
+          # subfolders mean the rebase never conflicts.
+          for attempt in 1 2 3 4 5; do
+            if git push origin "HEAD:$BRANCH"; then
+              echo "Pushed ${{ matrix.project }} goldens on attempt $attempt."
+              exit 0
+            fi
+            echo "Push rejected; rebasing onto latest $BRANCH (attempt $attempt)."
+            git pull --rebase origin "$BRANCH"
+          done
+          echo "Failed to push ${{ matrix.project }} goldens after 5 attempts."
+          exit 1
+
+      # Fallback for fork PRs (whose head branch can't be pushed to): the created
+      # goldens are available as an artifact to commit manually.
+      - name: Upload newly created goldens (fallback if push is skipped)
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: new-visual-goldens-${{ matrix.project }}
+          path: src/visual-regression.e2e.spec.ts-snapshots/${{ matrix.project }}
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Save Playwright browser cache
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-24.04-${{ matrix.project }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
