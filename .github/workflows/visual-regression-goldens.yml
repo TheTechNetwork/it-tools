@@ -1,0 +1,313 @@
+# Own visual regression for changed tools, automatically and cheaply.
+#
+# This validates + self-heals the golden snapshots in
+# src/visual-regression.e2e.spec.ts on CI's pinned browsers, but scoped to only
+# the tools a change actually touches — so adding a tool no longer needs a manual
+# golden-refresh dispatch, without paying to re-render the whole catalogue.
+#
+#   * It runs only when tool code (or the visual harness itself) changes, and
+#     tests only the added/modified tools (derived from the PR diff), across
+#     Chromium + Firefox + WebKit.
+#   * For each such tool: validate against its golden; only if that fails, create
+#     any missing golden (--update-snapshots=missing, which never rewrites an
+#     existing one) and re-validate. That re-validate is the gate — a brand-new
+#     tool goes green in the same run; a genuine rendering change to an existing
+#     tool still fails (and is refreshed via the manual visual-regression-update
+#     workflow).
+#   * Newly created goldens are committed straight back to the PR branch.
+#
+# Structure mirrors visual-regression-update.yml: a scope step picks the tools,
+# then one shared build feeds a per-browser matrix that commits just its own
+# `<browser>/` subfolder (disjoint paths; a fetch+rebase+retry loop absorbs the
+# ref race).
+name: visual-regression-goldens
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'src/tools/**'
+      - 'src/visual-regression.e2e.spec.ts'
+      - 'playwright.config.ts'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/visual-regression-goldens.yml'
+  pull_request:
+    paths:
+      - 'src/tools/**'
+      - 'src/visual-regression.e2e.spec.ts'
+      - 'playwright.config.ts'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/visual-regression-goldens.yml'
+
+concurrency:
+  group: visual-regression-goldens-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+# contents: write lets the matrix push newly created goldens back to the PR
+# branch. The push step is additionally gated to same-repo PRs (a fork PR still
+# gets full validation, just no auto-commit — its head branch isn't writable).
+permissions:
+  contents: write
+
+jobs:
+  # Pick the tools to test from the diff. Empty output when nothing relevant
+  # changed, so build + browsers are skipped entirely.
+  scope:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      run: ${{ steps.detect.outputs.run }}
+      grep: ${{ steps.detect.outputs.grep }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          filter: blob:none
+
+      - name: Detect added/modified tools
+        id: detect
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            changed=$(git diff --name-only "origin/$BASE_REF...HEAD")
+          else
+            before="$BEFORE_SHA"
+            if [ -z "$before" ] || ! git cat-file -e "${before}^{commit}" 2>/dev/null; then
+              before="HEAD^"
+            fi
+            changed=$(git diff --name-only "$before" HEAD)
+          fi
+          echo "Changed files:"
+          echo "$changed"
+
+          # A change to the spec, the Playwright config, the dependencies (a
+          # rendering lib — naive-ui, unocss, Monaco … — or Playwright/its
+          # browsers can shift output), or this workflow can affect every tool's
+          # render, so validate the whole suite (empty grep). A bump that shifts
+          # existing goldens fails here (never a silent rewrite) — the red is the
+          # signal to refresh via the manual visual-regression-update workflow.
+          if echo "$changed" | grep -qE '^(src/visual-regression\.e2e\.spec\.ts|playwright\.config\.ts|package\.json|pnpm-lock\.yaml|\.github/workflows/visual-regression-goldens\.yml)$'; then
+            echo "Visual harness or dependencies changed → validating the full suite."
+            {
+              echo "run=true"
+              echo "grep="
+            } >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Otherwise, the tool directories that changed and still exist (a
+          # deleted tool has no test to run, so drop it).
+          mapfile -t names < <(echo "$changed" | grep -oE '^src/tools/[^/]+/' | cut -d/ -f3 | sort -u)
+          selected=()
+          for n in "${names[@]:-}"; do
+            [ -n "$n" ] || continue
+            [ -d "src/tools/$n" ] && selected+=("$n")
+          done
+
+          if [ ${#selected[@]} -eq 0 ]; then
+            echo "No added/modified tools → nothing to do."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          pattern=$(IFS='|'; echo "${selected[*]}")
+          echo "Scoped to tools: $pattern"
+          {
+            echo "run=true"
+            echo "grep=$pattern"
+          } >> "$GITHUB_OUTPUT"
+
+  # Single production build, shared with every browser's job. (The app must be
+  # built to render any tool; only the Playwright run is scoped.)
+  build:
+    needs: scope
+    if: needs.scope.outputs.run == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - run: corepack enable
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Cache Vite build
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            node_modules/.vite
+            .vite
+          key: ${{ runner.os }}-vite-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Build app
+        run: pnpm build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
+
+  # Validate + create the scoped tools' goldens, one browser per leg.
+  goldens:
+    needs: [scope, build]
+    if: needs.scope.outputs.run == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
+    env:
+      PROJECT: ${{ matrix.project }}
+      # Empty = whole suite (harness change); otherwise `tool-a|tool-b`.
+      GREP: ${{ needs.scope.outputs.grep }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # Check out the PR head branch (not the detached merge ref) so the commit
+        # step below can push newly created goldens straight back to it.
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+
+      - run: corepack enable
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Get Playwright version
+        id: playwright-version
+        run: echo "PLAYWRIGHT_VERSION=$(node -p "require('./package.json').devDependencies['@playwright/test']")" >> "$GITHUB_OUTPUT"
+
+      - name: Restore Playwright browser cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-24.04-${{ matrix.project }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+
+      - name: Install Playwright browser and system dependencies
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: pnpm exec playwright install --with-deps ${{ matrix.project }}
+        timeout-minutes: 5
+
+      - name: Install Playwright system dependencies only
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: pnpm exec playwright install-deps ${{ matrix.project }}
+        timeout-minutes: 10
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist
+
+      # Validate the scoped tools against their goldens first. In the common case
+      # (an existing tool's golden already matches) this passes and every
+      # recovery step below is skipped — a single run. A failure (a brand-new
+      # tool with no golden, OR a genuine change) falls through to recovery.
+      - name: Validate goldens
+        id: validate
+        continue-on-error: true
+        run: |
+          args=(src/visual-regression.e2e.spec.ts --project="$PROJECT")
+          if [ -n "$GREP" ]; then
+            args+=(--grep "$GREP")
+          fi
+          pnpm exec playwright test "${args[@]}"
+
+      # Only when validation failed. --update-snapshots=missing creates any absent
+      # goldens; it never rewrites an existing one, so a real change is not
+      # masked. (Playwright still exits non-zero on a first-time snapshot
+      # creation — that's why this isn't the gate; the re-validate below is.)
+      - name: Create missing goldens
+        if: steps.validate.outcome == 'failure'
+        run: |
+          args=(src/visual-regression.e2e.spec.ts --project="$PROJECT" --update-snapshots=missing --retries=0)
+          if [ -n "$GREP" ]; then
+            args+=(--grep "$GREP")
+          fi
+          pnpm exec playwright test "${args[@]}" || true
+
+      # Persist only *newly created* goldens (untracked files). An existing golden
+      # is never rewritten here. Same-repo PRs only — a fork head isn't writable.
+      - name: Commit newly created goldens
+        if: steps.validate.outcome == 'failure' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          DIR: src/visual-regression.e2e.spec.ts-snapshots/${{ matrix.project }}
+        run: |
+          new_files=$(git ls-files --others --exclude-standard -- "$DIR")
+          if [ -z "$new_files" ]; then
+            echo "No new ${{ matrix.project }} goldens to commit."
+            exit 0
+          fi
+          echo "New ${{ matrix.project }} goldens:"
+          echo "$new_files"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Stage only the untracked new files, never a modified existing golden.
+          echo "$new_files" | xargs git add --
+          git commit -m "test(e2e): add ${{ matrix.project }} visual goldens for new tools [skip ci]"
+          # The three legs push to the same branch; rebase our snapshot-only
+          # commit onto the latest ref and retry on rejection. Disjoint
+          # subfolders mean the rebase never conflicts.
+          for attempt in 1 2 3 4 5; do
+            if git push origin "HEAD:$BRANCH"; then
+              echo "Pushed ${{ matrix.project }} goldens on attempt $attempt."
+              exit 0
+            fi
+            echo "Push rejected; rebasing onto latest $BRANCH (attempt $attempt)."
+            git pull --rebase origin "$BRANCH"
+          done
+          echo "Failed to push ${{ matrix.project }} goldens after 5 attempts."
+          exit 1
+
+      # The real gate. With the just-created goldens now on disk, re-run the
+      # scoped tests normally: if the original failure was only missing goldens,
+      # this passes (green in the same run); a genuine change to an existing tool
+      # still fails here. Only runs when the first validation failed.
+      - name: Re-validate goldens
+        if: steps.validate.outcome == 'failure'
+        run: |
+          args=(src/visual-regression.e2e.spec.ts --project="$PROJECT")
+          if [ -n "$GREP" ]; then
+            args+=(--grep "$GREP")
+          fi
+          pnpm exec playwright test "${args[@]}"
+
+      # Fallback for fork PRs (whose head branch can't be pushed to): the created
+      # goldens are available as an artifact to commit manually.
+      - name: Upload newly created goldens (fallback if push is skipped)
+        if: steps.validate.outcome == 'failure'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: new-visual-goldens-${{ matrix.project }}
+          path: src/visual-regression.e2e.spec.ts-snapshots/${{ matrix.project }}
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Save Playwright browser cache
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-24.04-${{ matrix.project }}-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}

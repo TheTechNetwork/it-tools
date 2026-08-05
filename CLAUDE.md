@@ -698,22 +698,44 @@ The primary Node version comes from `.nvmrc` (via `setup-node`'s
 `node-version-file`); it is the single source of truth. All `pnpm install`
 steps use `--frozen-lockfile`.
 
+A **changes** job classifies each PR (via `git diff` against the base) into
+three independent flags that gate the heavy jobs, so they run only when their
+inputs change (everything runs on pushes to main and manual dispatch):
+- `app` — app code/tests, `locales/`, `public/`, `scripts/`, deps, build/test
+  config (`vite`/`vitest`/`playwright`/`tsconfig`/`eslint`), or `ci.yml` itself
+  → gates **checks**, **build** and **e2e**;
+- `toolchain` — dependencies + build/test tooling (not workflow files) → gates
+  **node-compat**;
+- `docker` — `Dockerfile`, `docker/`, `.dockerignore`, `ci.yml`, **and
+  dependencies/lockfile/pnpm config** (the image's builder stage runs `pnpm i
+  --frozen-lockfile && pnpm build`, so a dep bump changes the image) → gates
+  **docker-image**.
+
+So a docker-only or workflow-only PR skips the whole app-test path (checks +
+build + e2e); an ordinary tool-code PR skips node-compat and docker-image; and a
+**dependency PR (e.g. Renovate) runs the entire pipeline** — checks, build, e2e,
+node-compat, docker-image, dependency-review, plus the full visual-regression
+suite (see below) — so a green Renovate PR really means green.
+
 Jobs:
 1. **checks**: Lint (ESLint with caching, over `src`, `scripts` and the root
    config files), type check (vue-tsc), unit tests with coverage (Vitest +
    @vitest/coverage-v8). Coverage is scoped to the logic layer (`.vue` files
    are excluded - they are covered by e2e) and enforced by a no-regression
    threshold that auto-ratchets upward. Coverage is added to the job summary
-   and uploaded as an artifact. Runs once on the primary Node version.
-2. **build**: Production build, uploads `dist/` as an artifact.
-3. **e2e**: Playwright tests reusing the `dist/` artifact from **build**.
-   PRs run Chromium only (3 shards); pushes to main run the full
-   Chromium + Firefox + WebKit matrix.
+   and uploaded as an artifact. Runs once on the primary Node version, on PRs
+   with `app` changes (always on push/dispatch).
+2. **build**: Production build, uploads `dist/` as an artifact. Gated like
+   **checks** (`app`), which via `needs: build` also gates the e2e jobs.
+3. **e2e**: Functional Playwright tests reusing the `dist/` artifact from
+   **build** (2 shards). PRs run Chromium only; pushes to main run
+   Chromium + Firefox + WebKit. The visual-regression spec is excluded here and
+   owned by the **visual-regression-goldens** workflow (see below).
 4. **node-compat**: Build + unit tests across the other supported Node versions
    (22/25/26; the primary version from `.nvmrc` is already covered above).
-   Gates PRs only when they touch dependencies, build tooling or workflows
-   (detected by the **toolchain-changes** job); always runs on pushes to main
-   and manual dispatch. Ordinary tool-code PRs skip it.
+   Gates PRs to ones touching dependencies or build tooling (the `changes`
+   job's `toolchain` flag); always runs on pushes to main and manual dispatch.
+   Ordinary tool-code PRs skip it.
 5. **docker-image**: Builds each production image variant (standard nginx,
    rootless nginx-unprivileged, distroless static-web-server; multi-target
    `Dockerfile`) and verifies them in a matrix: the container serves, nginx
@@ -724,7 +746,7 @@ Jobs:
    blocking gate **fails the job on a fixable HIGH/CRITICAL** (`ignore-unfixed`
    keeps un-actionable base-image CVEs from blocking). Needs
    `security-events: write`. Gated to Docker changes (`Dockerfile`, `docker/`,
-   `.dockerignore`) via **toolchain-changes**; always runs on pushes to main.
+   `.dockerignore`) via the `changes` job; always runs on pushes to main.
 6. **dependency-review**: On PRs, `actions/dependency-review-action` fails the
    build when a PR introduces a dependency with a known HIGH/CRITICAL
    vulnerability (comments a summary on failure). Complements Renovate, which
@@ -809,14 +831,50 @@ R2 via the `aws` CLI, writes the manifest). Same `R2_*` secrets; no-ops until
 configured. A `VITE_FIGLET_ASSETS_BASE_URL` env override forces a specific host
 (e.g. same-origin for an offline build).
 
-#### 8. **visual-regression-update.yml** - Visual Golden Refresh
+#### 8. **visual-regression-goldens.yml** - Visual Regression (validate + auto-create)
 
-Manual (`workflow_dispatch`) job that regenerates the visual-regression golden
-snapshots (`src/visual-regression.e2e.spec.ts`) on CI's pinned Chromium and
+The workflow that owns visual regression (`src/visual-regression.e2e.spec.ts`)
+so `ci.yml` doesn't run it. It runs when tool code changes (path-filtered to
+`src/tools/**` plus the spec/config/**deps**/workflow), and a `scope` step reads
+the diff to test **only the added/modified tools** (`--grep`), not the whole
+catalogue — so it stays cheap. (A change to the spec, Playwright config,
+**dependencies** (`package.json`/`pnpm-lock.yaml` — a rendering lib or
+Playwright/browser bump can shift every golden), or the workflow itself
+validates the full suite, since those can affect every tool. A dep bump that
+shifts existing goldens fails here — never a silent rewrite — which is the
+signal to refresh via the manual workflow.)
+The scoped tools run across a per-browser matrix (Chromium + Firefox + WebKit);
+each leg validates, and only if that fails does it create any missing goldens
+(`--update-snapshots=missing`, which never rewrites an existing golden) and
+**re-validate** — that second pass is the gate:
+
+- an **existing** tool's golden is compared normally — a real rendering change
+  **fails** the job, so regressions stay caught pre-merge on all three browsers
+  (refresh it via the manual `visual-regression-update` workflow below);
+- a tool with **no golden yet** (e.g. a brand-new tool) has its golden
+  **created** on the spot; the re-validate then passes, so the check goes green
+  in the same run — no manual dispatch needed. (When the changed tool's golden
+  already exists and matches, the first validation passes and the
+  create/re-validate are skipped — a single run.)
+
+Newly created goldens are committed straight back to the PR branch (only *new*,
+untracked files), with a `[skip ci]` message; disjoint per-browser subfolders +
+a fetch+rebase+retry push loop let the three legs commit concurrently. Same-repo
+PRs only auto-commit (a fork head branch isn't writable — its goldens are
+uploaded as an artifact instead). Needs `contents: write`. Because it's
+path-filtered to tool code, a change to *shared* UI (`src/ui`, `src/components`,
+global styles) does **not** trigger it — refresh broadly with the manual
+workflow after such a change.
+
+#### 8b. **visual-regression-update.yml** - Visual Golden Refresh (manual bulk overwrite)
+
+Manual (`workflow_dispatch`) job that **overwrites** the visual-regression golden
+snapshots on CI's pinned browsers (Chromium + Firefox + WebKit matrix) and
 commits them back to the dispatched branch (with a `[skip ci]` message; also
 uploads them as an artifact in case the branch is protected). Run it after an
-intentional UI change to a covered tool, or when adding new visual cases whose
-goldens must be generated on the CI browser rather than a local one. Needs
+**intentional UI change** to a covered tool, to refresh the goldens the diff
+would otherwise fail on. (New tools no longer need this — the auto workflow above
+creates their missing goldens; this is only for *rewriting* existing ones.) Needs
 `contents: write`.
 
 > Static analysis (SAST) runs via GitHub code-scanning **default setup**
