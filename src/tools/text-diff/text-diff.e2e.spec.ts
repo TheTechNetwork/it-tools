@@ -14,4 +14,17 @@ test.describe('Tool - Text diff', () => {
     // the production bundle without deep editor interaction.
     await expect(page.locator('.monaco-diff-editor')).toBeVisible();
   });
+
+  test('Computes and renders the diff (editor worker is wired up)', async ({ page }) => {
+    // The editor loads two different default models ('original text' vs
+    // 'modified text') and Monaco computes the diff in a web worker. If no
+    // worker is configured, the panes still mount but no diff is ever computed,
+    // so no change decorations render. Asserting a char-level diff decoration
+    // therefore proves the worker actually ran end to end — this fails if the
+    // MonacoEnvironment worker wiring regresses.
+    await expect(page.locator('.monaco-diff-editor').first()).toBeVisible();
+    await expect(
+      page.locator('.monaco-diff-editor .char-insert, .monaco-diff-editor .char-delete').first(),
+    ).toBeAttached({ timeout: 15_000 });
+  });
 });

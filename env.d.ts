@@ -2,6 +2,15 @@
 /// <reference types="vite-svg-loader" />
 /// <reference types="vite-plugin-pwa/vue" />
 
+// monaco-editor's `exports` map exposes subpaths for runtime (`./*` ->
+// `./esm/vs/*.js`) but declares no `types` condition for them, so the slim
+// standalone editor API entry (used by c-diff-editor to avoid bundling all
+// language workers) has no types. Re-export the full package's types, which are
+// a superset that includes the `editor` namespace the diff editor uses.
+declare module 'monaco-editor/editor/editor.api' {
+  export * from 'monaco-editor';
+}
+
 interface ImportMetaEnv {
   PACKAGE_VERSION: string;
   GIT_SHORT_SHA: string;

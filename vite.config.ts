@@ -226,6 +226,10 @@ export default defineConfig({
         // Browser-only Node global shims (global/process); the guarded branches
         // never execute under Node/jsdom where those globals already exist.
         'src/polyfills/**',
+        // Browser-only Monaco web-worker wiring (sets self.MonacoEnvironment and
+        // instantiates a Worker); not meaningfully unit-testable, exercised by
+        // the text-diff e2e.
+        'src/ui/c-diff-editor/monaco-environment.ts',
         // Browser/canvas-only PDF rendering (pdf.js), exercised by e2e
         'src/tools/ocr-image-to-text/ocr-image-to-text.pdf.ts',
         // Trivial browser Map-method shim for pdf.js (branch depends on the
