@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import * as monaco from 'monaco-editor';
+// Import the slim standalone editor API instead of the full `monaco-editor`
+// entry. The text-diff tool only uses a plain-text ('txt') diff editor, so the
+// bundled language contributions and their large web-worker chunks (ts.worker
+// ~6.9 MB, css/html/json workers) are dead weight. editor.api provides
+// createDiffEditor / createModel / defineTheme / setTheme with no languages.
+// Runtime worker behaviour is unchanged: no MonacoEnvironment is configured
+// here (there was none before either), so this only removes unused bundles.
+import * as monaco from 'monaco-editor/editor/editor.api';
 import { useStyleStore } from '@/stores/style.store';
 
 const props = withDefaults(defineProps<{ options?: monaco.editor.IDiffEditorOptions }>(), { options: () => ({}) });
