@@ -1,18 +1,21 @@
 # Main CI pipeline: static checks, unit tests with coverage, a single shared
 # production build, and E2E tests that reuse that build.
 #
-# Speed/thoroughness trade-offs:
+# Speed/thoroughness trade-offs (a `changes` job classifies each PR so heavy
+# jobs run only when their inputs change; everything runs on push/dispatch):
 # - Lint, typecheck and unit tests run once on the primary Node version
-#   (their results do not vary across Node versions).
+#   (their results do not vary across Node versions), and only when a PR touches
+#   app code/tests/build config. Docker-only, workflow-only and similar non-app
+#   PRs skip them (and the build + E2E below).
 # - The production build runs once and its dist/ artifact is shared with E2E,
 #   instead of each workflow rebuilding.
 # - PRs run the functional E2E suite on Chromium only (2 shards); pushes to main
 #   run it on all three browsers. Visual regression is owned by a separate
 #   workflow (visual-regression-goldens.yml), which validates goldens on all
 #   three browsers and auto-creates missing ones, so it's excluded here.
-# - Node compatibility (22/25/26 build + test) gates PRs only when they touch
-#   dependencies, build tooling or workflows; it always runs on pushes to main
-#   and on manual dispatch. Ordinary tool-code PRs stay off that critical path.
+# - Node compatibility (22/25/26 build + test) gates PRs to ones touching
+#   dependencies or build tooling; it always runs on pushes to main and on
+#   manual dispatch. Ordinary tool-code PRs stay off that critical path.
 
 name: ci
 
@@ -41,8 +44,14 @@ permissions:
 
 jobs:
   # Lint, typecheck and unit tests (with coverage) - run once on the primary
-  # Node version since their results are Node-version independent.
+  # Node version since their results are Node-version independent. Gated to PRs
+  # that touch app code/tests/build config (the `changes` job); docker-only,
+  # workflow-only and similar non-app PRs skip it. Always runs on push/dispatch.
   checks:
+    needs: changes
+    if: >-
+      always() &&
+      (github.event_name != 'pull_request' || needs.changes.outputs.app == 'true')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -116,8 +125,13 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
-  # Single production build, shared with the E2E jobs below.
+  # Single production build, shared with the E2E jobs below. Gated like `checks`
+  # so non-app PRs skip it (and, via `needs: build`, the E2E jobs too).
   build:
+    needs: changes
+    if: >-
+      always() &&
+      (github.event_name != 'pull_request' || needs.changes.outputs.app == 'true')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
@@ -244,7 +258,9 @@ jobs:
   # fragment per job.
   e2e-report:
     needs: e2e
-    if: ${{ !cancelled() }}
+    # Merge whatever shards ran; skip entirely when e2e itself was skipped
+    # (non-app PR) so there are no absent blob reports to merge.
+    if: ${{ !cancelled() && needs.e2e.result != 'skipped' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -279,17 +295,24 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-  # Detect whether a PR touches anything that could affect Node-version
-  # compatibility (dependencies, build tooling, workflow definitions) or the
-  # Docker image (Dockerfile, docker/, .dockerignore). Ordinary tool-code
-  # changes cannot break either if they pass on the primary Node version, so the
-  # compat matrix and the Docker image test only run when their inputs change.
-  toolchain-changes:
+  # Classify what a PR touches so the heavy jobs run only when their inputs
+  # change. Three independent flags:
+  #   - app:       app code/tests/build+test config/deps/locales/public → the
+  #                lint+typecheck+unit `checks`, the `build`, and the E2E jobs.
+  #   - toolchain: dependencies + build/test tooling → the Node-compat matrix.
+  #                Deliberately NOT workflow files: a workflow edit can't change
+  #                Node compatibility.
+  #   - docker:    Dockerfile/docker//.dockerignore (+ ci.yml, which defines the
+  #                image test) → the Docker image build+scan.
+  # Ordinary tool-code PRs thus skip node-compat and docker-image; non-app PRs
+  # (docker-only, workflow-only, …) additionally skip checks/build/e2e.
+  changes:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
-      changed: ${{ steps.filter.outputs.changed }}
+      app: ${{ steps.filter.outputs.app }}
+      toolchain: ${{ steps.filter.outputs.toolchain }}
       docker: ${{ steps.filter.outputs.docker }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -297,31 +320,47 @@ jobs:
           fetch-depth: 0
           filter: blob:none
 
-      - name: Detect toolchain- and docker-sensitive changes
+      - name: Classify changed files
         id: filter
+        env:
+          BASE_REF: ${{ github.base_ref }}
         run: |
-          changed_files=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
-          if grep -qE '^(package\.json|pnpm-lock\.yaml|\.npmrc|vite\.config\.ts|vitest\.setup\.ts|tsconfig[^/]*\.json|\.github/workflows/)' <<<"$changed_files"; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
+          changed_files=$(git diff --name-only "origin/$BASE_REF...HEAD")
+          echo "Changed files:"; echo "$changed_files"
+
+          emit() { echo "$1=$2" >> "$GITHUB_OUTPUT"; echo "$1=$2"; }
+
+          # Anything that affects the built app, unit/e2e tests, lint or types.
+          # ci.yml is included so edits to the pipeline itself get a full run.
+          if grep -qE '^(src/|locales/|public/|scripts/|index\.html|package\.json|pnpm-lock\.yaml|\.npmrc|\.nvmrc|vite\.config\.ts|vitest\.setup\.ts|playwright\.config\.ts|uno\.config\.ts|tsconfig[^/]*\.json|eslint\.config\.mjs|\.github/workflows/ci\.yml)' <<<"$changed_files"; then
+            emit app true
           else
-            echo "changed=false" >> "$GITHUB_OUTPUT"
+            emit app false
           fi
-          if grep -qE '^(Dockerfile|\.dockerignore|docker/|\.github/workflows/ci\.yml)' <<<"$changed_files"; then
-            echo "docker=true" >> "$GITHUB_OUTPUT"
+
+          # Dependencies + build/test tooling (no workflows).
+          if grep -qE '^(package\.json|pnpm-lock\.yaml|\.npmrc|\.nvmrc|vite\.config\.ts|vitest\.setup\.ts|tsconfig[^/]*\.json)' <<<"$changed_files"; then
+            emit toolchain true
           else
-            echo "docker=false" >> "$GITHUB_OUTPUT"
+            emit toolchain false
+          fi
+
+          if grep -qE '^(Dockerfile|\.dockerignore|docker/|\.github/workflows/ci\.yml)' <<<"$changed_files"; then
+            emit docker true
+          else
+            emit docker false
           fi
 
   # Node compatibility: build + unit tests across other supported Node
   # versions. The primary version (from .nvmrc) is already covered above. Runs on
-  # pushes to main and manual dispatch, and gates PRs only when they touch
-  # dependencies, build tooling or workflows - the only changes that can
-  # realistically break other Node versions.
+  # pushes to main and manual dispatch, and gates PRs to ones touching
+  # dependencies or build tooling - the only changes that can realistically
+  # break other Node versions.
   node-compat:
-    needs: toolchain-changes
+    needs: changes
     if: >-
       always() &&
-      (github.event_name != 'pull_request' || needs.toolchain-changes.outputs.changed == 'true')
+      (github.event_name != 'pull_request' || needs.changes.outputs.toolchain == 'true')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
@@ -357,13 +396,13 @@ jobs:
   # each image with Trivy: findings are uploaded to GitHub code scanning (the
   # Security tab) and a blocking gate fails the job on a fixable HIGH/CRITICAL
   # (ignore-unfixed keeps un-actionable base-image CVEs from blocking). Gated to
-  # Docker changes (via toolchain-changes) so ordinary PRs skip the image
+  # Docker changes (via the `changes` job) so ordinary PRs skip the image
   # builds; always on main.
   docker-image:
-    needs: toolchain-changes
+    needs: changes
     if: >-
       always() &&
-      (github.event_name != 'pull_request' || needs.toolchain-changes.outputs.docker == 'true')
+      (github.event_name != 'pull_request' || needs.changes.outputs.docker == 'true')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     # security-events: write lets the Trivy SARIF upload reach code scanning.

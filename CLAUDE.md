@@ -698,23 +698,39 @@ The primary Node version comes from `.nvmrc` (via `setup-node`'s
 `node-version-file`); it is the single source of truth. All `pnpm install`
 steps use `--frozen-lockfile`.
 
+A **changes** job classifies each PR (via `git diff` against the base) into
+three independent flags that gate the heavy jobs, so they run only when their
+inputs change (everything runs on pushes to main and manual dispatch):
+- `app` — app code/tests, `locales/`, `public/`, `scripts/`, deps, build/test
+  config (`vite`/`vitest`/`playwright`/`tsconfig`/`eslint`), or `ci.yml` itself
+  → gates **checks**, **build** and **e2e**;
+- `toolchain` — dependencies + build/test tooling (not workflow files) → gates
+  **node-compat**;
+- `docker` — `Dockerfile`, `docker/`, `.dockerignore` (+ `ci.yml`) → gates
+  **docker-image**.
+
+So a docker-only or workflow-only PR skips the whole app-test path (checks +
+build + e2e); an ordinary tool-code PR skips node-compat and docker-image.
+
 Jobs:
 1. **checks**: Lint (ESLint with caching, over `src`, `scripts` and the root
    config files), type check (vue-tsc), unit tests with coverage (Vitest +
    @vitest/coverage-v8). Coverage is scoped to the logic layer (`.vue` files
    are excluded - they are covered by e2e) and enforced by a no-regression
    threshold that auto-ratchets upward. Coverage is added to the job summary
-   and uploaded as an artifact. Runs once on the primary Node version.
-2. **build**: Production build, uploads `dist/` as an artifact.
+   and uploaded as an artifact. Runs once on the primary Node version, on PRs
+   with `app` changes (always on push/dispatch).
+2. **build**: Production build, uploads `dist/` as an artifact. Gated like
+   **checks** (`app`), which via `needs: build` also gates the e2e jobs.
 3. **e2e**: Functional Playwright tests reusing the `dist/` artifact from
    **build** (2 shards). PRs run Chromium only; pushes to main run
    Chromium + Firefox + WebKit. The visual-regression spec is excluded here and
    owned by the **visual-regression-goldens** workflow (see below).
 4. **node-compat**: Build + unit tests across the other supported Node versions
    (22/25/26; the primary version from `.nvmrc` is already covered above).
-   Gates PRs only when they touch dependencies, build tooling or workflows
-   (detected by the **toolchain-changes** job); always runs on pushes to main
-   and manual dispatch. Ordinary tool-code PRs skip it.
+   Gates PRs to ones touching dependencies or build tooling (the `changes`
+   job's `toolchain` flag); always runs on pushes to main and manual dispatch.
+   Ordinary tool-code PRs skip it.
 5. **docker-image**: Builds each production image variant (standard nginx,
    rootless nginx-unprivileged, distroless static-web-server; multi-target
    `Dockerfile`) and verifies them in a matrix: the container serves, nginx
@@ -725,7 +741,7 @@ Jobs:
    blocking gate **fails the job on a fixable HIGH/CRITICAL** (`ignore-unfixed`
    keeps un-actionable base-image CVEs from blocking). Needs
    `security-events: write`. Gated to Docker changes (`Dockerfile`, `docker/`,
-   `.dockerignore`) via **toolchain-changes**; always runs on pushes to main.
+   `.dockerignore`) via the `changes` job; always runs on pushes to main.
 6. **dependency-review**: On PRs, `actions/dependency-review-action` fails the
    build when a PR introduces a dependency with a known HIGH/CRITICAL
    vulnerability (comments a summary on failure). Complements Renovate, which
