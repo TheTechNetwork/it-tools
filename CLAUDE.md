@@ -813,27 +813,33 @@ configured. A `VITE_FIGLET_ASSETS_BASE_URL` env override forces a specific host
 #### 8. **visual-regression-goldens.yml** - Visual Regression (validate + auto-create)
 
 The workflow that owns visual regression (`src/visual-regression.e2e.spec.ts`)
-end to end, so `ci.yml` doesn't run it. Runs on PRs and pushes to main, one
-per-browser matrix leg (Chromium + Firefox + WebKit). Each leg validates the
-goldens, and only if that fails does it create any missing ones
+so `ci.yml` doesn't run it. It runs **only when tool code changes** (path-filtered
+to `src/tools/**` plus the spec/config/workflow), and a `scope` step reads the
+diff to test **only the added/modified tools** (`--grep`), not the whole
+catalogue — so it stays cheap. (A change to the spec, Playwright config, or the
+workflow itself validates the full suite, since those can affect every tool.)
+The scoped tools run across a per-browser matrix (Chromium + Firefox + WebKit);
+each leg validates, and only if that fails does it create any missing goldens
 (`--update-snapshots=missing`, which never rewrites an existing golden) and
 **re-validate** — that second pass is the gate:
 
-- **existing** goldens are compared normally — a real rendering change **fails**
-  the job, so regressions stay caught pre-merge on all three browsers;
+- an **existing** tool's golden is compared normally — a real rendering change
+  **fails** the job, so regressions stay caught pre-merge on all three browsers
+  (refresh it via the manual `visual-regression-update` workflow below);
 - a tool with **no golden yet** (e.g. a brand-new tool) has its golden
   **created** on the spot; the re-validate then passes, so the check goes green
-  in the same run — no manual dispatch needed. (The common case, where every
-  golden already exists and nothing regressed, passes on the first validation
-  and skips the create/re-validate entirely — a single run.)
+  in the same run — no manual dispatch needed. (When the changed tool's golden
+  already exists and matches, the first validation passes and the
+  create/re-validate are skipped — a single run.)
 
-Newly created goldens are then committed straight back to the PR branch (only
-*new*, untracked files — an existing golden is never rewritten here), with a
-`[skip ci]` message; disjoint per-browser subfolders + a fetch+rebase+retry
-push loop let the three legs commit concurrently. Same-repo PRs only auto-commit
-(a fork head branch isn't writable — its goldens are uploaded as an artifact
-instead). Needs `contents: write`. Deliberately updating a *changed* golden
-after an intentional UI change stays the job of the manual workflow below.
+Newly created goldens are committed straight back to the PR branch (only *new*,
+untracked files), with a `[skip ci]` message; disjoint per-browser subfolders +
+a fetch+rebase+retry push loop let the three legs commit concurrently. Same-repo
+PRs only auto-commit (a fork head branch isn't writable — its goldens are
+uploaded as an artifact instead). Needs `contents: write`. Because it's
+path-filtered to tool code, a change to *shared* UI (`src/ui`, `src/components`,
+global styles) does **not** trigger it — refresh broadly with the manual
+workflow after such a change.
 
 #### 8b. **visual-regression-update.yml** - Visual Golden Refresh (manual bulk overwrite)
 
