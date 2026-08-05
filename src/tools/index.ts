@@ -96,6 +96,7 @@ import { tool as urlParser } from './url-parser';
 import { tool as userAgentParser } from './user-agent-parser';
 import { tool as uuidGenerator } from './uuid-generator';
 import { tool as wifiQrCodeGenerator } from './wifi-qr-code-generator';
+import { tool as x509CertificateParser } from './x509-certificate-parser';
 import { tool as xmlFormatter } from './xml-formatter';
 import { tool as xmlToJson } from './xml-to-json';
 import { tool as yamlToJson } from './yaml-to-json-converter';
@@ -105,7 +106,7 @@ import { tool as yamlViewer } from './yaml-viewer';
 export const toolsByCategory: ToolCategory[] = [
   {
     name: 'Crypto',
-    components: [tokenGenerator, hashText, bcrypt, uuidGenerator, ulidGenerator, cypher, bip39, hmacGenerator, rsaKeyPairGenerator, passwordStrengthAnalyser, pdfSignatureChecker],
+    components: [tokenGenerator, hashText, bcrypt, uuidGenerator, ulidGenerator, cypher, bip39, hmacGenerator, rsaKeyPairGenerator, passwordStrengthAnalyser, pdfSignatureChecker, x509CertificateParser],
   },
   {
     name: 'Converter',

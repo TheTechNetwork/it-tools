@@ -1,39 +1,39 @@
 pwa:
-  newContent: 'A new version is available.'
-  reload: 'Reload'
-  dismiss: 'Dismiss'
-  offlineReady: 'App ready to work offline.'
+  newContent: A new version is available.
+  reload: Reload
+  dismiss: Dismiss
+  offlineReady: App ready to work offline.
 home:
   categories:
     newestTools: Newest tools
-    favoriteTools: 'Your favorite tools'
-    allTools: 'All the tools'
-    favoritesDndToolTip: 'Drag and drop to reorder favorites'
-  subtitle: 'Handy tools for developers'
-  toggleMenu: 'Toggle menu'
-  skipToContent: 'Skip to content'
-  toolsNavigation: 'Tools navigation'
+    favoriteTools: Your favorite tools
+    allTools: All the tools
+    favoritesDndToolTip: Drag and drop to reorder favorites
+  subtitle: Handy tools for developers
+  toggleMenu: Toggle menu
+  skipToContent: Skip to content
+  toolsNavigation: Tools navigation
   home: Home
-  uiLib: 'UI Lib'
-  support: 'Support IT-Tools development'
-  buyMeACoffee: 'Buy me a coffee'
+  uiLib: UI Lib
+  support: Support IT-Tools development
+  buyMeACoffee: Buy me a coffee
   follow:
-    title: 'You like it-tools?'
-    p1: 'Give us a star on'
-    githubRepository: 'IT-Tools GitHub repository'
-    p2: 'or follow us on'
-    twitterXAccount: 'IT-Tools X account'
-    thankYou: 'Thank you!'
+    title: You like it-tools?
+    p1: Give us a star on
+    githubRepository: IT-Tools GitHub repository
+    p2: or follow us on
+    twitterXAccount: IT-Tools X account
+    thankYou: Thank you!
   nav:
-    github: 'GitHub repository'
-    githubRepository: 'IT-Tools GitHub repository'
-    twitterX: 'X account'
-    twitterXAccount: 'IT Tools X account'
-    about: 'About  IT-Tools'
-    aboutLabel: 'About'
-    darkMode: 'Dark mode'
-    lightMode: 'Light mode'
-    mode: 'Toggle dark/light mode'
+    github: GitHub repository
+    githubRepository: IT-Tools GitHub repository
+    twitterX: X account
+    twitterXAccount: IT Tools X account
+    about: About  IT-Tools
+    aboutLabel: About
+    darkMode: Dark mode
+    lightMode: Light mode
+    mode: Toggle dark/light mode
 about:
   content: >
     # About IT-Tools
@@ -53,13 +53,13 @@ about:
     And if you found a bug, or something doesn't work as expected, please file a bug report in the [issues section](https://github.com/CorentinTh/it-tools/issues/new/choose) in the GitHub repository.
 
 404:
-  notFound: '404 Not Found'
+  notFound: 404 Not Found
   sorry: 'Sorry, this page does not seem to exist'
   maybe: 'Maybe the cache is doing tricky things, try force-refreshing?'
-  backHome: 'Back home'
+  backHome: Back home
 favoriteButton:
-  remove: 'Remove from favorites'
-  add: 'Add to favorites'
+  remove: Remove from favorites
+  add: Add to favorites
 toolCard:
   new: New
 search:
@@ -69,7 +69,7 @@ formatTransformer:
   download: Download
 tools:
   categories:
-    favorite-tools: 'Your favorite tools'
+    favorite-tools: Your favorite tools
     crypto: Crypto
     converter: Converter
     web: Web
@@ -110,7 +110,7 @@ tools:
     numbers: Numbers (123...)
     symbols: Symbols (!-;...)
     length: Length
-    tokenPlaceholder: 'The token...'
+    tokenPlaceholder: The token...
     copied: Token copied to the clipboard
     button:
       copy: Copy
@@ -153,9 +153,9 @@ tools:
   json-to-csv:
     title: JSON to CSV
     description: Convert JSON to CSV with automatic header detection.
-    inputLabel: 'Your raw JSON'
-    inputPlaceholder: 'Paste your raw JSON here...'
-    outputLabel: 'CSV version of your JSON'
+    inputLabel: Your raw JSON
+    inputPlaceholder: Paste your raw JSON here...
+    outputLabel: CSV version of your JSON
 
   camera-recorder:
     title: Camera recorder
@@ -216,6 +216,37 @@ tools:
     cmykPlaceholder: e.g. cmyk(0, 100%, 100%, 0)
     namePlaceholder: e.g. red
 
+  x509-certificate-parser:
+    title: X.509 certificate parser
+    description: Parse and decode an X.509 certificate (PEM) to inspect its subject, issuer, validity, extensions, public key and fingerprints.
+    inputLabel: PEM certificate
+    inputPlaceholder: Paste your PEM certificate here (-----BEGIN CERTIFICATE-----)...
+    parseError: Could not parse the certificate. Make sure it is a valid PEM-encoded X.509 certificate.
+    subject: Subject
+    issuer: Issuer
+    validity: Validity
+    subjectAltNames: Subject alternative names
+    details: Details
+    fingerprints: Fingerprints
+    commonName: Common name (CN)
+    organization: Organization (O)
+    organizationalUnit: Organizational unit (OU)
+    locality: Locality (L)
+    state: State / province (ST)
+    country: Country (C)
+    notBefore: Not before
+    notAfter: Not after
+    valid: Valid
+    expired: Expired
+    notYetValid: Not yet valid
+    version: Version
+    serialNumber: Serial number
+    signatureAlgorithm: Signature algorithm
+    publicKey: Public key
+    isCa: Certificate authority
+    selfSigned: Self-signed
+    yes: Yes
+    no: No
   bcrypt:
     title: Bcrypt
     description: Hash and compare text string using bcrypt. Bcrypt is a password-hashing function based on the Blowfish cipher.
@@ -234,8 +265,8 @@ tools:
       hashLabel: 'Your hash: '
       hashPlaceholder: Your hash to compare...
       doTheyMatch: 'Do they match ? '
-      matchYes: 'Yes'
-      matchNo: 'No'
+      matchYes: Yes
+      matchNo: No
 
   crontab-generator:
     title: Crontab generator
@@ -470,9 +501,9 @@ tools:
   list-converter:
     title: List converter
     description: This tool can process column-based data and apply various changes (transpose, add prefix and suffix, reverse list, sort list, lowercase values, truncate values) to each row.
-    inputLabel: 'Your input data'
-    inputPlaceholder: 'Paste your input data here...'
-    outputLabel: 'Your transformed data'
+    inputLabel: Your input data
+    inputPlaceholder: Paste your input data here...
+    outputLabel: Your transformed data
 
   base64-string-converter:
     title: Base64 string encoder/decoder
@@ -506,9 +537,9 @@ tools:
   toml-to-yaml:
     title: TOML to YAML
     description: Parse and convert TOML to YAML.
-    inputLabel: 'Your TOML'
-    inputPlaceholder: 'Paste your TOML here...'
-    outputLabel: 'YAML from your TOML'
+    inputLabel: Your TOML
+    inputPlaceholder: Paste your TOML here...
+    outputLabel: YAML from your TOML
 
   math-evaluator:
     title: Math evaluator
@@ -519,9 +550,9 @@ tools:
   json-to-yaml-converter:
     title: JSON to YAML converter
     description: Simply convert JSON to YAML with this online live converter.
-    inputLabel: 'Your JSON'
-    inputPlaceholder: 'Paste your JSON here...'
-    outputLabel: 'YAML from your JSON'
+    inputLabel: Your JSON
+    inputPlaceholder: Paste your JSON here...
+    outputLabel: YAML from your JSON
 
   url-parser:
     title: URL parser
@@ -680,9 +711,9 @@ tools:
   toml-to-json:
     title: TOML to JSON
     description: Parse and convert TOML to JSON.
-    inputLabel: 'Your TOML'
-    inputPlaceholder: 'Paste your TOML here...'
-    outputLabel: 'JSON from your TOML'
+    inputLabel: Your TOML
+    inputPlaceholder: Paste your TOML here...
+    outputLabel: JSON from your TOML
 
   lorem-ipsum-generator:
     title: Lorem ipsum generator
@@ -732,9 +763,9 @@ tools:
   xml-formatter:
     title: XML formatter
     description: Prettify your XML string into a friendly, human-readable format.
-    inputLabel: 'Your XML'
-    inputPlaceholder: 'Paste your XML here...'
-    outputLabel: 'Formatted XML from your XML'
+    inputLabel: Your XML
+    inputPlaceholder: Paste your XML here...
+    outputLabel: Formatted XML from your XML
 
   temperature-converter:
     title: Temperature converter
@@ -792,9 +823,9 @@ tools:
   yaml-to-toml:
     title: YAML to TOML
     description: Parse and convert YAML to TOML.
-    inputLabel: 'Your YAML'
-    inputPlaceholder: 'Paste your YAML here...'
-    outputLabel: 'TOML from your YAML'
+    inputLabel: Your YAML
+    inputPlaceholder: Paste your YAML here...
+    outputLabel: TOML from your YAML
 
   mac-address-generator:
     title: MAC address generator
@@ -920,9 +951,9 @@ tools:
   json-to-toml:
     title: JSON to TOML
     description: Parse and convert JSON to TOML.
-    inputLabel: 'Your JSON'
-    inputPlaceholder: 'Paste your JSON here...'
-    outputLabel: 'TOML from your JSON'
+    inputLabel: Your JSON
+    inputPlaceholder: Paste your JSON here...
+    outputLabel: TOML from your JSON
 
   device-information:
     title: Device information
@@ -969,9 +1000,9 @@ tools:
   json-minify:
     title: JSON minify
     description: Minify and compress your JSON by removing unnecessary whitespace.
-    inputLabel: 'Your raw JSON'
-    inputPlaceholder: 'Paste your raw JSON here...'
-    outputLabel: 'Minified version of your JSON'
+    inputLabel: Your raw JSON
+    inputPlaceholder: Paste your raw JSON here...
+    outputLabel: Minified version of your JSON
 
   ulid-generator:
     title: ULID generator
@@ -1017,9 +1048,9 @@ tools:
   yaml-to-json-converter:
     title: YAML to JSON converter
     description: Simply convert YAML to JSON with this online live converter.
-    inputLabel: 'Your YAML'
-    inputPlaceholder: 'Paste your yaml here...'
-    outputLabel: 'JSON from your YAML'
+    inputLabel: Your YAML
+    inputPlaceholder: Paste your yaml here...
+    outputLabel: JSON from your YAML
 
   uuid-generator:
     title: UUIDs generator
@@ -1256,16 +1287,16 @@ tools:
   json-to-typescript:
     title: JSON to TypeScript
     description: 'Generate TypeScript interfaces from a JSON object or array, with nested types automatically extracted.'
-    inputLabel: 'Your JSON'
-    inputPlaceholder: 'Paste your JSON here...'
-    outputLabel: 'TypeScript interfaces'
+    inputLabel: Your JSON
+    inputPlaceholder: Paste your JSON here...
+    outputLabel: TypeScript interfaces
 
   csv-to-json:
     title: CSV to JSON
     description: 'Convert CSV (comma, semicolon or any delimiter) to JSON, with proper handling of quoted fields, escaped quotes and embedded newlines.'
-    inputLabel: 'Your CSV'
-    inputPlaceholder: 'Paste your CSV here...'
-    outputLabel: 'JSON from your CSV'
+    inputLabel: Your CSV
+    inputPlaceholder: Paste your CSV here...
+    outputLabel: JSON from your CSV
     delimiter: Delimiter
     delimiterPlaceholder: ','
     header: First row is a header
@@ -1282,9 +1313,9 @@ tools:
   html-to-markdown:
     title: HTML to Markdown
     description: 'Convert HTML to clean Markdown, with headings, links, lists, emphasis and fenced code blocks.'
-    inputLabel: 'Your HTML'
-    inputPlaceholder: 'Paste your HTML here...'
-    outputLabel: 'Markdown from your HTML'
+    inputLabel: Your HTML
+    inputPlaceholder: Paste your HTML here...
+    outputLabel: Markdown from your HTML
 
   string-escape:
     title: String escape / unescape
@@ -1328,7 +1359,7 @@ tools:
 
   markdown-toc-generator:
     title: Markdown TOC generator
-    description: 'Generate a nested table of contents with GitHub-style anchor links from the headings of a Markdown document.'
+    description: Generate a nested table of contents with GitHub-style anchor links from the headings of a Markdown document.
     bulletDash: Dash (-)
     bulletAsterisk: Asterisk (*)
     bulletOrdered: Ordered (1.)
@@ -1345,16 +1376,16 @@ tools:
   json-sort-keys:
     title: JSON sort keys
     description: 'Recursively sort the keys of a JSON object to produce a canonical, diff-friendly output (array order is preserved).'
-    inputLabel: 'Your JSON'
-    inputPlaceholder: 'Paste your JSON here...'
-    outputLabel: 'JSON with sorted keys'
+    inputLabel: Your JSON
+    inputPlaceholder: Paste your JSON here...
+    outputLabel: JSON with sorted keys
     keyOrder: Key order
     ascending: Ascending (A→Z)
     descending: Descending (Z→A)
 
   ascii-text-drawer:
     title: ASCII Art Text Generator
-    description: 'Create ASCII art text with many fonts and styles.'
+    description: Create ASCII art text with many fonts and styles.
     textLabel: 'Your text:'
     textPlaceholder: Your text to draw
     fontLabel: 'Font:'
@@ -1367,7 +1398,7 @@ tools:
 
   email-normalizer:
     title: Email normalizer
-    description: 'Normalize email addresses to a standard format for easier comparison. Useful for deduplication and data cleaning.'
+    description: Normalize email addresses to a standard format for easier comparison. Useful for deduplication and data cleaning.
     rawLabel: 'Raw emails to normalize:'
     rawPlaceholder: Put your emails here (one per line)...
     normalizedLabel: 'Normalized emails:'
@@ -1378,14 +1409,14 @@ tools:
 
   json-to-xml:
     title: JSON to XML
-    description: 'Convert JSON to XML'
-    inputLabel: 'Your JSON content'
-    inputPlaceholder: 'Paste your JSON content here...'
-    outputLabel: 'Converted XML'
+    description: Convert JSON to XML
+    inputLabel: Your JSON content
+    inputPlaceholder: Paste your JSON content here...
+    outputLabel: Converted XML
 
   markdown-to-html:
     title: Markdown to HTML
-    description: 'Convert Markdown to Html and allow to print (as PDF)'
+    description: Convert Markdown to Html and allow to print (as PDF)
     input:
       placeholder: Your Markdown content...
       label: 'Your Markdown to convert:'
@@ -1441,11 +1472,11 @@ tools:
 
   regex-memo:
     title: Regex cheatsheet
-    description: 'Javascript Regex/Regular Expression cheatsheet'
+    description: Javascript Regex/Regular Expression cheatsheet
 
   regex-tester:
     title: Regex Tester
-    description: 'Test your regular expressions with sample text.'
+    description: Test your regular expressions with sample text.
     invalidRegex: Invalid regex
     regexTitle: Regex
     regexToTest: 'Regex to test:'
@@ -1478,7 +1509,7 @@ tools:
 
   safelink-decoder:
     title: Outlook Safelink decoder
-    description: 'Decode Outlook SafeLink links'
+    description: Decode Outlook SafeLink links
     input:
       placeholder: Your input Outlook SafeLink Url...
       label: 'Your input Outlook SafeLink Url:'
@@ -1487,7 +1518,7 @@ tools:
 
   xml-to-json:
     title: XML to JSON
-    description: 'Convert XML to JSON'
-    inputLabel: 'Your XML content'
-    inputPlaceholder: 'Paste your XML content here...'
-    outputLabel: 'Converted JSON'
+    description: Convert XML to JSON
+    inputLabel: Your XML content
+    inputPlaceholder: Paste your XML content here...
+    outputLabel: Converted JSON
