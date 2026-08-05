@@ -4,10 +4,11 @@
 // bundled language contributions and their large web-worker chunks (ts.worker
 // ~6.9 MB, css/html/json workers) are dead weight. editor.api provides
 // createDiffEditor / createModel / defineTheme / setTheme with no languages.
-// Runtime worker behaviour is unchanged: no MonacoEnvironment is configured
-// here (there was none before either), so this only removes unused bundles.
 import * as monaco from 'monaco-editor/editor/editor.api';
 import { useStyleStore } from '@/stores/style.store';
+// Configure the Monaco editor web worker (side-effect import) before any editor
+// is created — without it the diff never computes. See monaco-environment.ts.
+import './monaco-environment';
 
 const props = withDefaults(defineProps<{ options?: monaco.editor.IDiffEditorOptions }>(), { options: () => ({}) });
 const { options } = toRefs(props);
