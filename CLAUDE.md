@@ -814,14 +814,18 @@ configured. A `VITE_FIGLET_ASSETS_BASE_URL` env override forces a specific host
 
 The workflow that owns visual regression (`src/visual-regression.e2e.spec.ts`)
 end to end, so `ci.yml` doesn't run it. Runs on PRs and pushes to main, one
-per-browser matrix leg (Chromium + Firefox + WebKit), each using Playwright's
-`--update-snapshots=missing`:
+per-browser matrix leg (Chromium + Firefox + WebKit). Each leg validates the
+goldens, and only if that fails does it create any missing ones
+(`--update-snapshots=missing`, which never rewrites an existing golden) and
+**re-validate** — that second pass is the gate:
 
 - **existing** goldens are compared normally — a real rendering change **fails**
   the job, so regressions stay caught pre-merge on all three browsers;
 - a tool with **no golden yet** (e.g. a brand-new tool) has its golden
-  **created** on the spot and is *not* treated as a failure, so the check goes
-  green in the same run — no manual dispatch needed.
+  **created** on the spot; the re-validate then passes, so the check goes green
+  in the same run — no manual dispatch needed. (The common case, where every
+  golden already exists and nothing regressed, passes on the first validation
+  and skips the create/re-validate entirely — a single run.)
 
 Newly created goldens are then committed straight back to the PR branch (only
 *new*, untracked files — an existing golden is never rewritten here), with a

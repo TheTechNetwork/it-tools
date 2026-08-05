@@ -136,17 +136,31 @@ jobs:
           name: dist
           path: dist
 
-      # --update-snapshots=missing is the crux: a missing golden is created and
-      # NOT treated as a failure (so a new tool's first run is green), while an
-      # existing golden that differs still fails (so regressions are caught).
-      - name: Validate + create missing goldens on the CI browser
-        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --project=${{ matrix.project }} --update-snapshots=missing
+      # Validate against the existing goldens first. In the common case (every
+      # tool already has a golden and nothing regressed) this passes on the first
+      # run and every recovery step below is skipped — a single run. A failure
+      # here (a brand-new tool with no golden, OR a genuine regression) falls
+      # through to the recovery path instead of ending the job.
+      - name: Validate goldens
+        id: validate
+        continue-on-error: true
+        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --project=${{ matrix.project }}
+
+      # Only when validation failed. --update-snapshots=missing creates any
+      # absent goldens; it never rewrites an existing one, so a real regression
+      # is not masked. (In Playwright a first-time snapshot creation still exits
+      # non-zero — that's why this can't be the gate; the re-validate below is.)
+      # --retries=0 avoids re-running the just-created cases; `|| true` keeps the
+      # step from ending the job (the re-validate step is the real gate).
+      - name: Create missing goldens
+        if: steps.validate.outcome == 'failure'
+        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --project=${{ matrix.project }} --update-snapshots=missing --retries=0 || true
 
       # Persist only *newly created* goldens (untracked files). An existing
       # golden is never rewritten by this workflow, so nothing already tracked is
       # committed here. Same-repo PRs only — a fork head branch isn't writable.
       - name: Commit newly created goldens
-        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        if: steps.validate.outcome == 'failure' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         env:
           BRANCH: ${{ github.event.pull_request.head.ref }}
           DIR: src/visual-regression.e2e.spec.ts-snapshots/${{ matrix.project }}
@@ -177,10 +191,19 @@ jobs:
           echo "Failed to push ${{ matrix.project }} goldens after 5 attempts."
           exit 1
 
+      # The real gate. With the just-created goldens now on disk, re-run the spec
+      # normally: if the original failure was only missing goldens, this passes
+      # (green in the same run); a genuine regression on an existing tool still
+      # fails here. Only runs when the first validation failed — the common case
+      # (already green) never reaches this second run.
+      - name: Re-validate goldens
+        if: steps.validate.outcome == 'failure'
+        run: pnpm exec playwright test src/visual-regression.e2e.spec.ts --project=${{ matrix.project }}
+
       # Fallback for fork PRs (whose head branch can't be pushed to): the created
       # goldens are available as an artifact to commit manually.
       - name: Upload newly created goldens (fallback if push is skipped)
-        if: always()
+        if: steps.validate.outcome == 'failure'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: new-visual-goldens-${{ matrix.project }}
