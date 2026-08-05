@@ -59,6 +59,12 @@ onMounted(() => {
 
   editor = monaco.editor.createDiffEditor(editorContainer.value, {
     originalEditable: true,
+    // Always render the two panes side by side and keep both editable. Monaco
+    // otherwise collapses to a single inline view when the editor is narrower
+    // than renderSideBySideInlineBreakpoint (~900px) — e.g. on phones — which
+    // hides the original pane and makes only the modified side editable.
+    renderSideBySide: true,
+    useInlineViewWhenSpaceIsLimited: false,
     minimap: {
       enabled: false,
     },
