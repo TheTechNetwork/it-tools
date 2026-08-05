@@ -34,6 +34,7 @@ const EXCLUDED = new Set([
   'rsa-key-pair-generator', // multi-second async key generation; content height varies by capture timing
   'mime-types', // ~1000-row table renders progressively; capture is intermittently unstable
   'ascii-text-drawer', // figlet font is fetched from a CDN at load; output height depends on network timing
+  'text-diff', // Monaco diff editor: async worker-computed decorations + caret/font-hinting make pixel capture fragile; covered by its functional e2e instead
 ]);
 
 // Runs in the page before any app script: pin every source of runtime
