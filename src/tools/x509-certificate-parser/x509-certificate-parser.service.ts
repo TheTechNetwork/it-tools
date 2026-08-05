@@ -1,7 +1,7 @@
 import { asn1, md, pki } from 'node-forge';
 
 export type { DistinguishedName, ParsedCertificate };
-export { formatHexColons, parseCertificate };
+export { describePublicKey, formatAltNames, formatHexColons, parseCertificate, parseDistinguishedName };
 
 interface DistinguishedName {
   commonName?: string;
@@ -71,18 +71,21 @@ function parseDistinguishedName(attributes: { shortName?: string; name?: string;
   return dn;
 }
 
-function extractSubjectAltNames(cert: pki.Certificate): string[] {
-  const extension = cert.getExtension('subjectAltName') as { altNames?: { type: number; value?: string; ip?: string }[] } | undefined;
-  if (!extension?.altNames) {
-    return [];
-  }
-
+// Maps the raw subjectAltName entries to `<label>:<value>` strings (e.g.
+// "DNS:example.com", "IP:127.0.0.1"). Pure so it can be tested for every
+// GeneralName type without needing a certificate per case.
+function formatAltNames(altNames: { type: number; value?: string; ip?: string }[]): string[] {
   const typeLabels: Record<number, string> = { 1: 'email', 2: 'DNS', 6: 'URI', 7: 'IP' };
 
-  return extension.altNames.map((altName) => {
+  return altNames.map((altName) => {
     const label = typeLabels[altName.type] ?? `type-${altName.type}`;
     return `${label}:${altName.ip ?? altName.value ?? ''}`;
   });
+}
+
+function extractSubjectAltNames(cert: pki.Certificate): string[] {
+  const extension = cert.getExtension('subjectAltName') as { altNames?: { type: number; value?: string; ip?: string }[] } | undefined;
+  return extension?.altNames ? formatAltNames(extension.altNames) : [];
 }
 
 function getFingerprints(cert: pki.Certificate): { sha1: string; sha256: string } {
@@ -94,11 +97,10 @@ function getFingerprints(cert: pki.Certificate): { sha1: string; sha256: string 
   };
 }
 
-function getPublicKeyInfo(cert: pki.Certificate): ParsedCertificate['publicKey'] {
-  const publicKey = cert.publicKey as { n?: { bitLength: () => number }; e?: { toString: () => string } };
-
-  // node-forge fully models RSA keys (modulus `n`, exponent `e`); other key
-  // types (e.g. EC) surface without those fields.
+// node-forge fully models RSA keys (modulus `n`, exponent `e`); other key types
+// (e.g. EC) surface without those fields and are reported as "Unknown". Pure so
+// both branches are testable without an EC certificate fixture.
+function describePublicKey(publicKey: { n?: { bitLength: () => number }; e?: { toString: () => string } } | undefined): ParsedCertificate['publicKey'] {
   if (publicKey?.n && publicKey?.e) {
     return {
       algorithm: 'RSA',
@@ -142,7 +144,7 @@ function parseCertificate(pem: string): ParsedCertificate {
       notAfter: cert.validity.notAfter,
     },
     signatureAlgorithm: pki.oids[cert.signatureOid] ?? cert.signatureOid,
-    publicKey: getPublicKeyInfo(cert),
+    publicKey: describePublicKey(cert.publicKey as Parameters<typeof describePublicKey>[0]),
     subjectAltNames: extractSubjectAltNames(cert),
     basicConstraints: {
       isCertificateAuthority: Boolean(basicConstraints?.cA),
