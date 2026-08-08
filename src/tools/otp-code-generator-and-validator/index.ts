@@ -1,4 +1,4 @@
-import { DeviceMobile } from '@vicons/tabler';
+import { IconDeviceMobile as DeviceMobile } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

@@ -1,4 +1,4 @@
-import { Vocabulary } from '@vicons/tabler';
+import { IconVocabulary as Vocabulary } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

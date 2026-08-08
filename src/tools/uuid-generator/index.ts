@@ -1,4 +1,4 @@
-import { Fingerprint } from '@vicons/tabler';
+import { IconFingerprint as Fingerprint } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

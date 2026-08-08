@@ -1,4 +1,4 @@
-import { Markdown } from '@vicons/tabler';
+import { IconMarkdown as Markdown } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

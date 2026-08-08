@@ -1,4 +1,4 @@
-import { SortDescendingNumbers } from '@vicons/tabler';
+import { IconSortDescendingNumbers as SortDescendingNumbers } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

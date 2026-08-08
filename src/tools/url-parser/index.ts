@@ -1,4 +1,4 @@
-import { Unlink } from '@vicons/tabler';
+import { IconUnlink as Unlink } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

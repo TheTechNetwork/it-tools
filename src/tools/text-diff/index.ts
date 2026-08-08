@@ -1,4 +1,4 @@
-import { FileDiff } from '@vicons/tabler';
+import { IconFileDiff as FileDiff } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

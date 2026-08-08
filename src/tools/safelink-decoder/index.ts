@@ -1,4 +1,4 @@
-import { Mailbox } from '@vicons/tabler';
+import { IconMailbox as Mailbox } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

@@ -1,4 +1,4 @@
-import { ArrowsShuffle } from '@vicons/tabler';
+import { IconArrowsShuffle as ArrowsShuffle } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

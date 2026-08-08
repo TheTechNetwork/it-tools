@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { UserAgentResultSection } from './user-agent-parser.types';
-import { Adjustments, Browser, Cpu, Devices, Engine } from '@vicons/tabler';
+import { IconAdjustments as Adjustments, IconBrowser as Browser, IconCpu as Cpu, IconDevices as Devices, IconEngine as Engine } from '@tabler/icons-vue';
 import { withDefaultOnError } from '@/utils/defaults';
 import { getUserAgentInfo } from './user-agent-parser.service';
 import UserAgentResultCards from './user-agent-result-cards.vue';

@@ -1,4 +1,4 @@
-import { Braces } from '@vicons/tabler';
+import { IconBraces as Braces } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

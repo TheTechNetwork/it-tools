@@ -1,4 +1,4 @@
-import { Lock } from '@vicons/tabler';
+import { IconLock as Lock } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

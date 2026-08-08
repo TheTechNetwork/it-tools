@@ -1,4 +1,4 @@
-import { DeviceDesktop } from '@vicons/tabler';
+import { IconDeviceDesktop as DeviceDesktop } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

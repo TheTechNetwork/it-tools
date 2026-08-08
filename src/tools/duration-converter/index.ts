@@ -1,4 +1,4 @@
-import { Hourglass } from '@vicons/tabler';
+import { IconHourglass as Hourglass } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 
