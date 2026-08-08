@@ -55,6 +55,11 @@ const humanFileSize = computed(() => {
       @file-upload="onFileUpload"
     />
 
+    <div mt-2 flex items-center justify-center gap-1 text-sm op-70>
+      <icon-mdi-shield-lock-outline />
+      <span>{{ t('tools.file-hash.localOnly') }}</span>
+    </div>
+
     <c-card v-if="file" mt-4 :title="file.name">
       <div mb-3 text-sm op-70>
         {{ humanFileSize }}
