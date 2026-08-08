@@ -38,12 +38,6 @@ importers:
       '@tiptap/vue-3':
         specifier: 3.29.2
         version: 3.29.2(@floating-ui/dom@1.8.0)(@tiptap/core@3.29.2(@tiptap/pm@3.29.2))(@tiptap/pm@3.29.2)(vue@3.5.40(typescript@6.0.3))
-      '@types/figlet':
-        specifier: 1.7.0
-        version: 1.7.0
-      '@types/markdown-it':
-        specifier: 14.1.2
-        version: 14.1.2
       '@vicons/material':
         specifier: 0.13.0
         version: 0.13.0
@@ -209,9 +203,6 @@ importers:
       vue-shadow-dom:
         specifier: 4.2.0
         version: 4.2.0
-      vue-tsc:
-        specifier: 3.3.9
-        version: 3.3.9(typescript@6.0.3)
       vuedraggable:
         specifier: 4.1.0
         version: 4.1.0(vue@3.5.40(typescript@6.0.3))
@@ -258,9 +249,6 @@ importers:
       '@types/mime-types':
         specifier: 3.0.1
         version: 3.0.1
-      '@types/netmask':
-        specifier: 2.0.6
-        version: 2.0.6
       '@types/node':
         specifier: 24.13.3
         version: 24.13.3
@@ -273,9 +261,6 @@ importers:
       '@types/turndown':
         specifier: 5.0.6
         version: 5.0.6
-      '@types/ua-parser-js':
-        specifier: 0.7.39
-        version: 0.7.39
       '@unocss/eslint-config':
         specifier: 66.7.5
         version: 66.7.5(eslint@10.8.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
@@ -366,6 +351,9 @@ importers:
       vm-browserify:
         specifier: 1.1.2
         version: 1.1.2
+      vue-tsc:
+        specifier: 3.3.9
+        version: 3.3.9(typescript@6.0.3)
       workbox-window:
         specifier: 7.4.1
         version: 7.4.1
@@ -2248,9 +2236,6 @@ packages:
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
 
-  '@types/figlet@1.7.0':
-    resolution: {integrity: sha512-KwrT7p/8Eo3Op/HBSIwGXOsTZKYiM9NpWRBJ5sVjWP/SmlS+oxxRvJht/FNAtliJvja44N3ul1yATgohnVBV0Q==}
-
   '@types/hast@3.0.5':
     resolution: {integrity: sha512-rp/ezSWaD1m44dPKICGhiskI13nVr7qTloFwDa/IYkhhf5nzwP+zIQcIJh3WIFSBOy/H1PzB40jPjMDksN4F+g==}
 
@@ -2290,9 +2275,6 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/netmask@2.0.6':
-    resolution: {integrity: sha512-Ix9OqbTjSebDShQWvQte8++15zTgeInozzwMmH8NveMNobCRLGXdkz0ja3Z4GW3H/nUGRm0pJG6JKm2c86nJLQ==}
-
   '@types/node-forge@1.3.14':
     resolution: {integrity: sha512-mhVF2BnD4BO+jtOp7z1CdzaK4mbuK0LLQYAvdOLqHTavxFNq4zA1EmYkpnFjP8HOUzedfQkRnp0E2ulSAYSzAw==}
 
@@ -2316,9 +2298,6 @@ packages:
 
   '@types/turndown@5.0.6':
     resolution: {integrity: sha512-ru00MoyeeouE5BX4gRL+6m/BsDfbRayOskWqUvh7CLGW+UXxHQItqALa38kKnOiZPqJrtzJUgAC2+F0rL1S4Pg==}
-
-  '@types/ua-parser-js@0.7.39':
-    resolution: {integrity: sha512-P/oDfpofrdtF5xw433SPALpdSchtJmY7nsJItf8h3KXqOslkbySh8zq4dSWXH2oTjRvJ5PczVEoCZPow6GicLg==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -8200,8 +8179,6 @@ snapshots:
 
   '@types/estree@1.0.9': {}
 
-  '@types/figlet@1.7.0': {}
-
   '@types/hast@3.0.5':
     dependencies:
       '@types/unist': 3.0.3
@@ -8242,8 +8219,6 @@ snapshots:
 
   '@types/ms@2.1.0': {}
 
-  '@types/netmask@2.0.6': {}
-
   '@types/node-forge@1.3.14':
     dependencies:
       '@types/node': 24.13.3
@@ -8265,8 +8240,6 @@ snapshots:
   '@types/trusted-types@2.0.7': {}
 
   '@types/turndown@5.0.6': {}
-
-  '@types/ua-parser-js@0.7.39': {}
 
   '@types/unist@3.0.3': {}
 
