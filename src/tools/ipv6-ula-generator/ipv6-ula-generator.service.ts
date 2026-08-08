@@ -1,12 +1,12 @@
-import { SHA1 } from 'crypto-js';
+import { sha1 } from '@noble/hashes/legacy.js';
+import { bytesToHex, utf8ToBytes } from '@noble/hashes/utils.js';
 
 export { generateUla };
 
 function generateUla({ macAddress, timestamp = Date.now() }: { macAddress: string; timestamp?: number }) {
   // RFC 4193 section 3.2.2 mandates SHA-1 for deriving the ULA Global ID;
   // this is pseudo-random ID generation, not a security control.
-  const hex40bit = SHA1(timestamp + macAddress)
-    .toString()
+  const hex40bit = bytesToHex(sha1(utf8ToBytes(`${timestamp}${macAddress}`)))
     .substring(30);
 
   const ula = `fd${hex40bit.substring(0, 2)}:${hex40bit.substring(2, 6)}:${hex40bit.substring(6)}`;

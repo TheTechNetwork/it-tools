@@ -1,39 +1,35 @@
 <script setup lang="ts">
-import type { lib } from 'crypto-js';
-import { enc, MD5, RIPEMD160, SHA1, SHA3, SHA224, SHA256, SHA384, SHA512 } from 'crypto-js';
+import type { Encoding } from './hash-text.service';
+import { md5, ripemd160, sha1 } from '@noble/hashes/legacy.js';
+import { sha224, sha256, sha384, sha512 } from '@noble/hashes/sha2.js';
+import { keccak_512 } from '@noble/hashes/sha3.js';
+import { utf8ToBytes } from '@noble/hashes/utils.js';
 
 import { useQueryParam } from '@/composable/queryParams';
 import InputCopyable from '../../components/InputCopyable.vue';
-import { convertHexToBin } from './hash-text.service';
+import { formatBytes } from './hash-text.service';
 
 const { t } = useI18n();
 
 const algos = {
-  MD5,
-  SHA1,
-  SHA256,
-  SHA224,
-  SHA512,
-  SHA384,
-  SHA3,
-  RIPEMD160,
+  MD5: md5,
+  SHA1: sha1,
+  SHA256: sha256,
+  SHA224: sha224,
+  SHA512: sha512,
+  SHA384: sha384,
+  // crypto-js's "SHA3" was actually Keccak (the pre-NIST padding); keccak_512
+  // reproduces the exact output the tool has always shown for the "SHA3" row.
+  SHA3: keccak_512,
+  RIPEMD160: ripemd160,
 } as const;
 
 type AlgoNames = keyof typeof algos;
-type Encoding = keyof typeof enc | 'Bin';
 const algoNames = Object.keys(algos) as AlgoNames[];
 const encoding = useQueryParam<Encoding>({ defaultValue: 'Hex', name: 'encoding' });
 const clearText = ref('');
 
-function formatWithEncoding(words: lib.WordArray, encoding: Encoding) {
-  if (encoding === 'Bin') {
-    return convertHexToBin(words.toString(enc.Hex));
-  }
-
-  return words.toString(enc[encoding]);
-}
-
-const hashText = (algo: AlgoNames, value: string) => formatWithEncoding(algos[algo](value), encoding.value);
+const hashText = (algo: AlgoNames, value: string) => formatBytes(algos[algo](utf8ToBytes(value)), encoding.value);
 </script>
 
 <template>

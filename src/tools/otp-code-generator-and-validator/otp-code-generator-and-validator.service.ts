@@ -1,4 +1,6 @@
-import { enc, HmacSHA1 } from 'crypto-js';
+import { hmac } from '@noble/hashes/hmac.js';
+import { sha1 } from '@noble/hashes/legacy.js';
+import { bytesToHex } from '@noble/hashes/utils.js';
 import _ from 'lodash';
 import { createToken } from '../token-generator/token-generator.service';
 
@@ -19,7 +21,8 @@ function hexToBytes(hex: string) {
 }
 
 function computeHMACSha1(message: string, key: string) {
-  return HmacSHA1(enc.Hex.parse(message), enc.Hex.parse(base32toHex(key))).toString(enc.Hex);
+  // message and key are hex strings; HMAC-SHA1 over their decoded bytes.
+  return bytesToHex(hmac(sha1, Uint8Array.from(hexToBytes(base32toHex(key))), Uint8Array.from(hexToBytes(message))));
 }
 
 function base32toHex(base32: string) {
