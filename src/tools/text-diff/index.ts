@@ -6,7 +6,7 @@ export const tool = defineTool({
   name: translate('tools.text-diff.title'),
   path: '/text-diff',
   description: translate('tools.text-diff.description'),
-  keywords: ['text', 'diff', 'compare', 'string', 'text diff', 'code'],
+  keywords: ['text', 'diff', 'compare', 'string', 'text diff', 'code', 'json', 'xml', 'yaml', 'syntax', 'highlighting'],
   component: () => import('./text-diff.vue'),
   icon: FileDiff,
   createdAt: new Date('2023-08-16'),

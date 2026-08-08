@@ -177,7 +177,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project: [chromium, firefox, webkit]
+        # Chromium only on PRs; all three browsers on pushes to main. Firefox and
+        # WebKit add no functional coverage beyond Chromium, and (since visual
+        # regression moved to its own workflow) spinning them up on PRs only
+        # wasted a Playwright browser+system-deps install — occasionally flaky on
+        # a slow apt mirror — before skipping. Not scheduling them avoids that.
+        project: ${{ fromJSON(github.event_name == 'pull_request' && '["chromium"]' || '["chromium", "firefox", "webkit"]') }}
         shard: [1/2, 2/2]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -223,20 +228,13 @@ jobs:
         timeout-minutes: 20
 
       # Functional e2e only — the visual-regression spec is excluded here and
-      # owned by visual-regression-goldens.yml (which validates + creates goldens
-      # on all three browsers). On PRs, only Chromium runs (Firefox/WebKit add no
-      # functional coverage beyond Chromium); pushes to main run all three.
+      # owned by visual-regression-goldens.yml. The matrix already restricts the
+      # browser set per event (Chromium on PRs, all three on pushes to main).
       - name: Run Playwright tests
         env:
-          EVENT_NAME: ${{ github.event_name }}
           PROJECT: ${{ matrix.project }}
           SHARD: ${{ matrix.shard }}
-        run: |
-          if [ "$EVENT_NAME" = "pull_request" ] && [ "$PROJECT" != "chromium" ]; then
-            echo "Skipping $PROJECT functional e2e on PRs (Chromium-only); visual regression runs in visual-regression-goldens.yml."
-            exit 0
-          fi
-          pnpm run test:e2e --project="$PROJECT" --shard="$SHARD" --grep-invert "Visual regression"
+        run: pnpm run test:e2e --project="$PROJECT" --shard="$SHARD" --grep-invert "Visual regression"
 
       - name: Upload blob report
         if: ${{ !cancelled() }}

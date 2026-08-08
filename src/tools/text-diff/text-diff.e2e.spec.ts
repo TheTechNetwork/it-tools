@@ -27,4 +27,20 @@ test.describe('Tool - Text diff', () => {
       page.locator('.monaco-diff-editor .char-insert, .monaco-diff-editor .char-delete').first(),
     ).toBeAttached({ timeout: 15_000 });
   });
+
+  test('Offers a language selector and keeps the diff working after switching', async ({ page }) => {
+    // Scope to the tool's own content — the app header also has a c-select (the
+    // locale switcher), so an unscoped selector matches two elements.
+    const toolContent = page.locator('.tool-content');
+    await expect(toolContent.getByText('Language')).toBeVisible();
+
+    // Switch the diff language to JSON via the custom select.
+    await toolContent.locator('.c-select-input').click();
+    await page.locator('.c-select-dropdown-option', { hasText: 'JSON' }).first().click();
+
+    // The diff must still compute after switching languages.
+    await expect(
+      page.locator('.monaco-diff-editor .char-insert, .monaco-diff-editor .char-delete').first(),
+    ).toBeAttached({ timeout: 15_000 });
+  });
 });
