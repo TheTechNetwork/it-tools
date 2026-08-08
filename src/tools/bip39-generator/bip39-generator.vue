@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Copy, Refresh } from '@vicons/tabler';
+import { IconCopy as Copy, IconRefresh as Refresh } from '@tabler/icons-vue';
 
 import { useCopy } from '@/composable/copy';
 import { useValidation } from '@/composable/validation';

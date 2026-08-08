@@ -212,7 +212,7 @@ And automatically adds the import to `src/tools/index.ts`.
 **`index.ts`** - Tool metadata and registration:
 
 ```typescript
-import { ArrowsShuffle } from '@vicons/tabler';
+import { IconArrowsShuffle } from '@tabler/icons-vue';
 import { defineTool } from '../tool';
 
 export const tool = defineTool({
@@ -221,7 +221,7 @@ export const tool = defineTool({
   description: 'Tool description',      // SEO description
   keywords: ['keyword1', 'keyword2'],   // Search keywords
   component: () => import('./tool.vue'), // Lazy-loaded component
-  icon: ArrowsShuffle,                  // Icon component
+  icon: IconArrowsShuffle,              // Icon component
   createdAt: new Date('2024-01-15'),   // Creation date (for "new" badge)
   redirectFrom: ['/old-path'],          // Optional: redirect old URLs
 });

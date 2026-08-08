@@ -1,4 +1,4 @@
-import { LetterCaseToggle } from '@vicons/tabler';
+import { IconLetterCaseToggle as LetterCaseToggle } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

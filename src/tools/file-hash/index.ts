@@ -1,4 +1,4 @@
-import { FileCheck } from '@vicons/tabler';
+import { IconFileCheck as FileCheck } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

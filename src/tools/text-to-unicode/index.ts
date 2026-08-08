@@ -1,4 +1,4 @@
-import { TextWrap } from '@vicons/tabler';
+import { IconTextWrap as TextWrap } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

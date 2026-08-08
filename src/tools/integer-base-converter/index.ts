@@ -1,4 +1,4 @@
-import { ArrowsLeftRight } from '@vicons/tabler';
+import { IconArrowsLeftRight as ArrowsLeftRight } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

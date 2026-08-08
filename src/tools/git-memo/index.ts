@@ -1,4 +1,4 @@
-import { BrandGit } from '@vicons/tabler';
+import { IconBrandGit as BrandGit } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

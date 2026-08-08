@@ -1,4 +1,4 @@
-import { Qrcode } from '@vicons/tabler';
+import { IconQrcode as Qrcode } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

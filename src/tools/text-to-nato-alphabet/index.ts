@@ -1,4 +1,4 @@
-import { Speakerphone } from '@vicons/tabler';
+import { IconSpeakerphone as Speakerphone } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

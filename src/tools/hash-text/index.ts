@@ -1,4 +1,4 @@
-import { EyeOff } from '@vicons/tabler';
+import { IconEyeOff as EyeOff } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

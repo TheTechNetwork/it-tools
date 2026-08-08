@@ -1,4 +1,4 @@
-import { Edit } from '@vicons/tabler';
+import { IconEdit as Edit } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

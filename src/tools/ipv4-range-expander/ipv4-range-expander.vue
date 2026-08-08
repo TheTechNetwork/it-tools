@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Ipv4RangeExpanderResult } from './ipv4-range-expander.types';
-import { Exchange } from '@vicons/tabler';
+import { IconExchange as Exchange } from '@tabler/icons-vue';
 import { useValidation } from '@/composable/validation';
 import { isValidIpv4 } from '../ipv4-address-converter/ipv4-address-converter.service';
 import { calculateCidr } from './ipv4-range-expander.service';

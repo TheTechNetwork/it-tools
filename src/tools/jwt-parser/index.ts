@@ -1,4 +1,4 @@
-import { Key } from '@vicons/tabler';
+import { IconKey as Key } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { ToolCategory } from '@/tools/tools.types';
 
-import { Heart, Home2, Menu2 } from '@vicons/tabler';
+import { IconHeart as Heart, IconHome2 as Home2, IconMenu2 as Menu2 } from '@tabler/icons-vue';
 import { NIcon, useThemeVars } from 'naive-ui';
 
 import { storeToRefs } from 'pinia';

@@ -1,4 +1,4 @@
-import { Phone } from '@vicons/tabler';
+import { IconPhone as Phone } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

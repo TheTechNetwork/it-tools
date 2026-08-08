@@ -89,8 +89,8 @@
       "matchUpdateTypes": ["major", "minor", "patch"]
     },
     {
-      "groupName": "Vicons",
-      "matchPackageNames": ["@vicons/material", "@vicons/tabler"],
+      "groupName": "Icons",
+      "matchPackageNames": ["@vicons/material", "@tabler/icons-vue"],
       "matchUpdateTypes": ["major", "minor", "patch"]
     },
     {

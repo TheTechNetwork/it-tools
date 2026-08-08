@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Netmask } from 'netmask';
-import { ArrowLeft, ArrowRight } from '@vicons/tabler';
+import { IconArrowLeft as ArrowLeft, IconArrowRight as ArrowRight } from '@tabler/icons-vue';
 import { useStorage } from '@vueuse/core';
 import SpanCopyable from '@/components/SpanCopyable.vue';
 import { isNotThrowing } from '@/utils/boolean';

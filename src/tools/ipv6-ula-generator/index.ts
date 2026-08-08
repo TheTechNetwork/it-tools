@@ -1,4 +1,4 @@
-import { BuildingFactory } from '@vicons/tabler';
+import { IconBuildingFactory as BuildingFactory } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

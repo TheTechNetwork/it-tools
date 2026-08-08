@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Copy } from '@vicons/tabler';
+import { IconCopy as Copy } from '@tabler/icons-vue';
 import { useElementSize } from '@vueuse/core';
 import hljs from 'highlight.js/lib/core';
 import iniHljs from 'highlight.js/lib/languages/ini';

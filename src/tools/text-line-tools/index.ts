@@ -1,4 +1,4 @@
-import { ListNumbers } from '@vicons/tabler';
+import { IconListNumbers as ListNumbers } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

@@ -1,24 +1,7 @@
 <script setup lang="ts">
 import type { Editor } from '@tiptap/vue-3';
 import type { Component } from 'vue';
-import {
-  ArrowBack,
-  ArrowForwardUp,
-  Blockquote,
-  Bold,
-  ClearFormatting,
-  Code,
-  CodePlus,
-  H1,
-  H2,
-  H3,
-  H4,
-  Italic,
-  List,
-  ListNumbers,
-  Strikethrough,
-  TextWrap,
-} from '@vicons/tabler';
+import { IconArrowBack as ArrowBack, IconArrowForwardUp as ArrowForwardUp, IconBlockquote as Blockquote, IconBold as Bold, IconClearFormatting as ClearFormatting, IconCode as Code, IconCodePlus as CodePlus, IconH1 as H1, IconH2 as H2, IconH3 as H3, IconH4 as H4, IconItalic as Italic, IconList as List, IconListNumbers as ListNumbers, IconStrikethrough as Strikethrough, IconTextWrap as TextWrap } from '@tabler/icons-vue';
 import MenuBarItem from './menu-bar-item.vue';
 
 const props = defineProps<{ editor: Editor }>();

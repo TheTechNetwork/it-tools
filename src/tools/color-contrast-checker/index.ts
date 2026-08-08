@@ -1,4 +1,4 @@
-import { Contrast } from '@vicons/tabler';
+import { IconContrast as Contrast } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

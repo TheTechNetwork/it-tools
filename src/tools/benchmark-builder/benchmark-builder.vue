@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Plus, Trash } from '@vicons/tabler';
+import { IconPlus as Plus, IconTrash as Trash } from '@tabler/icons-vue';
 import { useStorage } from '@vueuse/core';
 import _ from 'lodash';
 

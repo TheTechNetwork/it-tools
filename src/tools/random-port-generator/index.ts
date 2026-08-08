@@ -1,4 +1,4 @@
-import { Server } from '@vicons/tabler';
+import { IconServer as Server } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

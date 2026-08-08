@@ -1,4 +1,4 @@
-import { Certificate } from '@vicons/tabler';
+import { IconCertificate as Certificate } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

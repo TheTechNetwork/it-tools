@@ -1,4 +1,4 @@
-import { LockSquare } from '@vicons/tabler';
+import { IconLockSquare as LockSquare } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

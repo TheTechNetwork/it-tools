@@ -1,4 +1,4 @@
-import { Percentage } from '@vicons/tabler';
+import { IconPercentage as Percentage } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 

@@ -1,4 +1,4 @@
-import { Language } from '@vicons/tabler';
+import { IconLanguage as Language } from '@tabler/icons-vue';
 import { translate } from '@/plugins/i18n.plugin';
 import { defineTool } from '../tool';
 
