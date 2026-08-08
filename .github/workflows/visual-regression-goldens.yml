@@ -207,12 +207,15 @@ jobs:
       - name: Install Playwright browser and system dependencies
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm exec playwright install --with-deps ${{ matrix.project }}
-        timeout-minutes: 5
+        timeout-minutes: 12
 
+      # `install-deps` is an apt install of the browser's system libraries; it
+      # occasionally crawls on a slow Ubuntu mirror. Generous timeout so a
+      # slow-but-progressing download finishes instead of tripping the cap.
       - name: Install Playwright system dependencies only
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: pnpm exec playwright install-deps ${{ matrix.project }}
-        timeout-minutes: 10
+        timeout-minutes: 20
 
       - name: Download build artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
