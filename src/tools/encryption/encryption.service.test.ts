@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { cipherAlgorithms, decryptText, encryptText } from './encryption.service';
 
+// scrypt (the key derivation) is deliberately slow, and CI runs the test files
+// in parallel on constrained runners, so give the crypto tests plenty of
+// headroom over vitest's 5s default to avoid flaky timeouts.
+const TIMEOUT = 30_000;
+
 describe('encryption', () => {
   describe('cipherAlgorithms', () => {
     it('exposes the supported authenticated ciphers', () => {
@@ -15,13 +20,13 @@ describe('encryption', () => {
       expect(encrypted).not.toBe('');
       expect(encrypted).not.toBe('Lorem ipsum dolor sit amet');
       expect(encrypted).toMatch(/^[A-Z0-9+/]+=*$/i);
-    });
+    }, TIMEOUT);
 
     it('produces a different ciphertext each time (random salt and nonce)', () => {
       const args = { text: 'Lorem ipsum dolor sit amet', secret: 'my secret key', algorithm: 'AES-GCM' } as const;
 
       expect(encryptText(args)).not.toBe(encryptText(args));
-    });
+    }, TIMEOUT);
   });
 
   describe('round trips', () => {
@@ -30,20 +35,20 @@ describe('encryption', () => {
       const secret = 'my secret key';
 
       expect(decryptText({ text: encryptText({ text, secret, algorithm }), secret })).toBe(text);
-    });
+    }, TIMEOUT);
 
     it('round trips an empty string', () => {
       const encrypted = encryptText({ text: '', secret: 'secret', algorithm: 'AES-GCM' });
 
       expect(decryptText({ text: encrypted, secret: 'secret' })).toBe('');
-    });
+    }, TIMEOUT);
 
     it('round trips unicode content', () => {
       const text = 'héllo wörld 👋 中文';
       const encrypted = encryptText({ text, secret: 'secret', algorithm: 'ChaCha20-Poly1305' });
 
       expect(decryptText({ text: encrypted, secret: 'secret' })).toBe(text);
-    });
+    }, TIMEOUT);
   });
 
   describe('decryptText', () => {
@@ -56,14 +61,14 @@ describe('encryption', () => {
       const encrypted = encryptText({ text: 'Lorem ipsum', secret: 'my secret key', algorithm: 'AES-GCM' });
 
       expect(() => decryptText({ text: encrypted, secret: 'wrong key' })).toThrow();
-    });
+    }, TIMEOUT);
 
     it('throws when the ciphertext has been tampered with', () => {
       const encrypted = encryptText({ text: 'Lorem ipsum', secret: 'my secret key', algorithm: 'AES-GCM' });
       const tampered = `${encrypted.slice(0, -2)}${encrypted[encrypted.length - 2] === 'A' ? 'B' : 'A'}=`;
 
       expect(() => decryptText({ text: tampered, secret: 'my secret key' })).toThrow();
-    });
+    }, TIMEOUT);
 
     it('throws on an unrecognized ciphertext format', () => {
       // A valid base64 string that is too short / has an unknown version byte.
