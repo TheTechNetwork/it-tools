@@ -6,6 +6,11 @@
   "rangeStrategy": "pin",
   "minimumReleaseAge": "3 days",
   "labels": ["dependencies"],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    "src/tools/bip39-generator/wordlists.ts"
+  ],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true
