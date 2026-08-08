@@ -955,6 +955,7 @@ tools:
     localOnly: Your file never leaves your device — it is hashed locally in your browser, with nothing uploaded to any server.
     hashing: Hashing…
     compareTitle: Verify against a checksum
+    compareHint: Paste the checksum published alongside your download to confirm the file arrived intact — you don't need to pick the algorithm, the tool detects which one matches.
     comparePlaceholder: Paste an expected hash to check it against the file…
     matches: '✓ Matches the file''s {algo} checksum'
     noMatch: '✗ No algorithm matches this hash'

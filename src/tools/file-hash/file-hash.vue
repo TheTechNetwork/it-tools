@@ -81,6 +81,9 @@ const humanFileSize = computed(() => {
     </c-card>
 
     <c-card v-if="hashes" mt-3 :title="t('tools.file-hash.compareTitle')">
+      <div mb-2 text-sm op-70>
+        {{ t('tools.file-hash.compareHint') }}
+      </div>
       <c-input-text
         v-model:value="expectedHash"
         :placeholder="t('tools.file-hash.comparePlaceholder')"
