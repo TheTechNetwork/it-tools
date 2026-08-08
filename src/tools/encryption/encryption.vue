@@ -1,26 +1,42 @@
 <script setup lang="ts">
+import type { CipherAlgorithm } from './encryption.service';
 import { computedCatch } from '@/composable/computed/catchedComputed';
-import { algos, decryptText, encryptText } from './encryption.service';
+import { cipherAlgorithms, decryptText, encryptText } from './encryption.service';
 
 const { t } = useI18n();
 
+// The key derivation (scrypt) is deliberately slow, so debounce the inputs to
+// avoid re-running it on every keystroke; it only fires once typing pauses.
 const cypherInput = ref('Lorem ipsum dolor sit amet');
-const cypherAlgo = ref<keyof typeof algos>('AES');
+const cypherAlgo = ref<CipherAlgorithm>('AES-GCM');
 const cypherSecret = ref('my secret key');
+const debouncedCypherInput = refDebounced(cypherInput, 400);
+const debouncedCypherSecret = refDebounced(cypherSecret, 400);
 const cypherOutput = computed(() =>
-  encryptText({ text: cypherInput.value, secret: cypherSecret.value, algo: cypherAlgo.value }),
+  encryptText({ text: debouncedCypherInput.value, secret: debouncedCypherSecret.value, algorithm: cypherAlgo.value }),
 );
 
-const decryptInput = ref('U2FsdGVkX1/EC3+6P5dbbkZ3e1kQ5o2yzuU0NHTjmrKnLBEwreV489Kr0DIB+uBs');
-const decryptAlgo = ref<keyof typeof algos>('AES');
+// The algorithm is stored in the ciphertext envelope, so decryption detects it
+// automatically — no algorithm selector needed on this side.
+const decryptInput = ref('AQAKbW88xnOVdt19njUE/1/CuIeHo7TM0y3qt6rIxS4pQtqr32+K/sRbv0EUDJQob9plsaiOxoFAvP73loOTTit+HaFTQsvW');
 const decryptSecret = ref('my secret key');
-const [decryptOutput, decryptError] = computedCatch(() => decryptText({ text: decryptInput.value, secret: decryptSecret.value, algo: decryptAlgo.value }), {
-  defaultValue: '',
-  defaultErrorMessage: t('tools.encryption.unableToDecrypt'),
-});
+const debouncedDecryptInput = refDebounced(decryptInput, 400);
+const debouncedDecryptSecret = refDebounced(decryptSecret, 400);
+const [decryptOutput, decryptError] = computedCatch(
+  () => decryptText({ text: debouncedDecryptInput.value, secret: debouncedDecryptSecret.value }),
+  {
+    defaultValue: '',
+    defaultErrorMessage: t('tools.encryption.unableToDecrypt'),
+  },
+);
 </script>
 
 <template>
+  <div mb-2 flex items-start gap-1 text-sm op-70>
+    <icon-mdi-shield-lock-outline mt-1 shrink-0 />
+    <span>{{ t('tools.encryption.aeadNote') }}</span>
+  </div>
+
   <c-card :title="t('tools.encryption.encrypt.title')">
     <div flex gap-3>
       <c-input-text
@@ -36,7 +52,7 @@ const [decryptOutput, decryptError] = computedCatch(() => decryptText({ text: de
         <c-select
           v-model:value="cypherAlgo"
           :label="t('tools.encryption.algorithm')"
-          :options="Object.keys(algos).map((label) => ({ label, value: label }))"
+          :options="cipherAlgorithms.map((label) => ({ label, value: label }))"
         />
       </div>
     </div>
@@ -49,24 +65,15 @@ const [decryptOutput, decryptError] = computedCatch(() => decryptText({ text: de
     />
   </c-card>
   <c-card :title="t('tools.encryption.decrypt.title')">
-    <div flex gap-3>
-      <c-input-text
-        v-model:value="decryptInput"
-        :label="t('tools.encryption.decrypt.textLabel')"
-        :placeholder="t('tools.encryption.encrypt.textPlaceholder')"
-        rows="4"
-        multiline raw-text monospace autosize flex-1
-      />
-      <div flex flex-1 flex-col gap-2>
-        <c-input-text v-model:value="decryptSecret" :label="t('tools.encryption.secretKey')" clearable raw-text />
+    <c-input-text
+      v-model:value="decryptInput"
+      :label="t('tools.encryption.decrypt.textLabel')"
+      :placeholder="t('tools.encryption.encrypt.textPlaceholder')"
+      rows="4"
+      multiline raw-text monospace autosize
+    />
+    <c-input-text v-model:value="decryptSecret" :label="t('tools.encryption.secretKey')" clearable raw-text mt-3 />
 
-        <c-select
-          v-model:value="decryptAlgo"
-          :label="t('tools.encryption.algorithm')"
-          :options="Object.keys(algos).map((label) => ({ label, value: label }))"
-        />
-      </div>
-    </div>
     <c-alert v-if="decryptError" type="warning" mt-12 :title="t('tools.encryption.decrypt.errorTitle')">
       {{ decryptError }}
     </c-alert>

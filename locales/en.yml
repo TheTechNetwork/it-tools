@@ -381,10 +381,11 @@ tools:
 
   encryption:
     title: Encrypt / decrypt text
-    description: Encrypt clear text and decrypt ciphertext using crypto algorithms like AES, TripleDES, Rabbit or RC4.
+    description: Encrypt clear text and decrypt ciphertext with authenticated ciphers (AES-GCM or ChaCha20-Poly1305), using a passphrase-derived key.
     secretKey: 'Your secret key:'
     algorithm: 'Encryption algorithm:'
     outputPlaceholder: Your string hash
+    aeadNote: The key is derived from your passphrase with scrypt, and the ciphertext is authenticated — a wrong key or altered text fails to decrypt rather than returning garbage. Everything runs locally in your browser. Note the algorithm is detected automatically on decryption, and this format is not compatible with ciphertext from older AES/TripleDES/RC4 tools.
     encrypt:
       title: Encrypt
       textLabel: 'Your text:'
