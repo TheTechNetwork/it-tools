@@ -948,6 +948,16 @@ tools:
       base64: Base64 (base 64)
       base64url: Base64url (base 64 with url safe chars)
 
+  file-hash:
+    title: File hash / checksum
+    description: Compute the MD5, SHA-1, SHA-256 and SHA-512 checksums of a file, entirely in your browser, and verify it against an expected hash.
+    dragAndDrop: Drag and drop a file here, or click to select a file
+    hashing: Hashing…
+    compareTitle: Verify against a checksum
+    comparePlaceholder: Paste an expected hash to check it against the file…
+    matches: '✓ Matches the file''s {algo} checksum'
+    noMatch: '✗ No algorithm matches this hash'
+
   json-to-toml:
     title: JSON to TOML
     description: Parse and convert JSON to TOML.

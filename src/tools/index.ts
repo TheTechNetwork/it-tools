@@ -25,6 +25,7 @@ import { tool as emailNormalizer } from './email-normalizer';
 import { tool as emojiPicker } from './emoji-picker';
 import { tool as cypher } from './encryption';
 import { tool as etaCalculator } from './eta-calculator';
+import { tool as fileHash } from './file-hash';
 import { tool as gitMemo } from './git-memo';
 import { tool as hashText } from './hash-text';
 import { tool as hmacGenerator } from './hmac-generator';
@@ -106,7 +107,7 @@ import { tool as yamlViewer } from './yaml-viewer';
 export const toolsByCategory: ToolCategory[] = [
   {
     name: 'Crypto',
-    components: [tokenGenerator, hashText, bcrypt, uuidGenerator, ulidGenerator, cypher, bip39, hmacGenerator, rsaKeyPairGenerator, passwordStrengthAnalyser, pdfSignatureChecker, x509CertificateParser],
+    components: [tokenGenerator, hashText, fileHash, bcrypt, uuidGenerator, ulidGenerator, cypher, bip39, hmacGenerator, rsaKeyPairGenerator, passwordStrengthAnalyser, pdfSignatureChecker, x509CertificateParser],
   },
   {
     name: 'Converter',
