@@ -1,0 +1,150 @@
+name: PR Labeler
+
+# Automatically tags pull requests based on the files they change:
+#   - area/type labels (ci, docker, dependencies, i18n, ui, tests, ...)
+#   - per-tool labels `tool:<name>` for every src/tools/<name>/ touched
+#   - a single size/* label from the number of lines changed
+#
+# Uses pull_request_target so the token can label PRs opened from forks too.
+# This is safe here because the job never checks out or executes PR code — it
+# only reads the changed-file list through the API and applies labels.
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write # needed to auto-create labels that don't exist yet
+
+concurrency:
+  group: pr-labeler-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Apply labels from changed files
+        uses: actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b # v7.1.0
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const pr = context.payload.pull_request;
+            const issue_number = pr.number;
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner, repo, pull_number: issue_number, per_page: 100,
+            });
+            const paths = files.map(f => f.filename);
+            const totalChanges = files.reduce((n, f) => n + (f.changes || 0), 0);
+            const has = re => paths.some(p => re.test(p));
+
+            // --- area / type labels ---
+            const desired = new Set();
+            if (has(/^\.github\/workflows\//)) { desired.add('ci'); }
+            if (has(/^(Dockerfile|docker\/|\.dockerignore$)/)) { desired.add('docker'); }
+            if (has(/^(package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|\.npmrc)$/)) { desired.add('dependencies'); }
+            if (has(/^renovate\.json$/)) { desired.add('renovate'); desired.add('ci'); }
+            if (has(/(^|\/)locales\//)) { desired.add('i18n'); }
+            if (has(/^src\/(ui|components|layouts)\//)) { desired.add('ui'); }
+            if (has(/^src\/tools\//)) { desired.add('tools'); }
+            if (has(/\.(test|spec|e2e\.spec)\.ts$/) || has(/^(playwright\.config\.ts|vitest\.setup\.ts)$/)) { desired.add('tests'); }
+            if (has(/\.mdx?$/) || has(/^(README|CLAUDE|CHANGELOG|SECURITY|LICENSE)/)) { desired.add('documentation'); }
+            if (has(/^worker\//) || has(/^wrangler\.toml$/)) { desired.add('cloudflare'); }
+            if (has(/^scripts\//)) { desired.add('scripts'); }
+            if (has(/^public\//)) { desired.add('assets'); }
+            if (has(/^(vite\.config\.ts|tsconfig.*\.json|eslint\.config\.mjs|unocss\.config\.ts|\.editorconfig|\.prettierrc|\.versionrc)$/)) { desired.add('build'); }
+
+            // --- per-tool labels ---
+            const MAX_TOOL_LABELS = 12;
+            const toolLabels = new Set();
+            for (const p of paths) {
+              const m = p.match(/^src\/tools\/([^/]+)\//);
+              if (m) { toolLabels.add(`tool:${m[1]}`); }
+            }
+            let toolOverflow = false;
+            if (toolLabels.size > MAX_TOOL_LABELS) {
+              // A sweeping change across many tools — skip the noise, keep `tools`.
+              toolOverflow = true;
+            } else {
+              for (const t of toolLabels) { desired.add(t); }
+            }
+
+            // --- size label (mutually exclusive) ---
+            const size = totalChanges >= 1000 ? 'size/XL'
+              : totalChanges >= 500 ? 'size/L'
+              : totalChanges >= 100 ? 'size/M'
+              : totalChanges >= 30 ? 'size/S'
+              : 'size/XS';
+            desired.add(size);
+
+            // --- colors / descriptions ---
+            const sizeColors = { XS: '0e8a16', S: '5cb85c', M: 'fbca04', L: 'f0ad4e', XL: 'd93f0b' };
+            const areaMeta = {
+              ci: ['fbca04', 'CI / workflow changes'],
+              docker: ['0db7ed', 'Docker image / build'],
+              dependencies: ['0366d6', 'Dependency updates'],
+              renovate: ['027fb5', 'Renovate configuration'],
+              i18n: ['d4c5f9', 'Translations / locales'],
+              ui: ['bfd4f2', 'Shared UI / layout / components'],
+              tools: ['5319e7', 'Tool implementations'],
+              tests: ['0e8a16', 'Unit / e2e tests'],
+              documentation: ['0075ca', 'Documentation'],
+              cloudflare: ['f38020', 'Cloudflare worker / deploy'],
+              scripts: ['fef2c0', 'Build / utility scripts'],
+              assets: ['e99695', 'Static assets'],
+              build: ['c2e0c6', 'Build / tooling config'],
+            };
+            const colorFor = (name) => {
+              if (name.startsWith('tool:')) { return ['c5def5', `Touches the ${name.slice(5)} tool`]; }
+              if (name.startsWith('size/')) { return [sizeColors[name.slice(5)] || 'ededed', 'PR size by lines changed']; }
+              return areaMeta[name] || ['ededed', ''];
+            };
+
+            async function ensureLabel(name) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name });
+              } catch (e) {
+                if (e.status !== 404) { throw e; }
+                const [color, description] = colorFor(name);
+                try {
+                  await github.rest.issues.createLabel({ owner, repo, name, color, description });
+                } catch (err) {
+                  if (err.status !== 422) { throw err; } // 422 = created concurrently
+                }
+              }
+            }
+
+            for (const name of desired) { await ensureLabel(name); }
+
+            // --- reconcile: only touch machine-owned namespaces (tool:* and size/*) ---
+            const current = (pr.labels || []).map(l => l.name);
+            const stale = current.filter(n =>
+              (n.startsWith('tool:') || n.startsWith('size/')) && !desired.has(n));
+            for (const name of stale) {
+              try {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number, name });
+              } catch (e) {
+                if (e.status !== 404) { throw e; }
+              }
+            }
+
+            const toAdd = [...desired].filter(n => !current.includes(n));
+            if (toAdd.length) {
+              await github.rest.issues.addLabels({ owner, repo, issue_number, labels: toAdd });
+            }
+
+            // --- job summary ---
+            core.summary
+              .addHeading('PR Labeler', 3)
+              .addRaw(`Changed files: ${paths.length} · lines: ${totalChanges} · size: ${size}`)
+              .addBreak();
+            if (toolOverflow) {
+              core.notice(`PR touches ${toolLabels.size} tools (> ${MAX_TOOL_LABELS}); ` +
+                `skipped per-tool labels and applied 'tools' instead.`);
+            }
+            core.summary
+              .addRaw(`Applied: ${[...desired].sort().join(', ') || '(none)'}`)
+              .write();
