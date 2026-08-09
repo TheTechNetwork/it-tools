@@ -5,7 +5,9 @@
     "helpers:pinGitHubActionDigestsToSemver",
     "helpers:disableTypesNodeMajor",
     "security:openssf-scorecard",
-    ":enableVulnerabilityAlertsWithLabel(security)"
+    ":enableVulnerabilityAlertsWithLabel(security)",
+    ":automergeStableNonMajor",
+    "group:linters"
   ],
   "rangeStrategy": "pin",
   "minimumReleaseAge": "3 days",
