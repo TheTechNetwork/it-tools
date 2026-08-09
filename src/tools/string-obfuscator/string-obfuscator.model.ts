@@ -2,9 +2,7 @@ import type { MaybeRef } from 'vue';
 import { get } from '@vueuse/core';
 import { computed } from 'vue';
 
-export { obfuscateString, useObfuscateString };
-
-function obfuscateString(
+export function obfuscateString(
   str: string,
   { replacementChar = '*', keepFirst = 4, keepLast = 0, keepSpace = true }: { replacementChar?: string; keepFirst?: number; keepLast?: number; keepSpace?: boolean } = {},
 ): string {
@@ -20,7 +18,7 @@ function obfuscateString(
     .join('');
 }
 
-function useObfuscateString(
+export function useObfuscateString(
   str: MaybeRef<string>,
   config: { replacementChar?: MaybeRef<string>; keepFirst?: MaybeRef<number>; keepLast?: MaybeRef<number>; keepSpace?: MaybeRef<boolean> } = {},
 

@@ -1,13 +1,11 @@
-export { convertAsciiBinaryToText, convertTextToAsciiBinary };
-
-function convertTextToAsciiBinary(text: string, { separator = ' ' }: { separator?: string } = {}): string {
+export function convertTextToAsciiBinary(text: string, { separator = ' ' }: { separator?: string } = {}): string {
   return text
     .split('')
     .map(char => char.charCodeAt(0).toString(2).padStart(8, '0'))
     .join(separator);
 }
 
-function convertAsciiBinaryToText(binary: string): string {
+export function convertAsciiBinaryToText(binary: string): string {
   const cleanBinary = binary.replace(/[^01]/g, '');
 
   if (cleanBinary.length % 8) {

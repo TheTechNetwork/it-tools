@@ -2,9 +2,7 @@ import type { MaybeRef } from 'vue';
 import { get } from '@vueuse/core';
 import JSON5 from 'json5';
 
-export { formatJson, sortObjectKeys };
-
-function sortObjectKeys<T>(obj: T): T {
+export function sortObjectKeys<T>(obj: T): T {
   if (typeof obj !== 'object' || obj === null) {
     return obj;
   }
@@ -21,7 +19,7 @@ function sortObjectKeys<T>(obj: T): T {
     }, {} as Record<string, unknown>) as T;
 }
 
-function formatJson({
+export function formatJson({
   rawJson,
   sortKeys = true,
   indentSize = 3,

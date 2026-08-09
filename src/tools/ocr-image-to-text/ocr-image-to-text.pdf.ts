@@ -8,13 +8,11 @@ import PdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 // to users who actually process a PDF.
 import './map-upsert.polyfill';
 
-export { renderPdfToImages };
-
 GlobalWorkerOptions.workerSrc = PdfWorkerUrl;
 
 // Higher scale -> sharper render -> better OCR, at the cost of memory/time. 2x
 // is a good default for screen-resolution PDFs.
-async function renderPdfToImages(file: File | ArrayBuffer, { scale = 2 }: { scale?: number } = {}): Promise<Blob[]> {
+export async function renderPdfToImages(file: File | ArrayBuffer, { scale = 2 }: { scale?: number } = {}): Promise<Blob[]> {
   const data = file instanceof File ? await file.arrayBuffer() : file;
   const loadingTask = getDocument({ data });
   const pdf = await loadingTask.promise;

@@ -1,9 +1,7 @@
 import type { Difference, DifferenceStatus } from './json-diff.types';
 import _ from 'lodash';
 
-export { diff };
-
-function diff(
+export function diff(
   obj: unknown,
   newObj: unknown,
   { onlyShowDifferences = false }: { onlyShowDifferences?: boolean } = {},

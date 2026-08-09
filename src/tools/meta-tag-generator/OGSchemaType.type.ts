@@ -1,27 +1,25 @@
 import type { SelectGroupOption, SelectOption } from 'naive-ui';
 
-export type { OGSchemaType, OGSchemaTypeElementInput, OGSchemaTypeElementInputMultiple, OGSchemaTypeElementSelect };
-
 interface OGSchemaTypeElementBase {
   key: string;
   label: string;
   placeholder: string;
 }
 
-interface OGSchemaTypeElementInput extends OGSchemaTypeElementBase {
+export interface OGSchemaTypeElementInput extends OGSchemaTypeElementBase {
   type: 'input';
 }
 
-interface OGSchemaTypeElementInputMultiple extends OGSchemaTypeElementBase {
+export interface OGSchemaTypeElementInputMultiple extends OGSchemaTypeElementBase {
   type: 'input-multiple';
 }
 
-interface OGSchemaTypeElementSelect extends OGSchemaTypeElementBase {
+export interface OGSchemaTypeElementSelect extends OGSchemaTypeElementBase {
   type: 'select';
   options: Array<SelectOption | SelectGroupOption>;
 }
 
-interface OGSchemaType {
+export interface OGSchemaType {
   name: string;
   elements: (OGSchemaTypeElementSelect | OGSchemaTypeElementInput | OGSchemaTypeElementInputMultiple)[];
 }

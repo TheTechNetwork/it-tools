@@ -1,9 +1,7 @@
 import type { Ref } from 'vue';
 import { computed, ref } from 'vue';
 
-export { useMediaRecorder };
-
-function useMediaRecorder({ stream }: { stream: Ref<MediaStream | undefined> }): {
+export function useMediaRecorder({ stream }: { stream: Ref<MediaStream | undefined> }): {
   isRecordingSupported: Ref<boolean>;
   recordingState: Ref<'stopped' | 'recording' | 'paused'>;
   startRecording: () => void;

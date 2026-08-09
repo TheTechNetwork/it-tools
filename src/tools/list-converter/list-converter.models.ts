@@ -2,14 +2,12 @@ import type { ConvertOptions } from './list-converter.types';
 import _ from 'lodash';
 import { byOrder } from '@/utils/array';
 
-export { convert };
-
 function whenever<T, R>(condition: boolean, fn: (value: T) => R) {
   return (value: T) =>
     condition ? fn(value) : value;
 }
 
-function convert(list: string, options: ConvertOptions): string {
+export function convert(list: string, options: ConvertOptions): string {
   const lineBreak = options.keepLineBreaks ? '\n' : '';
 
   return _.chain(list)

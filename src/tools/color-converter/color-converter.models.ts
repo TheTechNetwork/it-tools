@@ -4,13 +4,11 @@ import { ref } from 'vue';
 import { useValidation } from '@/composable/validation';
 import { withDefaultOnError } from '@/utils/defaults';
 
-export { buildColorFormat, removeAlphaChannelWhenOpaque };
-
-function removeAlphaChannelWhenOpaque(hexColor: string) {
+export function removeAlphaChannelWhenOpaque(hexColor: string) {
   return hexColor.replace(/^(#(?:[0-9a-f]{3}){1,2})ff$/i, '$1');
 }
 
-function buildColorFormat({
+export function buildColorFormat({
   label,
   parse = value => colord(value),
   format,

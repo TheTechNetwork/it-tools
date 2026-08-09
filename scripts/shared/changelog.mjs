@@ -1,8 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
-export { addToChangelog };
-
-async function addToChangelog({ changelog, version, changelogPath = './CHANGELOG.md' }) {
+export async function addToChangelog({ changelog, version, changelogPath = './CHANGELOG.md' }) {
   const changelogContent = await readFile(changelogPath, 'utf-8');
   const versionTitle = `## Version ${version}`;
 

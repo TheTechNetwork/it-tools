@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-export { rawCommitsToMarkdown };
-
 const commitScopesToHumanReadable = {
   build: 'Build system',
   chore: 'Chores',
@@ -41,7 +39,7 @@ function commitSectionsToMarkdown({ type, commits }) {
   ].join('\n');
 }
 
-function rawCommitsToMarkdown({ rawCommits }) {
+export function rawCommitsToMarkdown({ rawCommits }) {
   return _.chain(rawCommits)
     .trim()
     .split('\n')

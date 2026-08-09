@@ -1,19 +1,5 @@
 import _ from 'lodash';
 
-export {
-  dateToExcelFormat,
-  excelFormatToDate,
-  isExcelFormat,
-  isISO8601DateTimeString,
-  isISO9075DateString,
-  isMongoObjectId,
-  isRFC3339DateString,
-  isRFC7231DateString,
-  isTimestamp,
-  isUnixTimestamp,
-  isUTCDateString,
-};
-
 const ISO8601_REGEX
   = /^([+-]?\d{4}(?!\d{2}\b))((-?)((0[1-9]|1[0-2])(\3([12]\d|0[1-9]|3[01]))?|W([0-4]\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\d|[12]\d{2}|3([0-5]\d|6[1-6])))([T\s]((([01]\d|2[0-3])((:?)[0-5]\d)?|24:?00)([.,]\d+)?)?(:?[0-5]\d([.,]\d+)?)?([zZ]|([+-])([01]\d|2[0-3]):?([0-5]\d)?)?)?)?$/;
 const ISO9075_REGEX
@@ -30,17 +16,17 @@ function createRegexMatcher(regex: RegExp) {
   return (date?: string) => !_.isNil(date) && regex.test(date);
 }
 
-const isISO8601DateTimeString = createRegexMatcher(ISO8601_REGEX);
-const isISO9075DateString = createRegexMatcher(ISO9075_REGEX);
-const isRFC3339DateString = createRegexMatcher(RFC3339_REGEX);
-const isRFC7231DateString = createRegexMatcher(RFC7231_REGEX);
-const isUnixTimestamp = createRegexMatcher(/^\d{1,10}$/);
-const isTimestamp = createRegexMatcher(/^\d{1,13}$/);
-const isMongoObjectId = createRegexMatcher(/^[0-9a-f]{24}$/i);
+export const isISO8601DateTimeString = createRegexMatcher(ISO8601_REGEX);
+export const isISO9075DateString = createRegexMatcher(ISO9075_REGEX);
+export const isRFC3339DateString = createRegexMatcher(RFC3339_REGEX);
+export const isRFC7231DateString = createRegexMatcher(RFC7231_REGEX);
+export const isUnixTimestamp = createRegexMatcher(/^\d{1,10}$/);
+export const isTimestamp = createRegexMatcher(/^\d{1,13}$/);
+export const isMongoObjectId = createRegexMatcher(/^[0-9a-f]{24}$/i);
 
-const isExcelFormat = createRegexMatcher(EXCEL_FORMAT_REGEX);
+export const isExcelFormat = createRegexMatcher(EXCEL_FORMAT_REGEX);
 
-function isUTCDateString(date?: string) {
+export function isUTCDateString(date?: string) {
   if (_.isNil(date)) {
     return false;
   }
@@ -53,10 +39,10 @@ function isUTCDateString(date?: string) {
   }
 }
 
-function dateToExcelFormat(date: Date) {
+export function dateToExcelFormat(date: Date) {
   return String(((date.getTime()) / (1000 * 60 * 60 * 24)) + 25569);
 }
 
-function excelFormatToDate(excelFormat: string | number) {
+export function excelFormatToDate(excelFormat: string | number) {
   return new Date((Number(excelFormat) - 25569) * 86400 * 1000);
 }

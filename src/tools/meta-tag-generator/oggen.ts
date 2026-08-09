@@ -4,12 +4,9 @@
 // tags carry their data in the `content` attribute (what OG/Twitter crawlers
 // read), not `value` - the original emitted the invalid `value="..."`.
 
-export type { MetadataConfig, MetadataValue };
-export { generateMeta };
+export type MetadataValue = boolean | string | Date | number;
 
-type MetadataValue = boolean | string | Date | number;
-
-interface MetadataConfig {
+export interface MetadataConfig {
   [key: string]: MetadataValue | MetadataValue[] | MetadataConfig;
 }
 
@@ -26,7 +23,7 @@ const twitterCompatibility: Record<string, string> = {
   'og:image:alt': 'twitter:image:alt',
 };
 
-function generateMeta(
+export function generateMeta(
   { twitter: twitterMetadataRaw, ...ogMetadataRaw }: MetadataConfig,
   { indentation = 0, indentWith = '  ', generateTwitterCompatibleMeta = false }: { indentation?: number; indentWith?: string; generateTwitterCompatibleMeta?: boolean } = {},
 ): string {

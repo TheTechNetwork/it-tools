@@ -1,6 +1,4 @@
-export { getIPClass };
-
-function getIPClass({ ip }: { ip: string }) {
+export function getIPClass({ ip }: { ip: string }) {
   const [firstOctet] = ip.split('.').map(Number);
 
   if (firstOctet === undefined) {
