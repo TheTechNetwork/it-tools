@@ -24,6 +24,7 @@ const renderedHtml = computed(() => renderMarkdownToSafeHtml(inputMarkdown.value
     <div flex flex-col gap-3 md:flex-row>
       <c-input-text
         v-model:value="inputMarkdown"
+        test-id="input"
         :label="t('tools.markdown-editor.input.label')"
         :placeholder="t('tools.markdown-editor.input.placeholder')"
 

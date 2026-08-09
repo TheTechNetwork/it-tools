@@ -1,5 +1,5 @@
 import JSON5 from 'json5';
-import { JSONPath } from 'jsonpath-plus';
+import { evaluateJsonPath } from './jsonpath.engine';
 
 export { queryJson };
 
@@ -17,7 +17,7 @@ function queryJson({ data, query, indentSize = 2 }: { data: string; query: strin
     return JSON.stringify(json, null, indentSize);
   }
 
-  const result = JSONPath({ path: trimmedQuery, json });
+  const result = evaluateJsonPath({ path: trimmedQuery, json });
 
   return JSON.stringify(result, null, indentSize);
 }
