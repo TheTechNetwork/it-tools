@@ -1,7 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:best-practices",
+    "helpers:pinGitHubActionDigestsToSemver",
+    "security:openssf-scorecard"
   ],
   "rangeStrategy": "pin",
   "minimumReleaseAge": "3 days",
