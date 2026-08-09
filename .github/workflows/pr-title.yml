@@ -7,7 +7,7 @@ name: pr-title
 
 on:
   pull_request:
-    types: [opened, edited, synchronize, reopened]
+    types: [opened, edited, synchronize, reopened, ready_for_review]
 
 permissions:
   pull-requests: read
@@ -18,6 +18,11 @@ concurrency:
 
 jobs:
   validate:
+    # Skip drafts — a work-in-progress title (e.g. an agent's "[WIP] …"
+    # placeholder) isn't final yet. The `ready_for_review` trigger re-runs this
+    # the moment a draft is marked ready, so the title is still validated before
+    # it can be merged.
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
