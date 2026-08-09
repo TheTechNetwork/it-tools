@@ -1,4 +1,4 @@
-import { parse as parseToml } from 'iarna-toml-esm';
+import { parse as parseToml } from 'smol-toml';
 import { stringify as stringifyYaml } from 'yaml';
 
 export { convertTomlToYaml };

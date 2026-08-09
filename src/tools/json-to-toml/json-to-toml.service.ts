@@ -1,4 +1,4 @@
-import { stringify as stringifyToml } from 'iarna-toml-esm';
+import { stringify as stringifyToml } from 'smol-toml';
 import JSON5 from 'json5';
 
 export { convertJsonToToml };

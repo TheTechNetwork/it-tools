@@ -12,11 +12,6 @@ declare module '*.md' {
   export default Component;
 }
 
-declare module 'iarna-toml-esm' {
-  export const parse: (toml: string) => any;
-  export const stringify: (obj: any) => string;
-}
-
 declare module 'emojilib' {
   const lib: Record<string, string[]>;
   export default lib;
