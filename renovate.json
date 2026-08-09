@@ -11,6 +11,7 @@
   ],
   "rangeStrategy": "pin",
   "minimumReleaseAge": "3 days",
+  "rebaseWhen": "behind-base-branch",
   "labels": ["dependencies"],
   "ignorePaths": [
     "**/node_modules/**",
