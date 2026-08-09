@@ -15,6 +15,7 @@ import { tool as chronometer } from './chronometer';
 import { tool as colorContrastChecker } from './color-contrast-checker';
 import { tool as colorConverter } from './color-converter';
 import { tool as crontabGenerator } from './crontab-generator';
+import { tool as cssUnitConverter } from './css-unit-converter';
 import { tool as csvToJson } from './csv-to-json';
 import { tool as dataStorageConverter } from './data-storage-converter';
 import { tool as dateTimeConverter } from './date-time-converter';
@@ -48,6 +49,7 @@ import { tool as jsonToTypescript } from './json-to-typescript';
 import { tool as jsonToXml } from './json-to-xml';
 import { tool as jsonToYaml } from './json-to-yaml-converter';
 import { tool as jsonViewer } from './json-viewer';
+import { tool as jsonpathQuery } from './jsonpath-query';
 import { tool as jwtGenerator } from './jwt-generator';
 import { tool as jwtParser } from './jwt-parser';
 import { tool as keycodeInfo } from './keycode-info';
@@ -55,6 +57,7 @@ import { tool as listConverter } from './list-converter';
 import { tool as loremIpsumGenerator } from './lorem-ipsum-generator';
 import { tool as macAddressGenerator } from './mac-address-generator';
 import { tool as macAddressLookup } from './mac-address-lookup';
+import { tool as markdownEditor } from './markdown-editor';
 import { tool as markdownToHtml } from './markdown-to-html';
 import { tool as markdownTocGenerator } from './markdown-toc-generator';
 import { tool as mathEvaluator } from './math-evaluator';
@@ -173,6 +176,7 @@ export const toolsByCategory: ToolCategory[] = [
       jsonViewer,
       jsonMinify,
       jsonSortKeys,
+      jsonpathQuery,
       jsonToCsv,
       sqlPrettify,
       chmodCalculator,
@@ -182,6 +186,7 @@ export const toolsByCategory: ToolCategory[] = [
       emailNormalizer,
       regexTester,
       regexMemo,
+      markdownEditor,
       markdownTocGenerator,
     ],
   },
@@ -195,7 +200,7 @@ export const toolsByCategory: ToolCategory[] = [
   },
   {
     name: 'Measurement',
-    components: [chronometer, temperatureConverter, benchmarkBuilder, dataStorageConverter, durationConverter],
+    components: [chronometer, temperatureConverter, benchmarkBuilder, dataStorageConverter, durationConverter, cssUnitConverter],
   },
   {
     name: 'Text',
