@@ -169,7 +169,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      'crypto': 'crypto-browserify',
+      // Browser deps (bcryptjs, node-forge) use the Web Crypto API and only
+      // need a stand-in for Node's `crypto`; the empty stub keeps the
+      // browserify crypto chain (and its vulnerable `elliptic`) out of the bundle.
+      'crypto': fileURLToPath(new URL('./src/polyfills/empty-crypto.ts', import.meta.url)),
       'stream': 'stream-browserify',
       'buffer': 'buffer',
       'events': 'events',
