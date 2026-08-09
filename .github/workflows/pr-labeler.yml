@@ -5,6 +5,11 @@ name: PR Labeler
 #   - per-tool labels `tool:<name>` for every src/tools/<name>/ touched, AND
 #     for dependency PRs, every tool that imports the updated package(s)
 #   - a single size/* label from the number of lines changed
+#   - `new-tool` when a PR adds a new src/tools/<name>/index.ts
+#   - `new-dependency` / `removed-dependency` / `major-update` from the
+#     package.json diff
+#   - a kind label (enhancement/bug/performance/refactor/documentation) from
+#     the Conventional-Commit PR title
 #
 # Uses pull_request_target so the token can label PRs opened from forks too.
 # This is safe because the job only reads the changed-file list via the API and
@@ -69,6 +74,16 @@ jobs:
             if (has(/^public\//)) { desired.add('assets'); }
             if (has(/^(vite\.config\.ts|tsconfig.*\.json|eslint\.config\.mjs|unocss\.config\.ts|\.editorconfig|\.prettierrc|\.versionrc)$/)) { desired.add('build'); }
 
+            // --- new tool: a brand-new src/tools/<name>/index.ts is ADDED ---
+            if (files.some(f => f.status === 'added' && /^src\/tools\/[^/]+\/index\.ts$/.test(f.filename))) {
+              desired.add('new-tool');
+            }
+
+            // --- kind of change, from the enforced Conventional-Commit PR title ---
+            const titleType = (/^([a-z]+)(?:\([^)]*\))?!?:/i.exec(pr.title || '')?.[1] || '').toLowerCase();
+            const typeToLabel = { feat: 'enhancement', fix: 'bug', perf: 'performance', refactor: 'refactor', docs: 'documentation' };
+            if (typeToLabel[titleType]) { desired.add(typeToLabel[titleType]); }
+
             // --- per-tool labels: from changed paths ... ---
             const toolLabels = new Set();
             for (const p of paths) {
@@ -77,19 +92,33 @@ jobs:
             }
 
             // --- ... AND from changed dependencies (map package -> importing tools) ---
-            // Package names whose version lines changed in package.json /
-            // pnpm-workspace.yaml overrides. A dependency PR touches no
-            // src/tools/ file, so this is the only way it gets tool: labels.
-            const changedDeps = new Set();
+            // Parse the package.json patch into old/new versions per package so
+            // we can both map packages -> tools and classify the change (added /
+            // removed / major bump). A dependency PR touches no src/tools/ file,
+            // so this is the only way it gets tool: labels.
             const skipKeys = new Set([
               'name', 'version', 'description', 'author', 'license', 'type',
               'packageManager', 'overrides', 'packages', 'allowBuilds', 'onlyBuiltDependencies',
             ]);
+            const oldVer = {}, newVer = {};
             const pjPatch = files.find(f => f.filename === 'package.json')?.patch || '';
             for (const line of pjPatch.split('\n')) {
-              const m = /^[+-]\s*"([^"]+)"\s*:\s*"/.exec(line);
-              if (m && !skipKeys.has(m[1])) { changedDeps.add(m[1]); }
+              const m = /^([+-])\s*"([^"]+)"\s*:\s*"([^"]+)"/.exec(line);
+              if (!m || skipKeys.has(m[2])) { continue; }
+              if (m[1] === '+') { newVer[m[2]] = m[3]; } else { oldVer[m[2]] = m[3]; }
             }
+            const changedDeps = new Set([...Object.keys(oldVer), ...Object.keys(newVer)]);
+
+            // classify: added / removed dependency, and major-version bumps
+            const majorOf = v => String(v).replace(/^\D*/, '').split('.')[0];
+            for (const name of changedDeps) {
+              const hasOld = name in oldVer, hasNew = name in newVer;
+              if (hasNew && !hasOld) { desired.add('new-dependency'); }
+              else if (hasOld && !hasNew) { desired.add('removed-dependency'); }
+              else if (hasOld && hasNew && majorOf(oldVer[name]) !== majorOf(newVer[name])) { desired.add('major-update'); }
+            }
+
+            // pnpm-workspace.yaml overrides also feed the package -> tool mapping
             const wsPatch = files.find(f => f.filename === 'pnpm-workspace.yaml')?.patch || '';
             for (const line of wsPatch.split('\n')) {
               // overrides entries: `  dompurify@<3.4.13: 3.4.13`  or  `  pkg: x`
@@ -154,6 +183,14 @@ jobs:
               scripts: ['fef2c0', 'Build / utility scripts'],
               assets: ['e99695', 'Static assets'],
               build: ['c2e0c6', 'Build / tooling config'],
+              'new-tool': ['0e8a16', 'Adds a brand-new tool'],
+              'new-dependency': ['d93f0b', 'Adds a new dependency'],
+              'removed-dependency': ['5319e7', 'Removes a dependency'],
+              'major-update': ['b60205', 'Major-version dependency update'],
+              enhancement: ['a2eeef', 'New feature or enhancement'],
+              bug: ['d73a4a', 'Bug fix'],
+              performance: ['fbca04', 'Performance improvement'],
+              refactor: ['d4c5f9', 'Code refactor'],
             };
             const colorFor = (name) => {
               if (name.startsWith('tool:')) { return ['c5def5', `Touches the ${name.slice(5)} tool`]; }
