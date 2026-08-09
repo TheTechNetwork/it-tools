@@ -1,6 +1,4 @@
-export { createToken };
-
-function createToken({
+export function createToken({
   withUppercase = true,
   withLowercase = true,
   withNumbers = true,

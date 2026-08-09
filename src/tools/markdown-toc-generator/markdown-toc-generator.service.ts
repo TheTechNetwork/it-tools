@@ -1,7 +1,4 @@
-export { generateToc, slugify };
-export type { TocOptions };
-
-interface TocOptions {
+export interface TocOptions {
   // Only include headings between these levels (inclusive).
   minLevel?: number;
   maxLevel?: number;
@@ -19,7 +16,7 @@ interface Heading {
 
 // GitHub-style anchor slug: lowercase, spaces to hyphens, drop characters that
 // are not word characters/hyphens/spaces.
-function slugify(text: string): string {
+export function slugify(text: string): string {
   return text
     .trim()
     .toLowerCase()
@@ -67,7 +64,7 @@ function parseHeadings(markdown: string): Heading[] {
   return headings;
 }
 
-function generateToc(markdown: string, options: TocOptions = {}): string {
+export function generateToc(markdown: string, options: TocOptions = {}): string {
   const { minLevel = 1, maxLevel = 6, indent = '  ', bullet = '-' } = options;
 
   const headings = parseHeadings(markdown).filter(

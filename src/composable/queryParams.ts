@@ -2,8 +2,6 @@ import { useStorage } from '@vueuse/core';
 import { useRouteQuery } from '@vueuse/router';
 import { computed } from 'vue';
 
-export { useQueryParam, useQueryParamOrStorage };
-
 const transformers = {
   number: {
     fromQuery: (value: string) => Number(value),
@@ -25,7 +23,7 @@ const transformers = {
   },
 };
 
-function useQueryParam<T>({ name, defaultValue }: { name: string; defaultValue: T }) {
+export function useQueryParam<T>({ name, defaultValue }: { name: string; defaultValue: T }) {
   const type = typeof defaultValue;
   const transformer = transformers[type as keyof typeof transformers] ?? transformers.string;
 
@@ -41,7 +39,7 @@ function useQueryParam<T>({ name, defaultValue }: { name: string; defaultValue: 
   });
 }
 
-function useQueryParamOrStorage<T>({ name, storageName, defaultValue }: { name: string; storageName: string; defaultValue: T }) {
+export function useQueryParamOrStorage<T>({ name, storageName, defaultValue }: { name: string; storageName: string; defaultValue: T }) {
   const type = typeof defaultValue;
   const transformer = transformers[type as keyof typeof transformers] ?? transformers.string;
 

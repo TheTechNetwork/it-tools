@@ -1,7 +1,5 @@
 import type { SignatureInfo } from './pdf-signature-checker.types';
 
-export { formatCertificates };
-
 type Certificate = SignatureInfo['meta']['certs'][number];
 
 type FormattedCertificate = Certificate & {
@@ -16,7 +14,7 @@ type FormattedCertificate = Certificate & {
 // the injected `formatDate` (locale-sensitive when using toLocaleString in the UI,
 // so it is passed in to keep this function pure and testable) and each row gets a
 // 1-based name from `formatCertificateName`.
-function formatCertificates({
+export function formatCertificates({
   certs,
   formatDate,
   formatCertificateName,

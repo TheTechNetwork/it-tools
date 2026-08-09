@@ -1,8 +1,6 @@
 import yaml from 'yaml';
 
-export { formatYaml };
-
-function formatYaml({
+export function formatYaml({
   rawYaml,
   sortKeys = false,
   indentSize = 2,

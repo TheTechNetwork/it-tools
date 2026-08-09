@@ -277,9 +277,10 @@ import { transformInput } from './tool.service';
 **`tool.service.ts`** - Pure business logic:
 
 ```typescript
-export { transformInput };
-
-function transformInput(input: string): string {
+// Export inline on the declaration (not a separate `export { … }` block at the
+// top of the file — that references the declaration before it appears, which
+// CodeQL flags as js/use-before-declaration).
+export function transformInput(input: string): string {
   // Pure function - no Vue dependencies
   // Easy to test
   return input.toUpperCase();

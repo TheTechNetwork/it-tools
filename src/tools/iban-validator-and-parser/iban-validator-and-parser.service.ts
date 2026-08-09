@@ -1,7 +1,5 @@
 import { ValidationErrorsIBAN } from 'ibantools';
 
-export { getFriendlyErrors };
-
 const ibanErrorToMessage = {
   [ValidationErrorsIBAN.NoIBANProvided]: 'No IBAN provided',
   [ValidationErrorsIBAN.NoIBANCountry]: 'No IBAN country',
@@ -13,6 +11,6 @@ const ibanErrorToMessage = {
   [ValidationErrorsIBAN.QRIBANNotAllowed]: 'QR-IBAN not allowed',
 };
 
-function getFriendlyErrors(errorCodes: ValidationErrorsIBAN[]) {
+export function getFriendlyErrors(errorCodes: ValidationErrorsIBAN[]) {
   return errorCodes.map(errorCode => ibanErrorToMessage[errorCode]).filter(Boolean);
 }

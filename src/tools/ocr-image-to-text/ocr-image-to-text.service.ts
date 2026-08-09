@@ -1,27 +1,24 @@
 import { createWorker } from 'tesseract.js';
 
-export { createRecognizer, getAssetsBaseUrl, recognizeText, resolveAssetsBase, SUPPORTED_LANGUAGES };
-export type { OcrImage, OcrLanguage, OcrProgress, OcrQuality, Recognizer };
-
-interface OcrLanguage {
+export interface OcrLanguage {
   code: string;
   name: string;
 }
 
 // Anything tesseract.js' recognize() accepts.
-type OcrImage = File | Blob | string;
+export type OcrImage = File | Blob | string;
 
-interface OcrProgress {
+export interface OcrProgress {
   status: string;
   progress: number;
 }
 
 // fast = tessdata_fast (smaller/faster, the default); best = tessdata_best
 // (larger, slower, higher accuracy). Selects which tessdata directory to load.
-type OcrQuality = 'fast' | 'best';
+export type OcrQuality = 'fast' | 'best';
 
 // A worker created once and reused across a batch of images, then terminated.
-interface Recognizer {
+export interface Recognizer {
   recognize: (image: OcrImage) => Promise<string>;
   terminate: () => Promise<void>;
 }
@@ -33,7 +30,7 @@ interface Recognizer {
 // VITE_OCR_ASSETS_BASE_URL override always wins - that origin must then be
 // allowed by the CSP connect-src/script-src. The path is versioned by the
 // tesseract.js version so the engine and its WASM core stay in lockstep.
-function resolveAssetsBase({ prod, override }: { prod: boolean; override?: string }): string {
+export function resolveAssetsBase({ prod, override }: { prod: boolean; override?: string }): string {
   const fallback = prod ? 'https://assets.thetech.network' : '';
   return (override ?? fallback).replace(/\/+$/, '');
 }
@@ -41,13 +38,13 @@ function resolveAssetsBase({ prod, override }: { prod: boolean; override?: strin
 const ASSETS_BASE = resolveAssetsBase({ prod: import.meta.env.PROD, override: import.meta.env.VITE_OCR_ASSETS_BASE_URL });
 const ASSETS_VERSION = import.meta.env.TESSERACT_VERSION;
 
-function getAssetsBaseUrl(): string {
+export function getAssetsBaseUrl(): string {
   return `${ASSETS_BASE}/tesseract/${ASSETS_VERSION}`;
 }
 
 // Languages offered in the UI. Codes are Tesseract language codes and must match
 // what the sync script uploads to the asset host.
-const SUPPORTED_LANGUAGES: OcrLanguage[] = [
+export const SUPPORTED_LANGUAGES: OcrLanguage[] = [
   { code: 'eng', name: 'English' },
   { code: 'spa', name: 'Spanish' },
   { code: 'fra', name: 'French' },
@@ -108,7 +105,7 @@ async function assertLanguageAvailable(url: string, language: string): Promise<v
 // Create one worker for the given languages/quality and reuse it across many
 // images before terminating - much faster than re-initializing per image when
 // processing a batch (or the pages of a PDF).
-async function createRecognizer({
+export async function createRecognizer({
   languages,
   quality = 'fast',
   onProgress,
@@ -144,7 +141,7 @@ async function createRecognizer({
 }
 
 // Recognize a single image (creates a worker, recognizes, terminates).
-async function recognizeText({
+export async function recognizeText({
   image,
   languages,
   quality,

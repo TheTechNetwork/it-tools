@@ -1,5 +1,3 @@
-export { numberToWords };
-
 const ONES = [
   'zero',
   'one',
@@ -84,7 +82,7 @@ function integerToWords(digits: string): string {
 // Convert a number (or numeric string) into its English words representation.
 // Supports negatives and decimals; decimal digits are read out individually
 // (e.g. 3.14 -> "three point one four").
-function numberToWords(input: number | string): string {
+export function numberToWords(input: number | string): string {
   const raw = typeof input === 'number' ? input.toString() : input.trim();
 
   if (raw === '' || !/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)$/.test(raw)) {

@@ -1,8 +1,6 @@
 import { textToBase64 } from '@/utils/base64';
 
-export { generateSvgPlaceholder, svgToBase64DataUrl };
-
-function generateSvgPlaceholder({
+export function generateSvgPlaceholder({
   width,
   height,
   fontSize,
@@ -30,6 +28,6 @@ function generateSvgPlaceholder({
   `.trim();
 }
 
-function svgToBase64DataUrl(svgString: string): string {
+export function svgToBase64DataUrl(svgString: string): string {
   return `data:image/svg+xml;base64,${textToBase64(svgString)}`;
 }

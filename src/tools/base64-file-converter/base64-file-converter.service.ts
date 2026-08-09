@@ -1,8 +1,6 @@
 import { getExtensionFromMimeType, getMimeTypeFromBase64 } from '@/composable/downloadBase64';
 
-export { getFileExtensionFromBase64 };
-
-function getFileExtensionFromBase64({
+export function getFileExtensionFromBase64({
   base64String,
   defaultExtension = '',
 }: {

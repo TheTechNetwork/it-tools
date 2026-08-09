@@ -1,7 +1,5 @@
 import JSON5 from 'json5';
 
-export { sortJsonKeys };
-
 interface SortOptions {
   order?: 'asc' | 'desc';
   indent?: number;
@@ -26,7 +24,7 @@ function sortValue(value: unknown, order: 'asc' | 'desc'): unknown {
 
 // Parse JSON (JSON5-tolerant) and re-serialize it with every object's keys
 // sorted recursively, producing a canonical output useful for diffing.
-function sortJsonKeys(json: string, { order = 'asc', indent = 2 }: SortOptions = {}): string {
+export function sortJsonKeys(json: string, { order = 'asc', indent = 2 }: SortOptions = {}): string {
   const parsed = JSON5.parse(json);
   return JSON.stringify(sortValue(parsed, order), null, indent);
 }

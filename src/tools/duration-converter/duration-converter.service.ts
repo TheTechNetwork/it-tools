@@ -1,7 +1,4 @@
-export { convertDuration, DURATION_UNITS, humanizeDuration };
-export type { DurationUnit };
-
-interface DurationUnit {
+export interface DurationUnit {
   key: string;
   label: string;
   // Number of milliseconds in one unit.
@@ -15,7 +12,7 @@ const HOUR = 60 * MINUTE;
 const DAY = 24 * HOUR;
 const WEEK = 7 * DAY;
 
-const DURATION_UNITS: DurationUnit[] = [
+export const DURATION_UNITS: DurationUnit[] = [
   { key: 'nanosecond', label: 'Nanoseconds (ns)', milliseconds: 1e-6 },
   { key: 'microsecond', label: 'Microseconds (µs)', milliseconds: 1e-3 },
   { key: 'millisecond', label: 'Milliseconds (ms)', milliseconds: MS },
@@ -28,7 +25,7 @@ const DURATION_UNITS: DurationUnit[] = [
 
 const UNIT_BY_KEY = new Map(DURATION_UNITS.map(unit => [unit.key, unit]));
 
-function convertDuration({ value, from, to }: { value: number; from: string; to: string }): number {
+export function convertDuration({ value, from, to }: { value: number; from: string; to: string }): number {
   const fromUnit = UNIT_BY_KEY.get(from);
   const toUnit = UNIT_BY_KEY.get(to);
 
@@ -41,7 +38,7 @@ function convertDuration({ value, from, to }: { value: number; from: string; to:
 
 // Break a duration (given in one unit) down into a human-readable string such
 // as "1 hour, 2 minutes, 3 seconds". Sub-millisecond remainders are dropped.
-function humanizeDuration({ value, from }: { value: number; from: string }): string {
+export function humanizeDuration({ value, from }: { value: number; from: string }): string {
   const fromUnit = UNIT_BY_KEY.get(from);
   if (!fromUnit) {
     throw new Error(`Unknown duration unit: ${from}`);
