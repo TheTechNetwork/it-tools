@@ -54,6 +54,9 @@ jobs:
       (github.event_name != 'pull_request' || needs.changes.outputs.app == 'true')
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    permissions:
+      contents: read
+      code-quality: write # let the coverage upload post to GitHub Code Quality
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -124,6 +127,19 @@ jobs:
             coverage/lcov-report
           retention-days: 7
           if-no-files-found: ignore
+
+      # Feed the Cobertura report to GitHub Code Quality; the
+      # github-code-quality[bot] then posts a coverage summary on the PR.
+      # Skipped for fork PRs, which can't write to Code Quality.
+      - name: Upload coverage to GitHub Code Quality
+        if: >-
+          github.event_name != 'pull_request' ||
+          github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/upload-code-coverage@64515b666cfee68a0a9944893e7e2359ef331ab8 # v1.4.2
+        with:
+          file: coverage/cobertura-coverage.xml
+          language: javascript
+          label: unit
 
   # Single production build, shared with the E2E jobs below. Gated like `checks`
   # so non-app PRs skip it (and, via `needs: build`, the E2E jobs too).
