@@ -32,6 +32,11 @@
       "rangeStrategy": "replace"
     },
     {
+      "description": "Resolve aquasecurity/trivy-action versions from GitHub Releases instead of tags. Renovate's default github-tags lookup for this action intermittently returns no-result (its tags were unavailable to the API during the action's supply-chain incident remediation). The action cuts a GitHub Release for every version, so github-releases is a more reliable source; digest pinning is unaffected.",
+      "matchPackageNames": ["aquasecurity/trivy-action"],
+      "overrideDatasource": "github-releases"
+    },
+    {
       "description": "Automerge low-risk devDependency updates once CI passes",
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor", "patch"],
