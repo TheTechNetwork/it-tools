@@ -1017,6 +1017,16 @@ tools:
     inputPlaceholder: Paste your raw JSON here...
     outputLabel: Minified version of your JSON
 
+  jsonpath-query:
+    title: JSONPath query
+    description: Query and extract data from a JSON document using JSONPath expressions.
+    inputLabel: Your JSON
+    inputPlaceholder: Paste your JSON here...
+    queryLabel: JSONPath expression
+    queryPlaceholder: e.g. $.store.books[*].title
+    resultLabel: Result
+    invalidJson: Provided JSON is not valid.
+
   ulid-generator:
     title: ULID generator
     description: Generate random Universally Unique Lexicographically Sortable Identifier (ULID).
@@ -1272,6 +1282,16 @@ tools:
     to: To
     result: Result
 
+  css-unit-converter:
+    title: CSS unit converter
+    description: 'Convert between CSS units: px, rem, em, %, pt, pc, in, cm and mm, using a configurable base font size for the font-relative units.'
+    valueToConvert: Value to convert
+    from: From
+    to: To
+    swap: Swap units
+    baseFontSize: Base font size (px)
+    result: Result
+
   text-line-tools:
     title: Text line tools
     description: 'Sort, deduplicate, reverse, shuffle, number, trim and filter the lines of a block of text.'
@@ -1438,6 +1458,15 @@ tools:
       label: 'Output HTML:'
     button:
       print: Print as PDF
+
+  markdown-editor:
+    title: Markdown editor
+    description: Write Markdown and see the rendered HTML result live, side by side.
+    input:
+      label: 'Markdown:'
+      placeholder: Type your Markdown here...
+    output:
+      label: 'Preview:'
 
   ocr-image-to-text:
     title: Image to text (OCR)
