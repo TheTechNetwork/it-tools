@@ -1,8 +1,6 @@
 import TurndownService from 'turndown';
 
-export { convertHtmlToMarkdown };
-
-function convertHtmlToMarkdown(html: string): string {
+export function convertHtmlToMarkdown(html: string): string {
   const turndown = new TurndownService({
     headingStyle: 'atx',
     hr: '---',

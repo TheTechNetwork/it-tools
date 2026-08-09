@@ -1,9 +1,7 @@
 import { normalizeEmail } from 'email-normalizer';
 import { withDefaultOnError } from '@/utils/defaults';
 
-export { normalizeEmails };
-
-function normalizeEmails(rawEmails: string): string {
+export function normalizeEmails(rawEmails: string): string {
   if (!rawEmails) {
     return '';
   }

@@ -1,6 +1,4 @@
-export { convertArrayToCsv, getHeaders };
-
-function getHeaders({ array }: { array: Record<string, unknown>[] }): string[] {
+export function getHeaders({ array }: { array: Record<string, unknown>[] }): string[] {
   const headers = new Set<string>();
 
   array.forEach(item => Object.keys(item).forEach(key => headers.add(key)));
@@ -26,7 +24,7 @@ function serializeValue(value: unknown): string {
   return valueAsString;
 }
 
-function convertArrayToCsv({ array }: { array: Record<string, unknown>[] }): string {
+export function convertArrayToCsv({ array }: { array: Record<string, unknown>[] }): string {
   const headers = getHeaders({ array });
 
   const rows = array.map(item => headers.map(header => serializeValue(item[header])));

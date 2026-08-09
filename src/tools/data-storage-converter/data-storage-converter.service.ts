@@ -1,7 +1,4 @@
-export { convertDataSize, DATA_UNITS };
-export type { DataUnit };
-
-interface DataUnit {
+export interface DataUnit {
   key: string;
   label: string;
   // Number of bytes in one unit.
@@ -10,7 +7,7 @@ interface DataUnit {
 
 // SI (decimal, powers of 1000) and IEC (binary, powers of 1024) units, plus
 // the bit as the smallest unit (1 byte = 8 bits).
-const DATA_UNITS: DataUnit[] = [
+export const DATA_UNITS: DataUnit[] = [
   { key: 'bit', label: 'Bit (b)', bytes: 1 / 8 },
   { key: 'byte', label: 'Byte (B)', bytes: 1 },
   { key: 'kilobyte', label: 'Kilobyte (kB)', bytes: 1e3 },
@@ -27,7 +24,7 @@ const DATA_UNITS: DataUnit[] = [
 
 const UNIT_BY_KEY = new Map(DATA_UNITS.map(unit => [unit.key, unit]));
 
-function convertDataSize({ value, from, to }: { value: number; from: string; to: string }): number {
+export function convertDataSize({ value, from, to }: { value: number; from: string; to: string }): number {
   const fromUnit = UNIT_BY_KEY.get(from);
   const toUnit = UNIT_BY_KEY.get(to);
 

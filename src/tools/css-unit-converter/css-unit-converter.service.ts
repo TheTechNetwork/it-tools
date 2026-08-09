@@ -1,8 +1,6 @@
-export { convertCssUnit, CSS_UNITS, type CssUnit };
+export type CssUnit = 'px' | 'rem' | 'em' | 'pt' | 'pc' | 'in' | 'cm' | 'mm' | '%';
 
-type CssUnit = 'px' | 'rem' | 'em' | 'pt' | 'pc' | 'in' | 'cm' | 'mm' | '%';
-
-const CSS_UNITS: { value: CssUnit; label: string }[] = [
+export const CSS_UNITS: { value: CssUnit; label: string }[] = [
   { value: 'px', label: 'px — pixels' },
   { value: 'rem', label: 'rem — root em' },
   { value: 'em', label: 'em — element em' },
@@ -45,7 +43,7 @@ function fromPx({ px, unit, baseFontSize }: { px: number; unit: CssUnit; baseFon
   return px / ABSOLUTE_PX_PER_UNIT[unit];
 }
 
-function convertCssUnit({
+export function convertCssUnit({
   value,
   from,
   to,

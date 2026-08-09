@@ -1,6 +1,4 @@
-export { booleanToHumanReadable, isNotThrowing };
-
-function isNotThrowing(cb: () => unknown): boolean {
+export function isNotThrowing(cb: () => unknown): boolean {
   try {
     cb();
     return true;
@@ -10,6 +8,6 @@ function isNotThrowing(cb: () => unknown): boolean {
   }
 }
 
-function booleanToHumanReadable(value: boolean): string {
+export function booleanToHumanReadable(value: boolean): string {
   return value ? 'Yes' : 'No';
 }

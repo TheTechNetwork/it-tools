@@ -1,9 +1,7 @@
 import JSON5 from 'json5';
 import { evaluateJsonPath } from './jsonpath.engine';
 
-export { queryJson };
-
-function queryJson({ data, query, indentSize = 2 }: { data: string; query: string; indentSize?: number }): string {
+export function queryJson({ data, query, indentSize = 2 }: { data: string; query: string; indentSize?: number }): string {
   if (data.trim() === '') {
     return '';
   }

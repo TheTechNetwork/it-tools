@@ -1,6 +1,4 @@
-export { generateNumeronym };
-
-function generateNumeronym(word: string): string {
+export function generateNumeronym(word: string): string {
   const wordLength = word.length;
 
   if (wordLength <= 3) {

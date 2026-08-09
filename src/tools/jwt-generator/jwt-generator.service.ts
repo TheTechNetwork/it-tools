@@ -1,16 +1,13 @@
 import { importPKCS8, SignJWT } from 'jose';
 
-export { isSymmetric, signJwt, SUPPORTED_ALGORITHMS };
-export type { JwtAlgorithm };
-
-type JwtAlgorithm
+export type JwtAlgorithm
   = | 'HS256' | 'HS384' | 'HS512'
     | 'RS256' | 'RS384' | 'RS512'
     | 'PS256' | 'PS384' | 'PS512'
     | 'ES256' | 'ES384' | 'ES512'
     | 'EdDSA';
 
-const SUPPORTED_ALGORITHMS: JwtAlgorithm[] = [
+export const SUPPORTED_ALGORITHMS: JwtAlgorithm[] = [
   'HS256',
   'HS384',
   'HS512',
@@ -27,11 +24,11 @@ const SUPPORTED_ALGORITHMS: JwtAlgorithm[] = [
 ];
 
 // HMAC algorithms sign with a shared secret; everything else needs a private key.
-function isSymmetric(algorithm: string): boolean {
+export function isSymmetric(algorithm: string): boolean {
   return algorithm.startsWith('HS');
 }
 
-async function signJwt({
+export async function signJwt({
   payload,
   algorithm,
   key,

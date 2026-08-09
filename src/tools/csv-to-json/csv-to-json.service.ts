@@ -1,5 +1,3 @@
-export { convertCsvToJson, parseCsv };
-
 interface ParseOptions {
   delimiter?: string;
   // When true, the first row is treated as the header and each record becomes
@@ -9,7 +7,7 @@ interface ParseOptions {
 
 // A small RFC 4180 CSV parser: supports quoted fields, escaped quotes (""),
 // and delimiters/newlines inside quotes. Handles both \n and \r\n line endings.
-function parseCsv(csv: string, { delimiter = ',' }: { delimiter?: string } = {}): string[][] {
+export function parseCsv(csv: string, { delimiter = ',' }: { delimiter?: string } = {}): string[][] {
   const rows: string[][] = [];
   let field = '';
   let row: string[] = [];
@@ -84,7 +82,7 @@ function parseCsv(csv: string, { delimiter = ',' }: { delimiter?: string } = {})
   return rows;
 }
 
-function convertCsvToJson(csv: string, { delimiter = ',', header = true }: ParseOptions = {}): string {
+export function convertCsvToJson(csv: string, { delimiter = ',', header = true }: ParseOptions = {}): string {
   const rows = parseCsv(csv.trim(), { delimiter });
 
   if (rows.length === 0) {

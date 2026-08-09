@@ -1,6 +1,6 @@
-const random = () => Math.random();
+export const random = () => Math.random();
 
-function randFromArray<T>(array: T[]): T {
+export function randFromArray<T>(array: T[]): T {
   const index = Math.floor(random() * array.length);
   const value = array[index];
   if (value === undefined) {
@@ -9,10 +9,10 @@ function randFromArray<T>(array: T[]): T {
   return value;
 }
 
-const randIntFromInterval = (min: number, max: number) => Math.floor(random() * (max - min) + min);
+export const randIntFromInterval = (min: number, max: number) => Math.floor(random() * (max - min) + min);
 
 // Durstenfeld shuffle
-function shuffleArrayMutate<T>(array: T[]): T[] {
+export function shuffleArrayMutate<T>(array: T[]): T[] {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     const temp = array[i];
@@ -26,18 +26,8 @@ function shuffleArrayMutate<T>(array: T[]): T[] {
   return array;
 }
 
-const shuffleArray = <T>(array: T[]): T[] => shuffleArrayMutate([...array]);
+export const shuffleArray = <T>(array: T[]): T[] => shuffleArrayMutate([...array]);
 
-const shuffleString = (str: string, delimiter = ''): string => shuffleArrayMutate(str.split(delimiter)).join(delimiter);
+export const shuffleString = (str: string, delimiter = ''): string => shuffleArrayMutate(str.split(delimiter)).join(delimiter);
 
-const generateRandomId = () => `id-${random().toString(36).substring(2, 12)}`;
-
-export {
-  generateRandomId,
-  randFromArray,
-  randIntFromInterval,
-  random,
-  shuffleArray,
-  shuffleArrayMutate,
-  shuffleString,
-};
+export const generateRandomId = () => `id-${random().toString(36).substring(2, 12)}`;

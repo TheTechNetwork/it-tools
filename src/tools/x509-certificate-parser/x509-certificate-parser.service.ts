@@ -1,9 +1,6 @@
 import { asn1, md, pki } from 'node-forge';
 
-export type { DistinguishedName, ParsedCertificate };
-export { describePublicKey, formatAltNames, formatHexColons, parseCertificate, parseDistinguishedName };
-
-interface DistinguishedName {
+export interface DistinguishedName {
   commonName?: string;
   organizationName?: string;
   organizationalUnitName?: string;
@@ -14,7 +11,7 @@ interface DistinguishedName {
   attributes: { shortName?: string; name?: string; value: string }[];
 }
 
-interface ParsedCertificate {
+export interface ParsedCertificate {
   subject: DistinguishedName;
   issuer: DistinguishedName;
   serialNumber: string;
@@ -51,11 +48,11 @@ const SHORT_NAME_TO_FIELD: Record<string, keyof Omit<DistinguishedName, 'attribu
 
 // Groups a lowercase hex digest into colon-separated, upper-cased byte pairs,
 // e.g. "ab12cd" -> "AB:12:CD" (the conventional fingerprint/serial display).
-function formatHexColons(hex: string): string {
+export function formatHexColons(hex: string): string {
   return (hex.match(/.{1,2}/g) ?? []).join(':').toUpperCase();
 }
 
-function parseDistinguishedName(attributes: { shortName?: string; name?: string; value?: unknown }[]): DistinguishedName {
+export function parseDistinguishedName(attributes: { shortName?: string; name?: string; value?: unknown }[]): DistinguishedName {
   const dn: DistinguishedName = { attributes: [] };
 
   for (const attribute of attributes) {
@@ -74,7 +71,7 @@ function parseDistinguishedName(attributes: { shortName?: string; name?: string;
 // Maps the raw subjectAltName entries to `<label>:<value>` strings (e.g.
 // "DNS:example.com", "IP:127.0.0.1"). Pure so it can be tested for every
 // GeneralName type without needing a certificate per case.
-function formatAltNames(altNames: { type: number; value?: string; ip?: string }[]): string[] {
+export function formatAltNames(altNames: { type: number; value?: string; ip?: string }[]): string[] {
   const typeLabels: Record<number, string> = { 1: 'email', 2: 'DNS', 6: 'URI', 7: 'IP' };
 
   return altNames.map((altName) => {
@@ -100,7 +97,7 @@ function getFingerprints(cert: pki.Certificate): { sha1: string; sha256: string 
 // node-forge fully models RSA keys (modulus `n`, exponent `e`); other key types
 // (e.g. EC) surface without those fields and are reported as "Unknown". Pure so
 // both branches are testable without an EC certificate fixture.
-function describePublicKey(publicKey: { n?: { bitLength: () => number }; e?: { toString: () => string } } | undefined): ParsedCertificate['publicKey'] {
+export function describePublicKey(publicKey: { n?: { bitLength: () => number }; e?: { toString: () => string } } | undefined): ParsedCertificate['publicKey'] {
   if (publicKey?.n && publicKey?.e) {
     return {
       algorithm: 'RSA',
@@ -123,7 +120,7 @@ function isSelfSigned(cert: pki.Certificate): boolean {
   }
 }
 
-function parseCertificate(pem: string): ParsedCertificate {
+export function parseCertificate(pem: string): ParsedCertificate {
   const trimmed = pem.trim();
   if (trimmed === '') {
     throw new Error('No certificate provided');

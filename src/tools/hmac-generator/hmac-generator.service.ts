@@ -4,12 +4,11 @@ import { hmac } from '@awasm/noble/hmac.js';
 import { utf8ToBytes } from '@awasm/noble/utils.js';
 import { formatBytes } from '../hash-text/hash-text.service';
 
-export { algos, computeHmac };
 export type { Encoding };
 
 export type AlgoName = keyof typeof algos;
 
-const algos = {
+export const algos = {
   MD5: md5,
   RIPEMD160: ripemd160,
   SHA1: sha1,
@@ -22,7 +21,7 @@ const algos = {
   SHA512: sha512,
 } as const;
 
-function computeHmac({
+export function computeHmac({
   plainText,
   secret,
   hashFunction,

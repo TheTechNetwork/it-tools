@@ -3,16 +3,13 @@ import { chacha20poly1305 } from '@noble/ciphers/chacha.js';
 import { bytesToUtf8, randomBytes, utf8ToBytes } from '@noble/ciphers/utils.js';
 import { scrypt } from '@noble/hashes/scrypt.js';
 
-export { cipherAlgorithms, decryptText, encryptText };
-export type { CipherAlgorithm };
-
 // Modern authenticated ciphers (AEAD): both provide confidentiality *and*
 // tamper detection, so a wrong key or corrupted ciphertext fails loudly on
 // decryption instead of returning garbage. This replaces the legacy crypto-js
 // ciphers (AES-CBC/TripleDES/RC4/Rabbit), which are unauthenticated and, for
 // RC4/3DES, cryptographically broken.
-const cipherAlgorithms = ['AES-GCM', 'ChaCha20-Poly1305'] as const;
-type CipherAlgorithm = typeof cipherAlgorithms[number];
+export const cipherAlgorithms = ['AES-GCM', 'ChaCha20-Poly1305'] as const;
+export type CipherAlgorithm = typeof cipherAlgorithms[number];
 
 const ALGORITHM_ID: Record<CipherAlgorithm, number> = {
   'AES-GCM': 0,
@@ -60,7 +57,7 @@ function base64ToBytes(base64: string): Uint8Array {
   return bytes;
 }
 
-function encryptText({ text, secret, algorithm }: { text: string; secret: string; algorithm: CipherAlgorithm }): string {
+export function encryptText({ text, secret, algorithm }: { text: string; secret: string; algorithm: CipherAlgorithm }): string {
   const salt = randomBytes(SALT_LENGTH);
   const nonce = randomBytes(NONCE_LENGTH);
   const key = deriveKey(secret, salt);
@@ -76,7 +73,7 @@ function encryptText({ text, secret, algorithm }: { text: string; secret: string
   return bytesToBase64(envelope);
 }
 
-function decryptText({ text, secret }: { text: string; secret: string; algorithm?: CipherAlgorithm }): string {
+export function decryptText({ text, secret }: { text: string; secret: string; algorithm?: CipherAlgorithm }): string {
   if (text.trim() === '') {
     return '';
   }

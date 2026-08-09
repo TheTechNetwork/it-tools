@@ -1,8 +1,6 @@
 import _ from 'lodash';
 
-export { getErrorMessageIfThrows };
-
-function getErrorMessageIfThrows(cb: () => unknown) {
+export function getErrorMessageIfThrows(cb: () => unknown) {
   try {
     cb();
     return undefined;

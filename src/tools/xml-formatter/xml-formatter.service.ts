@@ -2,17 +2,15 @@ import type { XMLFormatterOptions } from 'xml-formatter';
 import xmlFormat from 'xml-formatter';
 import { withDefaultOnError } from '@/utils/defaults';
 
-export { formatXml, isValidXML };
-
 function cleanRawXml(rawXml: string): string {
   return rawXml.trim();
 }
 
-function formatXml(rawXml: string, options?: XMLFormatterOptions): string {
+export function formatXml(rawXml: string, options?: XMLFormatterOptions): string {
   return withDefaultOnError(() => xmlFormat(cleanRawXml(rawXml), options) ?? '', '');
 }
 
-function isValidXML(rawXml: string): boolean {
+export function isValidXML(rawXml: string): boolean {
   const cleanedRawXml = cleanRawXml(rawXml);
 
   if (cleanedRawXml === '') {

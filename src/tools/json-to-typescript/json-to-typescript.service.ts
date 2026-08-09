@@ -1,9 +1,7 @@
 import JSON5 from 'json5';
 import JsonToTS from 'json-to-ts';
 
-export { convertJsonToTypescript };
-
-function convertJsonToTypescript(json: string, { rootName = 'RootObject' }: { rootName?: string } = {}): string {
+export function convertJsonToTypescript(json: string, { rootName = 'RootObject' }: { rootName?: string } = {}): string {
   const parsed = JSON5.parse(json);
 
   if (typeof parsed !== 'object' || parsed === null) {

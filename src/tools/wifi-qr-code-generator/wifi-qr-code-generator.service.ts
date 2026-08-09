@@ -1,12 +1,9 @@
-export { EAPMethods, EAPPhase2Methods, escapeString, getQrCodeText, wifiEncryptions };
-export type { EAPMethod, EAPPhase2Method, GetQrCodeTextOptions, WifiEncryption };
-
-const wifiEncryptions = ['WEP', 'WPA', 'nopass', 'WPA2-EAP'] as const;
-type WifiEncryption = typeof wifiEncryptions[number];
+export const wifiEncryptions = ['WEP', 'WPA', 'nopass', 'WPA2-EAP'] as const;
+export type WifiEncryption = typeof wifiEncryptions[number];
 
 // @see https://en.wikipedia.org/wiki/Extensible_Authentication_Protocol
 // for a list of available EAP methods. There are a lot (40!) of them.
-const EAPMethods = [
+export const EAPMethods = [
   'MD5',
   'POTP',
   'GTC',
@@ -25,15 +22,15 @@ const EAPMethods = [
   'NOOB',
   'PEAP',
 ] as const;
-type EAPMethod = typeof EAPMethods[number];
+export type EAPMethod = typeof EAPMethods[number];
 
-const EAPPhase2Methods = [
+export const EAPPhase2Methods = [
   'None',
   'MSCHAPV2',
 ] as const;
-type EAPPhase2Method = typeof EAPPhase2Methods[number];
+export type EAPPhase2Method = typeof EAPPhase2Methods[number];
 
-interface GetQrCodeTextOptions {
+export interface GetQrCodeTextOptions {
   ssid: string;
   password: string;
   encryption: WifiEncryption;
@@ -44,12 +41,12 @@ interface GetQrCodeTextOptions {
   eapPhase2Method: EAPPhase2Method;
 }
 
-function escapeString(str: string) {
+export function escapeString(str: string) {
   // replaces \, ;, ,, " and : with the same character preceded by a backslash
   return str.replace(/([\\;,:"])/g, '\\$1');
 }
 
-function getQrCodeText(options: GetQrCodeTextOptions): string | null {
+export function getQrCodeText(options: GetQrCodeTextOptions): string | null {
   const { ssid, password, encryption, eapMethod, isHiddenSSID, eapAnonymous, eapIdentity, eapPhase2Method } = options;
   if (!ssid) {
     return null;

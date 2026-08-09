@@ -4,19 +4,7 @@ import { bytesToHex } from '@awasm/noble/utils.js';
 import _ from 'lodash';
 import { createToken } from '../token-generator/token-generator.service';
 
-export {
-  base32toHex,
-  buildKeyUri,
-  generateHOTP,
-  generateSecret,
-  generateTOTP,
-  getCounterFromTime,
-  hexToBytes,
-  verifyHOTP,
-  verifyTOTP,
-};
-
-function hexToBytes(hex: string) {
+export function hexToBytes(hex: string) {
   return (hex.match(/.{1,2}/g) ?? []).map(char => Number.parseInt(char, 16));
 }
 
@@ -25,7 +13,7 @@ function computeHMACSha1(message: string, key: string) {
   return bytesToHex(hmac(sha1, Uint8Array.from(hexToBytes(base32toHex(key))), Uint8Array.from(hexToBytes(message))));
 }
 
-function base32toHex(base32: string) {
+export function base32toHex(base32: string) {
   const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 
   const bits = base32
@@ -40,7 +28,7 @@ function base32toHex(base32: string) {
   return hex;
 }
 
-function generateHOTP({ key, counter = 0 }: { key: string; counter?: number }) {
+export function generateHOTP({ key, counter = 0 }: { key: string; counter?: number }) {
   // Compute HMACdigest
   const digest = computeHMACSha1(counter.toString(16).padStart(16, '0'), key);
 
@@ -60,7 +48,7 @@ function generateHOTP({ key, counter = 0 }: { key: string; counter?: number }) {
   return code;
 }
 
-function verifyHOTP({
+export function verifyHOTP({
   token,
   key,
   window = 0,
@@ -80,17 +68,17 @@ function verifyHOTP({
   return false;
 }
 
-function getCounterFromTime({ now, timeStep }: { now: number; timeStep: number }) {
+export function getCounterFromTime({ now, timeStep }: { now: number; timeStep: number }) {
   return Math.floor(now / 1000 / timeStep);
 }
 
-function generateTOTP({ key, now = Date.now(), timeStep = 30 }: { key: string; now?: number; timeStep?: number }) {
+export function generateTOTP({ key, now = Date.now(), timeStep = 30 }: { key: string; now?: number; timeStep?: number }) {
   const counter = getCounterFromTime({ now, timeStep });
 
   return generateHOTP({ key, counter });
 }
 
-function verifyTOTP({
+export function verifyTOTP({
   key,
   token,
   window = 0,
@@ -108,7 +96,7 @@ function verifyTOTP({
   return verifyHOTP({ token, key, window, counter });
 }
 
-function buildKeyUri({
+export function buildKeyUri({
   secret,
   app = 'IT-Tools',
   account = 'demo-user',
@@ -138,6 +126,6 @@ function buildKeyUri({
   return `otpauth://totp/${encodeURIComponent(app)}:${encodeURIComponent(account)}?${paramsString}`;
 }
 
-function generateSecret() {
+export function generateSecret() {
   return createToken({ length: 16, alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567' });
 }

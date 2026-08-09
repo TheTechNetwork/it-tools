@@ -1,8 +1,6 @@
 import slugify from '@sindresorhus/slugify';
 
-export { slugifyString };
-
-function slugifyString(
+export function slugifyString(
   input: string,
   { separator = '-', lowercase = true }: { separator?: string; lowercase?: boolean } = {},
 ): string {

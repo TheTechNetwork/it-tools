@@ -12,18 +12,9 @@ import {
   spanishWordList,
 } from './wordlists';
 
-export {
-  convertEntropyToMnemonic,
-  convertMnemonicToEntropy,
-  generateRandomEntropy,
-  isEntropyHexadecimal,
-  isEntropyLengthValid,
-  languages,
-};
-
 export type Language = keyof typeof languages;
 
-const languages = {
+export const languages = {
   'English': englishWordList,
   'Chinese simplified': chineseSimplifiedWordList,
   'Chinese traditional': chineseTraditionalWordList,
@@ -36,22 +27,22 @@ const languages = {
   'Spanish': spanishWordList,
 };
 
-function generateRandomEntropy(): string {
+export function generateRandomEntropy(): string {
   return generateEntropy();
 }
 
-function convertEntropyToMnemonic({ entropy, language }: { entropy: string; language: Language }): string {
+export function convertEntropyToMnemonic({ entropy, language }: { entropy: string; language: Language }): string {
   return entropyToMnemonic(entropy, languages[language]);
 }
 
-function convertMnemonicToEntropy({ mnemonic, language }: { mnemonic: string; language: Language }): string {
+export function convertMnemonicToEntropy({ mnemonic, language }: { mnemonic: string; language: Language }): string {
   return mnemonicToEntropy(mnemonic, languages[language]);
 }
 
-function isEntropyLengthValid(entropy: string): boolean {
+export function isEntropyLengthValid(entropy: string): boolean {
   return entropy === '' || (entropy.length <= 32 && entropy.length >= 16 && entropy.length % 4 === 0);
 }
 
-function isEntropyHexadecimal(entropy: string): boolean {
+export function isEntropyHexadecimal(entropy: string): boolean {
   return /^[a-f0-9]*$/i.test(entropy);
 }

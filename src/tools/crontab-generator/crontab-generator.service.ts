@@ -1,8 +1,6 @@
 import { isValidCron } from 'cron-validator';
 import cronstrue from 'cronstrue';
 
-export { getCronDescription, isCronValid };
-
 interface CronDescriptionConfig {
   verbose?: boolean;
   dayOfWeekStartIndexZero?: boolean;
@@ -10,11 +8,11 @@ interface CronDescriptionConfig {
   throwExceptionOnParseError?: boolean;
 }
 
-function isCronValid(v: string) {
+export function isCronValid(v: string) {
   return isValidCron(v, { allowBlankDay: true, alias: true, seconds: true });
 }
 
-function getCronDescription(cron: string, config?: CronDescriptionConfig): string {
+export function getCronDescription(cron: string, config?: CronDescriptionConfig): string {
   if (isCronValid(cron)) {
     return cronstrue.toString(cron, config);
   }

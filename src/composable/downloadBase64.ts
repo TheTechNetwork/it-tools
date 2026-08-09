@@ -2,14 +2,7 @@ import type { Ref } from 'vue';
 import _ from 'lodash';
 import { extension as getExtensionFromMimeType, lookup as getMimeTypeFromExtension } from 'mime-types';
 
-export {
-  getExtensionFromMimeType,
-  getMimeTypeFromBase64,
-  getMimeTypeFromExtension,
-  previewImageFromBase64,
-  useDownloadFileFromBase64,
-  useDownloadFileFromBase64Refs,
-};
+export { getExtensionFromMimeType, getMimeTypeFromExtension };
 
 const commonMimeTypesSignatures = {
   'JVBERi0': 'application/pdf',
@@ -19,7 +12,7 @@ const commonMimeTypesSignatures = {
   '/9j/': 'image/jpg',
 };
 
-function getMimeTypeFromBase64({ base64String }: { base64String: string }) {
+export function getMimeTypeFromBase64({ base64String }: { base64String: string }) {
   const [,mimeTypeFromBase64] = base64String.match(/data:(.*?);base64/i) ?? [];
 
   if (mimeTypeFromBase64) {
@@ -77,7 +70,7 @@ function downloadFromBase64({ sourceValue, filename, extension, fileMimeType }:
   a.click();
 }
 
-function useDownloadFileFromBase64(
+export function useDownloadFileFromBase64(
   { source, filename, extension, fileMimeType }:
   { source: Ref<string>; filename?: string; extension?: string; fileMimeType?: string },
 ) {
@@ -88,7 +81,7 @@ function useDownloadFileFromBase64(
   };
 }
 
-function useDownloadFileFromBase64Refs(
+export function useDownloadFileFromBase64Refs(
   { source, filename, extension }:
   { source: Ref<string>; filename?: Ref<string>; extension?: Ref<string> },
 ) {
@@ -99,7 +92,7 @@ function useDownloadFileFromBase64Refs(
   };
 }
 
-function previewImageFromBase64(base64String: string): HTMLImageElement {
+export function previewImageFromBase64(base64String: string): HTMLImageElement {
   if (base64String === '') {
     throw new Error('Base64 string is empty');
   }

@@ -1,9 +1,6 @@
-export { applyLineOperations };
-export type { LineOperations, SortOrder };
+export type SortOrder = 'none' | 'asc' | 'desc' | 'shuffle';
 
-type SortOrder = 'none' | 'asc' | 'desc' | 'shuffle';
-
-interface LineOperations {
+export interface LineOperations {
   trim: boolean;
   removeEmpty: boolean;
   unique: boolean;
@@ -35,7 +32,7 @@ function seededShuffle(lines: string[]): string[] {
   return result;
 }
 
-function applyLineOperations(text: string, operations: LineOperations): string {
+export function applyLineOperations(text: string, operations: LineOperations): string {
   if (text === '') {
     return '';
   }

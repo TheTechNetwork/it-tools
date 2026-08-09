@@ -1,9 +1,7 @@
 import type { QRCodeErrorCorrectionLevel, QRCodeToDataURLOptions } from 'qrcode';
 import QRCode from 'qrcode';
 
-export { createQRCodeDataUrl };
-
-function createQRCodeDataUrl({
+export function createQRCodeDataUrl({
   text,
   foreground,
   background,

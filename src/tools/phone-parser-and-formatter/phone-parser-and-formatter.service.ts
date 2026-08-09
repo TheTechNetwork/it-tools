@@ -3,8 +3,6 @@ import lookup from 'country-code-lookup';
 import { parsePhoneNumber } from 'libphonenumber-js/max';
 import { booleanToHumanReadable } from '@/utils/boolean';
 
-export { formatTypeToHumanReadable, getDefaultCountryCode, getFullCountryName, parsePhoneNumberDetails };
-
 const typeToLabel: Record<NonNullable<NumberType>, string> = {
   MOBILE: 'Mobile',
   FIXED_LINE: 'Fixed line',
@@ -19,7 +17,7 @@ const typeToLabel: Record<NonNullable<NumberType>, string> = {
   PAGER: 'Pager',
 };
 
-function formatTypeToHumanReadable(type: NumberType): string | undefined {
+export function formatTypeToHumanReadable(type: NumberType): string | undefined {
   if (!type) {
     return undefined;
   }
@@ -27,7 +25,7 @@ function formatTypeToHumanReadable(type: NumberType): string | undefined {
   return typeToLabel[type];
 }
 
-function getFullCountryName(countryCode: string | undefined) {
+export function getFullCountryName(countryCode: string | undefined) {
   if (!countryCode) {
     return undefined;
   }
@@ -35,7 +33,7 @@ function getFullCountryName(countryCode: string | undefined) {
   return lookup.byIso(countryCode)?.country;
 }
 
-function getDefaultCountryCode({
+export function getDefaultCountryCode({
   locale = window.navigator.language,
   defaultCode = 'FR',
 }: { locale?: string; defaultCode?: CountryCode } = {}): CountryCode {
@@ -48,7 +46,7 @@ function getDefaultCountryCode({
   return (lookup.byIso(countryCode)?.iso2 ?? defaultCode) as CountryCode;
 }
 
-function parsePhoneNumberDetails({ phoneNumber, defaultCountryCode }: { phoneNumber: string; defaultCountryCode?: CountryCode }) {
+export function parsePhoneNumberDetails({ phoneNumber, defaultCountryCode }: { phoneNumber: string; defaultCountryCode?: CountryCode }) {
   const parsed = parsePhoneNumber(phoneNumber, defaultCountryCode);
 
   return [

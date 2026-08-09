@@ -4,9 +4,7 @@ import { get } from '@vueuse/core';
 import Fuse from 'fuse.js';
 import { computed } from 'vue';
 
-export { useFuzzySearch };
-
-function useFuzzySearch<Data>({
+export function useFuzzySearch<Data>({
   search,
   data,
   options = {},

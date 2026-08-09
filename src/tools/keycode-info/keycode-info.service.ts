@@ -11,9 +11,7 @@ export interface KeyCodeInfo {
   modifiers: string;
 }
 
-export { formatModifiers, getKeyCodeInfo };
-
-function formatModifiers(event: Pick<KeyboardEventLike, 'metaKey' | 'shiftKey' | 'ctrlKey' | 'altKey'>): string {
+export function formatModifiers(event: Pick<KeyboardEventLike, 'metaKey' | 'shiftKey' | 'ctrlKey' | 'altKey'>): string {
   return [
     event.metaKey && 'Meta',
     event.shiftKey && 'Shift',
@@ -24,7 +22,7 @@ function formatModifiers(event: Pick<KeyboardEventLike, 'metaKey' | 'shiftKey' |
     .join(' + ');
 }
 
-function getKeyCodeInfo(event: KeyboardEventLike): KeyCodeInfo {
+export function getKeyCodeInfo(event: KeyboardEventLike): KeyCodeInfo {
   return {
     key: event.key,
     keyCode: String(event.keyCode),

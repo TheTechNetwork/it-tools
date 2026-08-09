@@ -1,7 +1,4 @@
-export { inspectString };
-export type { CharacterInfo };
-
-interface CharacterInfo {
+export interface CharacterInfo {
   char: string;
   codePoint: number;
   // "U+0041" style notation.
@@ -53,7 +50,7 @@ function describe(codePoint: number): string {
 
 // Break a string into its Unicode code points (iterating by code point handles
 // surrogate pairs / emoji correctly) and describe each one.
-function inspectString(input: string): CharacterInfo[] {
+export function inspectString(input: string): CharacterInfo[] {
   return Array.from(input).map((char) => {
     const codePoint = char.codePointAt(0) ?? 0;
 

@@ -1,8 +1,6 @@
 import _ from 'lodash';
 
-export { ipv4ToInt, ipv4ToIpv6, isValidIpv4 };
-
-function ipv4ToInt({ ip }: { ip: string }) {
+export function ipv4ToInt({ ip }: { ip: string }) {
   if (!isValidIpv4({ ip })) {
     return 0;
   }
@@ -13,7 +11,7 @@ function ipv4ToInt({ ip }: { ip: string }) {
     .reduce((acc, part, index) => acc + Number(part) * 256 ** (3 - index), 0);
 }
 
-function ipv4ToIpv6({ ip, prefix = '0000:0000:0000:0000:0000:ffff:' }: { ip: string; prefix?: string }) {
+export function ipv4ToIpv6({ ip, prefix = '0000:0000:0000:0000:0000:ffff:' }: { ip: string; prefix?: string }) {
   if (!isValidIpv4({ ip })) {
     return '';
   }
@@ -31,7 +29,7 @@ function ipv4ToIpv6({ ip, prefix = '0000:0000:0000:0000:0000:ffff:' }: { ip: str
   );
 }
 
-function isValidIpv4({ ip }: { ip: string }) {
+export function isValidIpv4({ ip }: { ip: string }) {
   const cleanIp = ip.trim();
 
   // eslint-disable-next-line regexp/no-empty-alternative -- empty alternative is intentional to match 0-9

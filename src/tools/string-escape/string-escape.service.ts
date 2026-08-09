@@ -1,5 +1,3 @@
-export { escapeString, unescapeString };
-
 const ESCAPE_MAP: Record<string, string> = {
   '\\': '\\\\',
   '"': '\\"',
@@ -13,7 +11,7 @@ const ESCAPE_MAP: Record<string, string> = {
 // Escape a raw string into its backslash-escaped form (as it would appear
 // inside a double-quoted JSON/JS string literal, without the surrounding
 // quotes). Control characters below 0x20 become \uXXXX escapes.
-function escapeString(input: string): string {
+export function escapeString(input: string): string {
   let output = '';
 
   for (const char of input) {
@@ -36,7 +34,7 @@ function escapeString(input: string): string {
 
 // Reverse of escapeString: turn a backslash-escaped string back into its raw
 // form. Supports \\, \", \/, \b, \f, \n, \r, \t, \uXXXX and \xXX escapes.
-function unescapeString(input: string): string {
+export function unescapeString(input: string): string {
   let output = '';
   let i = 0;
 

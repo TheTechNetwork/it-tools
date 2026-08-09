@@ -1,9 +1,7 @@
 import { computedAsync, watchThrottled } from '@vueuse/core';
 import { computed, ref, watch } from 'vue';
 
-export { computedRefreshable, computedRefreshableAsync };
-
-function computedRefreshable<T>(getter: () => T, { throttle }: { throttle?: number } = {}) {
+export function computedRefreshable<T>(getter: () => T, { throttle }: { throttle?: number } = {}) {
   const dirty = ref(true);
   let value: T;
 
@@ -27,7 +25,7 @@ function computedRefreshable<T>(getter: () => T, { throttle }: { throttle?: numb
   return [computedValue, update] as const;
 }
 
-function computedRefreshableAsync<T>(getter: () => Promise<T>, defaultValue?: T) {
+export function computedRefreshableAsync<T>(getter: () => Promise<T>, defaultValue?: T) {
   const dirty = ref(true);
   let value: T;
 

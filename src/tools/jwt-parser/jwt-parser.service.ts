@@ -3,9 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 import _ from 'lodash';
 import { ALGORITHM_DESCRIPTIONS, CLAIM_DESCRIPTIONS } from './jwt-parser.constants';
 
-export { decodeJwt };
-
-function decodeJwt({ jwt }: { jwt: string }) {
+export function decodeJwt({ jwt }: { jwt: string }) {
   const rawHeader = jwtDecode<JwtHeader>(jwt, { header: true });
   const rawPayload = jwtDecode<JwtPayload>(jwt);
 

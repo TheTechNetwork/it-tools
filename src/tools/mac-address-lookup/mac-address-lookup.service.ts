@@ -6,20 +6,18 @@ import ouiDataUrl from 'oui-data?url';
 
 export type OuiData = Record<string, string>;
 
-export { getVendorValue, loadOuiData, lookupMacAddressVendor };
-
 let ouiDataPromise: Promise<OuiData> | undefined;
 
 // Memoised: the database is fetched and parsed at most once per session.
-function loadOuiData(): Promise<OuiData> {
+export function loadOuiData(): Promise<OuiData> {
   ouiDataPromise ??= fetch(ouiDataUrl).then(response => response.json() as Promise<OuiData>);
   return ouiDataPromise;
 }
 
-function getVendorValue(address: string): string {
+export function getVendorValue(address: string): string {
   return address.trim().replace(/[.:-]/g, '').toUpperCase().substring(0, 6);
 }
 
-function lookupMacAddressVendor(db: OuiData, address: string): string | undefined {
+export function lookupMacAddressVendor(db: OuiData, address: string): string | undefined {
   return db[getVendorValue(address)];
 }

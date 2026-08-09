@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-export { getCharsetLength, getPasswordCrackTimeEstimation };
-
 function prettifyExponentialNotation(exponentialNotation: number) {
   const [base, exponent] = exponentialNotation.toString().split('e');
   const baseAsNumber = Number.parseFloat(base ?? '0');
@@ -49,7 +47,7 @@ function getHumanFriendlyDuration({ seconds }: { seconds: number }) {
     .value();
 }
 
-function getPasswordCrackTimeEstimation({ password, guessesPerSecond = 1e9 }: { password: string; guessesPerSecond?: number }) {
+export function getPasswordCrackTimeEstimation({ password, guessesPerSecond = 1e9 }: { password: string; guessesPerSecond?: number }) {
   const charsetLength = getCharsetLength({ password });
   const passwordLength = password.length;
 
@@ -71,7 +69,7 @@ function getPasswordCrackTimeEstimation({ password, guessesPerSecond = 1e9 }: { 
   };
 }
 
-function getCharsetLength({ password }: { password: string }) {
+export function getCharsetLength({ password }: { password: string }) {
   const hasLowercase = /[a-z]/.test(password);
   const hasUppercase = /[A-Z]/.test(password);
   const hasDigits = /\d/.test(password);
