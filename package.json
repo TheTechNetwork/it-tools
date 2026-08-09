@@ -139,7 +139,6 @@
     "@vue/tsconfig": "0.9.1",
     "buffer": "6.0.3",
     "consola": "3.4.2",
-    "crypto-browserify": "3.12.1",
     "eslint": "10.8.0",
     "events": "3.3.0",
     "hygen": "6.2.11",
