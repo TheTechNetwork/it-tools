@@ -203,7 +203,8 @@ export default defineConfig({
     },
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html', 'lcov', 'json-summary'],
+      // 'cobertura' feeds GitHub's Code Quality coverage (ci.yml uploads it).
+      reporter: ['text', 'html', 'lcov', 'json-summary', 'cobertura'],
       // Unit coverage tracks the logic layer (services, composables, utils).
       // Vue SFCs are exercised by the Playwright e2e suite rather than unit
       // tests, so including them would drown this metric in ~0%-covered UI and
