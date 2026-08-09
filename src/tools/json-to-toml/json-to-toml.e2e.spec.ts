@@ -31,8 +31,8 @@ foo = "bar"
 [list]
 name = "item"
 
-  [list.another]
-  key = "value"
+[list.another]
+key = "value"
    `.trim(),
     );
   });

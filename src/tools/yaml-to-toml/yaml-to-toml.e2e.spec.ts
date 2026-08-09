@@ -28,9 +28,9 @@ foo = "bar"
 [list]
 name = "item"
 
-  [list.another]
-  key = "value"
-  number = 1
+[list.another]
+key = "value"
+number = 1
    `.trim(),
     );
   });

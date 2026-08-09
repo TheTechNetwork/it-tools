@@ -11,7 +11,7 @@ describe('yaml-to-toml service', () => {
 
     it('converts nested YAML to TOML tables', () => {
       expect(convertYamlToToml('server:\n  host: localhost\n  port: 8080')).toBe(
-        '[server]\nhost = "localhost"\nport = 8_080',
+        '[server]\nhost = "localhost"\nport = 8080',
       );
     });
 
@@ -23,8 +23,8 @@ describe('yaml-to-toml service', () => {
       expect(convertYamlToToml('items:\n  - id: 1\n  - id: 2')).toBe('[[items]]\nid = 1\n\n[[items]]\nid = 2');
     });
 
-    it('uses literal strings for values containing double quotes', () => {
-      expect(convertYamlToToml('a: "with \\"quotes\\""')).toBe('a = \'with "quotes"\'');
+    it('escapes double quotes inside basic strings', () => {
+      expect(convertYamlToToml('a: "with \\"quotes\\""')).toBe('a = "with \\"quotes\\""');
     });
 
     it('converts an empty YAML object to an empty string', () => {
