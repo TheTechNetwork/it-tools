@@ -3,7 +3,9 @@
   "extends": [
     "config:best-practices",
     "helpers:pinGitHubActionDigestsToSemver",
-    "security:openssf-scorecard"
+    "helpers:disableTypesNodeMajor",
+    "security:openssf-scorecard",
+    ":enableVulnerabilityAlertsWithLabel(security)"
   ],
   "rangeStrategy": "pin",
   "minimumReleaseAge": "3 days",
