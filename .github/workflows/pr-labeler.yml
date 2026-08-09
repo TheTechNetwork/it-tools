@@ -2,12 +2,14 @@ name: PR Labeler
 
 # Automatically tags pull requests based on the files they change:
 #   - area/type labels (ci, docker, dependencies, i18n, ui, tests, ...)
-#   - per-tool labels `tool:<name>` for every src/tools/<name>/ touched
+#   - per-tool labels `tool:<name>` for every src/tools/<name>/ touched, AND
+#     for dependency PRs, every tool that imports the updated package(s)
 #   - a single size/* label from the number of lines changed
 #
 # Uses pull_request_target so the token can label PRs opened from forks too.
-# This is safe here because the job never checks out or executes PR code — it
-# only reads the changed-file list through the API and applies labels.
+# This is safe because the job only reads the changed-file list via the API and
+# checks out the *base* commit (trusted) — never the PR head — to grep the
+# import graph. It never executes PR code.
 
 on:
   pull_request_target:
@@ -26,10 +28,20 @@ jobs:
   label:
     runs-on: ubuntu-latest
     steps:
+      # Base branch is trusted (a dependency bump doesn't change the import
+      # graph), so grepping it to map packages -> tools is safe under
+      # pull_request_target. Never checks out the PR head.
+      - name: Checkout base for dependency→tool mapping
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
       - name: Apply labels from changed files
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
+            const cp = require('node:child_process');
             const { owner, repo } = context.repo;
             const pr = context.payload.pull_request;
             const issue_number = pr.number;
@@ -57,17 +69,63 @@ jobs:
             if (has(/^public\//)) { desired.add('assets'); }
             if (has(/^(vite\.config\.ts|tsconfig.*\.json|eslint\.config\.mjs|unocss\.config\.ts|\.editorconfig|\.prettierrc|\.versionrc)$/)) { desired.add('build'); }
 
-            // --- per-tool labels ---
-            const MAX_TOOL_LABELS = 12;
+            // --- per-tool labels: from changed paths ... ---
             const toolLabels = new Set();
             for (const p of paths) {
               const m = p.match(/^src\/tools\/([^/]+)\//);
               if (m) { toolLabels.add(`tool:${m[1]}`); }
             }
+
+            // --- ... AND from changed dependencies (map package -> importing tools) ---
+            // Package names whose version lines changed in package.json /
+            // pnpm-workspace.yaml overrides. A dependency PR touches no
+            // src/tools/ file, so this is the only way it gets tool: labels.
+            const changedDeps = new Set();
+            const skipKeys = new Set([
+              'name', 'version', 'description', 'author', 'license', 'type',
+              'packageManager', 'overrides', 'packages', 'allowBuilds', 'onlyBuiltDependencies',
+            ]);
+            const pjPatch = files.find(f => f.filename === 'package.json')?.patch || '';
+            for (const line of pjPatch.split('\n')) {
+              const m = /^[+-]\s*"([^"]+)"\s*:\s*"/.exec(line);
+              if (m && !skipKeys.has(m[1])) { changedDeps.add(m[1]); }
+            }
+            const wsPatch = files.find(f => f.filename === 'pnpm-workspace.yaml')?.patch || '';
+            for (const line of wsPatch.split('\n')) {
+              // overrides entries: `  dompurify@<3.4.13: 3.4.13`  or  `  pkg: x`
+              const m = /^[+-]\s+(@?[a-z0-9][a-z0-9._-]*(?:\/[a-z0-9._-]+)?)(?:@[^:\s]+)?\s*:/i.exec(line);
+              if (m && !skipKeys.has(m[1])) { changedDeps.add(m[1]); }
+            }
+
+            const depToTools = {};
+            for (const pkg of changedDeps) {
+              const esc = pkg.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              // Match the package specifier in an import/require: quoted name
+              // followed by a subpath slash or the closing quote.
+              const pattern = `['"]${esc}(/|['"])`;
+              let out = '';
+              try {
+                out = cp.execFileSync(
+                  'grep',
+                  ['-rlE', pattern, 'src/tools', '--include=*.ts', '--include=*.vue'],
+                  { encoding: 'utf8' },
+                );
+              } catch { /* grep exit 1 = no match */ }
+              const hits = [];
+              for (const f of out.split('\n')) {
+                const m = /^src\/tools\/([^/]+)\//.exec(f);
+                if (m) { toolLabels.add(`tool:${m[1]}`); hits.push(m[1]); }
+              }
+              if (hits.length) { depToTools[pkg] = [...new Set(hits)]; }
+            }
+
+            if (toolLabels.size) { desired.add('tools'); }
+
+            // --- cap per-tool labels (a core-dep bump can hit dozens of tools) ---
+            const MAX_TOOL_LABELS = 12;
             let toolOverflow = false;
             if (toolLabels.size > MAX_TOOL_LABELS) {
-              // A sweeping change across many tools — skip the noise, keep `tools`.
-              toolOverflow = true;
+              toolOverflow = true; // keep only the `tools` label, skip the noise
             } else {
               for (const t of toolLabels) { desired.add(t); }
             }
@@ -141,9 +199,13 @@ jobs:
               .addHeading('PR Labeler', 3)
               .addRaw(`Changed files: ${paths.length} · lines: ${totalChanges} · size: ${size}`)
               .addBreak();
+            const depLines = Object.entries(depToTools).map(([p, t]) => `\`${p}\` → ${t.map(x => `tool:${x}`).join(', ')}`);
+            if (depLines.length) {
+              core.summary.addRaw('Dependency → tools:').addList(depLines);
+            }
             if (toolOverflow) {
-              core.notice(`PR touches ${toolLabels.size} tools (> ${MAX_TOOL_LABELS}); ` +
-                `skipped per-tool labels and applied 'tools' instead.`);
+              core.notice(`PR maps to ${toolLabels.size} tools (> ${MAX_TOOL_LABELS}); `
+                + `skipped per-tool labels and applied 'tools' instead.`);
             }
             core.summary
               .addRaw(`Applied: ${[...desired].sort().join(', ') || '(none)'}`)
