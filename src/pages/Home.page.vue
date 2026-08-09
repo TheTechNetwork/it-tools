@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { IconDragDrop, IconHeart } from '@tabler/icons-vue';
 import { useHead } from '@unhead/vue';
-import { computed } from 'vue';
-import Draggable from 'vuedraggable';
+import { ref, watch } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
 import ColoredCard from '../components/ColoredCard.vue';
 import ToolCard from '../components/ToolCard.vue';
 import { useToolStore } from '@/tools/tools.store';
@@ -13,7 +13,12 @@ const toolStore = useToolStore();
 useHead({ title: 'IT Tools - Handy online tools for developers' });
 const { t } = useI18n();
 
-const favoriteTools = computed(() => toolStore.favoriteTools);
+// Local, reorderable copy backing the drag-and-drop v-model; kept in sync with
+// the store, with the new order persisted back on drag end.
+const favoriteTools = ref([...toolStore.favoriteTools]);
+watch(() => toolStore.favoriteTools, (tools) => {
+  favoriteTools.value = [...tools];
+});
 
 // Update favorite tools order when drag is finished
 function onUpdateFavoriteTools() {
@@ -53,17 +58,14 @@ function onUpdateFavoriteTools() {
               <n-icon :component="IconDragDrop" size="18" />
             </c-tooltip>
           </h3>
-          <Draggable
-            :list="favoriteTools"
+          <VueDraggable
+            v-model="favoriteTools"
             class="grid grid-cols-1 gap-12px lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4"
             ghost-class="ghost-favorites-draggable"
-            item-key="name"
             @end="onUpdateFavoriteTools"
           >
-            <template #item="{ element: tool }">
-              <ToolCard :tool="tool" />
-            </template>
-          </Draggable>
+            <ToolCard v-for="tool in favoriteTools" :key="tool.name" :tool="tool" />
+          </VueDraggable>
         </div>
       </transition>
 
