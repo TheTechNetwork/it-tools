@@ -1,6 +1,15 @@
 packages:
   - '.'
 
+# Force patched versions of transitive dependencies flagged by security
+# advisories that their (unmaintained or slow-moving) parents still pull in.
+# Renovate manages these entries; drop one once the parent ships the fix.
+overrides:
+  # monaco-editor bundles an old dompurify; align it with our direct 3.4.13.
+  dompurify@<3.4.13: 3.4.13
+  # composerize-ts -> ip-cidr pulls a vulnerable ip-address (SSRF, GHSA-mwp4-54f8-5fhr).
+  ip-address@<10.3.1: 10.4.0
+
 allowBuilds:
   esbuild: true
   # tesseract.js' only postinstall is opencollective-postinstall (a funding
