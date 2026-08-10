@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MessageType } from 'composerize-ts';
+import { MessageType } from '@thetechnetwork/composerize-ts';
 import TextareaCopyable from '@/components/TextareaCopyable.vue';
 import { useDownloadFileFromBase64 } from '@/composable/downloadBase64';
 import { textToBase64 } from '@/utils/base64';

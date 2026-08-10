@@ -6,7 +6,6 @@ settings:
 
 overrides:
   dompurify@<3.4.13: 3.4.13
-  ip-address@<10.3.1: 10.4.0
 
 importers:
 
@@ -33,6 +32,9 @@ importers:
       '@tabler/icons-vue':
         specifier: 3.46.0
         version: 3.46.0(vue@3.5.41(typescript@6.0.3))
+      '@thetechnetwork/composerize-ts':
+        specifier: ^0.7.1
+        version: 0.7.1
       '@tiptap/pm':
         specifier: 3.29.2
         version: 3.29.2
@@ -63,9 +65,6 @@ importers:
       colord:
         specifier: 2.9.3
         version: 2.9.3
-      composerize-ts:
-        specifier: 0.6.2
-        version: 0.6.2
       country-code-lookup:
         specifier: 0.1.5
         version: 0.1.5
@@ -2067,6 +2066,11 @@ packages:
   '@tabler/icons@3.46.0':
     resolution: {integrity: sha512-f2RYFl3fzPwj5WO82x6en0dmkjefxEfOm16D1ByM6cj/McNiwOkL4VaPUoP9VVIrXAD9WnTSVFr70px703b//A==}
 
+  '@thetechnetwork/composerize-ts@0.7.1':
+    resolution: {integrity: sha512-18OOAzhr5hcPzWPjgboEtDbt2fZjjNctT3wfkkWcNFda9fzPpXOOo7Gc7Z/5a5IOjwHM0Uij77Yu72g8KCvB5g==}
+    engines: {node: '>=22'}
+    hasBin: true
+
   '@tiptap/core@3.29.2':
     resolution: {integrity: sha512-oKUkiPUB7noilVYxI9lNzUD4rX17sHub+PYjMfHMWHG9A3nvIy+FdePIVIIhThKWF7ijhr3eIqHY51Bn+GAFtw==}
     peerDependencies:
@@ -2957,6 +2961,10 @@ packages:
     resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
     engines: {node: '>=14'}
 
+  commander@13.1.0:
+    resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
+    engines: {node: '>=18'}
+
   commander@14.0.3:
     resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
     engines: {node: '>=20'}
@@ -2986,10 +2994,6 @@ packages:
 
   complex.js@2.4.3:
     resolution: {integrity: sha512-UrQVSUur14tNX6tiP4y8T4w4FeJAX3bi2cIv0pu/DTLFNxoq7z2Yh83Vfzztj6Px3X/lubqQ9IrPp7Bpn6p4MQ==}
-
-  composerize-ts@0.6.2:
-    resolution: {integrity: sha512-8tw5p/FBxg77ubjVftaXA+pknWbkUgbZ4rbZZs2yFUsj2yvO38IvtfpGLfaJ9mGFj324lFEr/OU9xULrKSF9Ag==}
-    hasBin: true
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -3142,8 +3146,8 @@ packages:
   deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
 
-  deepmerge-ts@5.1.0:
-    resolution: {integrity: sha512-eS8dRJOckyo9maw9Tu5O5RUi/4inFLrnoLkBe3cPfDMx3WZioXtmOew4TXQaxq7Rhl4xjDtR7c6x8nNTxOvbFw==}
+  deepmerge-ts@7.1.5:
+    resolution: {integrity: sha512-HOJkrhaYsweh+W+e74Yn7YStZOilkoPb6fycpwNLKzSPtruFs48nYis0zy5yJz1+ktUhHxoRDJ27RQAWLIJVJw==}
     engines: {node: '>=16.0.0'}
 
   deepmerge@4.3.1:
@@ -3954,10 +3958,6 @@ packages:
     resolution: {integrity: sha512-oSK96Grm3aP6OrS263xVxbNDGVL7rzBtYdpGqlDG8iQdoenDoTs/nkki+DflYbAEE8Xl6o5YxhxlrKvI3nqKXQ==}
     engines: {node: '>= 12'}
 
-  ip-cidr@3.1.0:
-    resolution: {integrity: sha512-HUCn4snshEX1P8cja/IyU3qk8FVDW8T5zZcegDFbu4w7NojmAhk5NcOgj3M8+0fmumo1afJTPDtJlzsxLdOjtg==}
-    engines: {node: '>=10.0.0'}
-
   is-array-buffer@3.0.5:
     resolution: {integrity: sha512-DDfANUiiG2wC1qawP66qlTugJeL5HyzMpfr8lLK+jMQirGzNod0B12cFB/9q838Ru27sBwfw78/rdoU7RERz6A==}
     engines: {node: '>= 0.4'}
@@ -4196,9 +4196,6 @@ packages:
   js-yaml@4.3.1:
     resolution: {integrity: sha512-CY6crGq313MX8GkwvB7tzgp99vjQxY1++5y10/BKN/GUfHqWaOGQMNZkBvqSzsZKWk/ijwHlWzzkLulsGHhjWQ==}
     hasBin: true
-
-  jsbn@1.1.0:
-    resolution: {integrity: sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==}
 
   jsdoc-type-pratt-parser@7.3.0:
     resolution: {integrity: sha512-DoyJXo7x/n48M3NsGOs9QnEws0ft0tV3YsSgvWMNxz2hZtz+Q6fpqUD96lVYX4a+jcEkzHeFNDJOn68TzXfbdA==}
@@ -7883,6 +7880,15 @@ snapshots:
 
   '@tabler/icons@3.46.0': {}
 
+  '@thetechnetwork/composerize-ts@0.7.1':
+    dependencies:
+      commander: 13.1.0
+      deepmerge-ts: 7.1.5
+      flex-js: 1.0.5
+      ip-address: 10.4.0
+      set-value: 4.1.0
+      yamljs: 0.3.0
+
   '@tiptap/core@3.29.2(@tiptap/pm@3.29.2)':
     dependencies:
       '@tiptap/pm': 3.29.2
@@ -8982,6 +8988,8 @@ snapshots:
 
   commander@10.0.1: {}
 
+  commander@13.1.0: {}
+
   commander@14.0.3: {}
 
   commander@2.20.3: {}
@@ -8997,15 +9005,6 @@ snapshots:
   common-tags@1.8.2: {}
 
   complex.js@2.4.3: {}
-
-  composerize-ts@0.6.2:
-    dependencies:
-      commander: 10.0.1
-      deepmerge-ts: 5.1.0
-      flex-js: 1.0.5
-      ip-cidr: 3.1.0
-      set-value: 4.1.0
-      yamljs: 0.3.0
 
   concat-map@0.0.1: {}
 
@@ -9152,7 +9151,7 @@ snapshots:
 
   deep-is@0.1.4: {}
 
-  deepmerge-ts@5.1.0: {}
+  deepmerge-ts@7.1.5: {}
 
   deepmerge@4.3.1: {}
 
@@ -10112,11 +10111,6 @@ snapshots:
 
   ip-address@10.4.0: {}
 
-  ip-cidr@3.1.0:
-    dependencies:
-      ip-address: 10.4.0
-      jsbn: 1.1.0
-
   is-array-buffer@3.0.5:
     dependencies:
       call-bind: 1.0.9
@@ -10341,8 +10335,6 @@ snapshots:
   js-yaml@4.3.1:
     dependencies:
       argparse: 2.0.1
-
-  jsbn@1.1.0: {}
 
   jsdoc-type-pratt-parser@7.3.0: {}
 

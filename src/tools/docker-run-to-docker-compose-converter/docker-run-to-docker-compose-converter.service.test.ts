@@ -1,4 +1,4 @@
-import { MessageType } from 'composerize-ts';
+import { MessageType } from '@thetechnetwork/composerize-ts';
 import { describe, expect, it } from 'vitest';
 import { convertDockerRunToDockerCompose, getMessagesOfType } from './docker-run-to-docker-compose-converter.service';
 
@@ -8,7 +8,9 @@ describe('docker-run-to-docker-compose-converter service', () => {
       const { yaml, messages } = convertDockerRunToDockerCompose('docker run nginx');
 
       expect(messages).toEqual([]);
-      expect(yaml).toContain('version:');
+      // composerize-ts >= 0.7 omits the obsolete top-level `version:` key, in
+      // line with the current Compose specification.
+      expect(yaml).not.toContain('version:');
       expect(yaml).toContain('services:');
       expect(yaml).toContain('image: nginx');
     });
