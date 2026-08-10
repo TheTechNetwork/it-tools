@@ -15,8 +15,6 @@
 // && || ! , parentheses, and number / string / boolean / null literals.
 // A bare path in a filter is an existence test. No eval is used anywhere.
 
-export { evaluateJsonPath };
-
 type Json = unknown;
 
 interface NameSelector { type: 'name'; name: string }
@@ -36,7 +34,7 @@ type Selector
 
 interface Step { recursive: boolean; selector: Selector }
 
-function evaluateJsonPath({ path, json }: { path: string; json: Json }): Json[] {
+export function evaluateJsonPath({ path, json }: { path: string; json: Json }): Json[] {
   const steps = parsePath(path);
 
   let current: Json[] = [json];

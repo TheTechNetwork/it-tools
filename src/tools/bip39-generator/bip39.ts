@@ -8,9 +8,7 @@ import type { WordList } from './wordlists';
 // (16-32 chars) is validated, matching the original.
 import { sha256 } from '@noble/hashes/sha2.js';
 
-export { entropyToMnemonic, generateEntropy, mnemonicToEntropy, validateEntropyLength };
-
-function validateEntropyLength(length: number): void {
+export function validateEntropyLength(length: number): void {
   if (length < 16) {
     throw new Error('[bip39] Invalid entropy: the length of the entropy string should be >= 16 ');
   }
@@ -22,7 +20,7 @@ function validateEntropyLength(length: number): void {
   }
 }
 
-function generateEntropy(length = 32): string {
+export function generateEntropy(length = 32): string {
   validateEntropyLength(length);
 
   const bytes = new Uint8Array(length / 2);
@@ -31,7 +29,7 @@ function generateEntropy(length = 32): string {
   return bytesToHexString(bytes);
 }
 
-function entropyToMnemonic(entropy: string, wordList: WordList): string {
+export function entropyToMnemonic(entropy: string, wordList: WordList): string {
   validateEntropyLength(entropy.length);
 
   if (!entropy.match(/^[a-z0-9]+$/i)) {
@@ -45,7 +43,7 @@ function entropyToMnemonic(entropy: string, wordList: WordList): string {
     .join(wordList.spacer);
 }
 
-function mnemonicToEntropy(mnemonic: string, wordList: WordList): string {
+export function mnemonicToEntropy(mnemonic: string, wordList: WordList): string {
   const bits = mnemonic
     .trim()
     .split(wordList.spacer)

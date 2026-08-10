@@ -1,8 +1,6 @@
 import { useStyleStore } from '@/stores/style.store';
 
-export { defineThemes };
-
-function defineThemes<Theme>(themes: { light: Theme; dark: Theme }) {
+export function defineThemes<Theme>(themes: { light: Theme; dark: Theme }) {
   return {
     themes,
     useTheme() {
