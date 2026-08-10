@@ -21,8 +21,10 @@ describe('docker-run-to-docker-compose-converter service', () => {
       );
 
       expect(messages).toEqual([]);
-      expect(yaml).toContain('- \'80:80\'');
-      expect(yaml).toContain('- \'/var/run/docker.sock:/tmp/docker.sock:ro\'');
+      // composerize-ts >= 0.9 serializes with `yaml` instead of `yamljs`, which
+      // emits plain scalars (even those containing `:`) unquoted.
+      expect(yaml).toContain('- 80:80');
+      expect(yaml).toContain('- /var/run/docker.sock:/tmp/docker.sock:ro');
       expect(yaml).toContain('restart: always');
     });
 

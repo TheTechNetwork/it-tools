@@ -16,6 +16,6 @@ allowBuilds:
 
 # First-party fork we publish ourselves; allow it past the minimum-release-age
 # supply-chain gate that would otherwise reject a version freshly published from
-# our own release pipeline. Safe to drop once 0.7.1 clears the age window.
+# our own release pipeline. Safe to drop once 0.9.1 clears the age window.
 minimumReleaseAgeExclude:
-  - '@thetechnetwork/composerize-ts@0.7.1'
+  - '@thetechnetwork/composerize-ts@0.9.1'
