@@ -51,7 +51,7 @@
     "@regexper/render": "1.0.0",
     "@sindresorhus/slugify": "3.0.0",
     "@tabler/icons-vue": "3.46.0",
-    "@thetechnetwork/composerize-ts": "^0.9.1",
+    "@thetechnetwork/composerize-ts": "0.9.1",
     "@tiptap/pm": "3.29.2",
     "@tiptap/starter-kit": "3.29.2",
     "@tiptap/vue-3": "3.29.2",
