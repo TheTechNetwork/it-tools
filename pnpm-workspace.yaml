@@ -7,11 +7,15 @@ packages:
 overrides:
   # monaco-editor bundles an old dompurify; align it with our direct 3.4.13.
   dompurify@<3.4.13: 3.4.13
-  # composerize-ts -> ip-cidr pulls a vulnerable ip-address (SSRF, GHSA-mwp4-54f8-5fhr).
-  ip-address@<10.3.1: 10.4.0
 
 allowBuilds:
   esbuild: true
   # tesseract.js' only postinstall is opencollective-postinstall (a funding
   # message); nothing needs building, so skip it.
   tesseract.js: false
+
+# First-party fork we publish ourselves; allow it past the minimum-release-age
+# supply-chain gate that would otherwise reject a version freshly published from
+# our own release pipeline. Safe to drop once 0.9.1 clears the age window.
+minimumReleaseAgeExclude:
+  - '@thetechnetwork/composerize-ts@0.9.1'
