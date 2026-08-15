@@ -162,8 +162,8 @@ importers:
         specifier: 0.5.3
         version: 0.5.3
       smol-toml:
-        specifier: 1.7.1
-        version: 1.7.1
+        specifier: 1.8.0
+        version: 1.8.0
       sql-formatter:
         specifier: 15.8.2
         version: 15.8.2
@@ -5332,8 +5332,8 @@ packages:
     resolution: {integrity: sha512-RQsvleCbF8cVHEv+xuDGaA4pOizFqJ0GgjtMSRo6oP8pnN7WsigHgVGey6aILRBKv4W2YOMHLqbKdnB6hpB9fw==}
     engines: {node: '>=20.0.0'}
 
-  smol-toml@1.7.1:
-    resolution: {integrity: sha512-PPlsspAZ4jbMBu5DMFhfUGDQLu/vrL4SyBROVS37x8ynnVmFIs1VPBz1Co8Xks3TvpIaZXmU85y4DrQ+UyVFoQ==}
+  smol-toml@1.8.0:
+    resolution: {integrity: sha512-kCZr2V3ch9i00x8zXRhjUNVcjG9ijES5dDudkXvUVCT5QlJNQWElSJdZqyPemffHoLNUYwOcou0Fy+ojN0uHSQ==}
     engines: {node: '>= 18'}
 
   snake-case@2.1.0:
@@ -11755,7 +11755,7 @@ snapshots:
 
   smob@1.6.2: {}
 
-  smol-toml@1.7.1: {}
+  smol-toml@1.8.0: {}
 
   snake-case@2.1.0:
     dependencies:
