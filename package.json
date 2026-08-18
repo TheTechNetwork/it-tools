@@ -121,7 +121,7 @@
     "@intlify/unplugin-vue-i18n": "11.2.4",
     "@playwright/test": "1.62.1",
     "@rushstack/eslint-patch": "1.16.1",
-    "@tsconfig/node24": "24.0.4",
+    "@tsconfig/node24": "24.0.5",
     "@types/jsdom": "30.0.0",
     "@types/lodash": "4.17.25",
     "@types/mime-types": "3.0.1",
