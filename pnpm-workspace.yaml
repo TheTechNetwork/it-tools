@@ -6,7 +6,7 @@ packages:
 # Renovate manages these entries; drop one once the parent ships the fix.
 overrides:
   # monaco-editor bundles an old dompurify; align it with our direct 3.4.13.
-  dompurify@<3.4.13: 3.4.13
+  dompurify@<3.4.13: 3.4.14
 
 allowBuilds:
   esbuild: true
