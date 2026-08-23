@@ -63,8 +63,8 @@ importers:
         specifier: 5.4.4
         version: 5.4.4
       colord:
-        specifier: 2.9.5
-        version: 2.9.5
+        specifier: 2.9.6
+        version: 2.9.6
       country-code-lookup:
         specifier: 0.1.5
         version: 0.1.5
@@ -2969,8 +2969,8 @@ packages:
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
 
-  colord@2.9.5:
-    resolution: {integrity: sha512-1N4FZkdj0BvP78UatS8VQHP+DnRy/rAyh+eelOONgZNsgatenTe+uApmVrdfknjqvsPdsBhq5tQpnIvClcNWZA==}
+  colord@2.9.6:
+    resolution: {integrity: sha512-ovjOJfOmwe9/RZCwPM5987opQOx0fyHraaeEKoboAtCjWAdUtT2xZdjkpcKxExlpr1f/CYyVlZsl6TpGjnHycw==}
 
   colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
@@ -8989,7 +8989,7 @@ snapshots:
 
   color-name@1.1.4: {}
 
-  colord@2.9.5: {}
+  colord@2.9.6: {}
 
   colorette@2.0.20: {}
 
