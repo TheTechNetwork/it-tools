@@ -61,7 +61,7 @@
     "@vueuse/router": "14.4.0",
     "bcryptjs": "3.0.3",
     "change-case": "5.4.4",
-    "colord": "2.9.4",
+    "colord": "2.9.5",
     "country-code-lookup": "0.1.5",
     "cron-validator": "1.4.0",
     "cronstrue": "3.24.0",
