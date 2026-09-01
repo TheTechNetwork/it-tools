@@ -331,8 +331,8 @@ importers:
         specifier: 32.1.0
         version: 32.1.0(rolldown@1.2.5)(rollup@4.62.5)(vite@8.2.2(@types/node@24.13.3)(jiti@2.7.0)(less@4.9.0(supports-color@7.2.0))(terser@5.50.0)(yaml@2.9.0))(vue@3.5.41(typescript@6.0.3))
       unplugin-vue-markdown:
-        specifier: 32.0.0
-        version: 32.0.0(rolldown@1.2.5)(rollup@4.62.5)(vite@8.2.2(@types/node@24.13.3)(jiti@2.7.0)(less@4.9.0(supports-color@7.2.0))(terser@5.50.0)(yaml@2.9.0))
+        specifier: 32.1.1
+        version: 32.1.1(rolldown@1.2.5)(rollup@4.62.5)(vite@8.2.2(@types/node@24.13.3)(jiti@2.7.0)(less@4.9.0(supports-color@7.2.0))(terser@5.50.0)(yaml@2.9.0))
       vite:
         specifier: 8.2.2
         version: 8.2.2(@types/node@24.13.3)(jiti@2.7.0)(less@4.9.0(supports-color@7.2.0))(terser@5.50.0)(yaml@2.9.0)
@@ -4443,8 +4443,8 @@ packages:
     resolution: {integrity: sha512-IfpFq6UM39dUNiphpA6uDezNx/AvWyhwfICWPR3t1VspkgkMZrL+Rk1RbN1bx+aeNYwOrqGJgEgV3yotk+ZUVw==}
     engines: {node: '>=18'}
 
-  markdown-exit@1.2.0:
-    resolution: {integrity: sha512-Pwl9wmjEmz2BCqklK81YTZSkqjLqSqIZfBVhI24R2ztYuiRsuR+cAu8VKrc/gNJOVpZd6FIPIBplrpyehs7r+Q==}
+  markdown-exit@1.3.0:
+    resolution: {integrity: sha512-bsqlcm3Hk1ukcG1Al83pp3JjVobu4w1mpZz47OzLw8bCY8XchkCX+PXC32l2TH4nZ7p5WFg2NwpnLDXkY1X7Yw==}
 
   markdown-it@14.3.0:
     resolution: {integrity: sha512-RCEsPjR+sr0x+AuYp601tKTkgFG4YEPLCzHST3cQ/fhlJkqAkz1L2/Qbp1j9qw5SBwQHFBoW8+hoN5xssOF0Tw==}
@@ -5817,8 +5817,8 @@ packages:
       '@nuxt/kit':
         optional: true
 
-  unplugin-vue-markdown@32.0.0:
-    resolution: {integrity: sha512-K9uiYJF9kvngrN/NRx8fVPZFXiqJR7tbnXQV4mVFxjcsKhuiL6+vVQ5woam59RqeCDprecBmbg+cCGADz0somA==}
+  unplugin-vue-markdown@32.1.1:
+    resolution: {integrity: sha512-2d9MCA4cA3JQ1qLVPE1mfsIv7dqubzVhxfrNDKOwJ/Z2tfz+Zp6LJ1QMZow/vhpjmKbwJ35TyRk94uxiQ2p1qQ==}
     engines: {node: '>=22'}
     peerDependencies:
       vite: ^2.0.0 || ^3.0.0-0 || ^4.0.0-0 || ^5.0.0-0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
@@ -10564,7 +10564,7 @@ snapshots:
   make-dir@5.1.0:
     optional: true
 
-  markdown-exit@1.2.0:
+  markdown-exit@1.3.0:
     dependencies:
       '@types/linkify-it': 5.0.0
       '@types/mdurl': 2.0.0
@@ -12354,12 +12354,12 @@ snapshots:
       - vite
       - webpack
 
-  unplugin-vue-markdown@32.0.0(rolldown@1.2.5)(rollup@4.62.5)(vite@8.2.2(@types/node@24.13.3)(jiti@2.7.0)(less@4.9.0(supports-color@7.2.0))(terser@5.50.0)(yaml@2.9.0)):
+  unplugin-vue-markdown@32.1.1(rolldown@1.2.5)(rollup@4.62.5)(vite@8.2.2(@types/node@24.13.3)(jiti@2.7.0)(less@4.9.0(supports-color@7.2.0))(terser@5.50.0)(yaml@2.9.0)):
     dependencies:
       '@mdit-vue/plugin-component': 3.0.2
       '@mdit-vue/plugin-frontmatter': 3.0.2
       '@mdit-vue/types': 3.0.2
-      markdown-exit: 1.2.0
+      markdown-exit: 1.3.0
       unplugin: 3.3.0(rolldown@1.2.5)(rollup@4.62.5)(vite@8.2.2(@types/node@24.13.3)(jiti@2.7.0)(less@4.9.0(supports-color@7.2.0))(terser@5.50.0)(yaml@2.9.0))
       unplugin-utils: 0.3.2
       vite: 8.2.2(@types/node@24.13.3)(jiti@2.7.0)(less@4.9.0(supports-color@7.2.0))(terser@5.50.0)(yaml@2.9.0)
