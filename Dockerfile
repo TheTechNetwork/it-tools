@@ -32,7 +32,7 @@ RUN pnpm build
 # (a non-root process cannot bind ports < 1024). Same nginx config as standard,
 # only the templated listen port differs.
 # ---------------------------------------------------------------------------
-FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:44e36330f74d4f3a1d4e222acca9e23b401fb87811a7597024502bb759c4dd49 AS rootless
+FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:45ce1e2e699234253d1def7baa96218a5d00b498d1ba0cbb1a17b6bdf73d1351 AS rootless
 # The pinned base digest can lag Alpine security fixes (CI's Trivy gate blocks
 # on fixable HIGH/CRITICAL CVEs), so pull in patched OS packages at build time.
 # apk needs root; drop back to the image's unprivileged UID afterwards.
