@@ -139,7 +139,7 @@
     "@vue/tsconfig": "0.9.1",
     "buffer": "6.0.3",
     "consola": "3.4.2",
-    "eslint": "10.9.0",
+    "eslint": "10.9.1",
     "events": "3.3.0",
     "hygen": "6.2.11",
     "jsdom": "30.0.1",
