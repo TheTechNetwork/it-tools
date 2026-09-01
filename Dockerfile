@@ -33,6 +33,12 @@ RUN pnpm build
 # only the templated listen port differs.
 # ---------------------------------------------------------------------------
 FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:44e36330f74d4f3a1d4e222acca9e23b401fb87811a7597024502bb759c4dd49 AS rootless
+# The pinned base digest can lag Alpine security fixes (CI's Trivy gate blocks
+# on fixable HIGH/CRITICAL CVEs), so pull in patched OS packages at build time.
+# apk needs root; drop back to the image's unprivileged UID afterwards.
+USER root
+RUN apk upgrade --no-cache
+USER 101
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
 ENV NGINX_PORT=8080
@@ -59,6 +65,9 @@ CMD ["-w", "/etc/sws.toml"]
 # the other variants so every image uses the same container port.
 # ---------------------------------------------------------------------------
 FROM nginx:stable-alpine@sha256:97d490c12ba55b4946b01546d1c3ed324e8d41ab1c9fcb2a616aa470620e5b46 AS standard
+# Same as rootless: patch OS packages so a base-image digest that lags an
+# Alpine security fix doesn't trip CI's blocking Trivy gate.
+RUN apk upgrade --no-cache
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
 ENV NGINX_PORT=8080
