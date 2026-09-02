@@ -90,7 +90,7 @@
     "node-forge": "1.4.0",
     "oui-data": "2.1.12",
     "pdf-signature-reader": "1.4.3",
-    "pdfjs-dist": "6.2.108",
+    "pdfjs-dist": "6.3.289",
     "pinia": "4.0.3",
     "qrcode": "1.5.4",
     "randexp": "0.5.3",
