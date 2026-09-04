@@ -223,8 +223,8 @@ importers:
         specifier: 5.20260901.1
         version: 5.20260901.1
       '@eslint/eslintrc':
-        specifier: 3.3.6
-        version: 3.3.6(supports-color@7.2.0)
+        specifier: 3.3.7
+        version: 3.3.7(supports-color@7.2.0)
       '@iconify-json/mdi':
         specifier: 1.2.3
         version: 1.2.3
@@ -1283,8 +1283,8 @@ packages:
     resolution: {integrity: sha512-iPmijIAq4hlIJB86PYmY/fcZORHtjphSqICDbwuw32A/JmkhZQ/K/6TjHE03zqf3n5yABpVcbRAMG8Mi9ojy8g==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
-  '@eslint/eslintrc@3.3.6':
-    resolution: {integrity: sha512-l2Ul9PrHsPCKcEY/ac7VgFj9D80C7S68sOKc618SyHDPK36s1XcFebXY0iTzUVn4Yq+YbwvSnDmCz9yxjX+QrA==}
+  '@eslint/eslintrc@3.3.7':
+    resolution: {integrity: sha512-F42g89Qd5oAWtp0k0nnSrjziAKza7w8SVT4mStc18LZMaRb4J1HQAHLCalEtDCxrTuksx7NU9qsmeLwpOfPqWw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@eslint/markdown@8.0.3':
@@ -7206,7 +7206,7 @@ snapshots:
       mdn-data: 2.29.0
       source-map-js: 1.2.1
 
-  '@eslint/eslintrc@3.3.6(supports-color@7.2.0)':
+  '@eslint/eslintrc@3.3.7(supports-color@7.2.0)':
     dependencies:
       ajv: 6.15.0
       debug: 4.4.3(supports-color@7.2.0)
