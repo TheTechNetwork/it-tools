@@ -144,8 +144,8 @@ importers:
         specifier: 1.4.0
         version: 1.4.0
       oui-data:
-        specifier: 2.1.12
-        version: 2.1.12
+        specifier: 2.1.13
+        version: 2.1.13
       pdf-signature-reader:
         specifier: 1.4.3
         version: 1.4.3
@@ -4767,8 +4767,8 @@ packages:
   orderedmap@2.1.1:
     resolution: {integrity: sha512-TvAWxi0nDe1j/rtMcWcIj94+Ffe6n7zhow33h40SKxmsmozs6dz/e+EajymfoFcHd7sxNn8yHM8839uixMOV6g==}
 
-  oui-data@2.1.12:
-    resolution: {integrity: sha512-RZhie9GuJCLmNYnGwAuau7wzOJNHI7LKygHMEGyjcQ/7BWiDNtPsGdZemXZmtSt271vBc9ippREKS6+Hz6jZGA==}
+  oui-data@2.1.13:
+    resolution: {integrity: sha512-5ywE9u7aSVl39NJa/8JTdoT9G7nFY2GUKDlHYkqFq8K2KDi83gqh0KGPtDN8HKt7pnwu7+v5+VZt6ETl7CzWPw==}
 
   own-keys@1.0.2:
     resolution: {integrity: sha512-19YVAg7T+WTrxggPukVq7DjTv6+PJ867TmhCvBsYwmbFCsZd344rq2Ld1p0wo8f8Qrrhgp82c6FJRqdXWtSEhg==}
@@ -11061,7 +11061,7 @@ snapshots:
 
   orderedmap@2.1.1: {}
 
-  oui-data@2.1.12: {}
+  oui-data@2.1.13: {}
 
   own-keys@1.0.2:
     dependencies:
