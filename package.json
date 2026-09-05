@@ -114,7 +114,7 @@
     "yaml": "2.9.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "9.3.0",
+    "@antfu/eslint-config": "9.5.1",
     "@cloudflare/workers-types": "5.20260902.1",
     "@eslint/eslintrc": "3.3.7",
     "@iconify-json/mdi": "1.2.3",
