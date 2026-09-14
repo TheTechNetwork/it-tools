@@ -64,7 +64,7 @@ CMD ["-w", "/etc/sws.toml"]
 # standard (default target): stock nginx, runs as root. Listens on 8080 like
 # the other variants so every image uses the same container port.
 # ---------------------------------------------------------------------------
-FROM nginx:stable-alpine@sha256:97d490c12ba55b4946b01546d1c3ed324e8d41ab1c9fcb2a616aa470620e5b46 AS standard
+FROM nginx:stable-alpine@sha256:dc5069ad14f19660b141b21236140b91656bf89bbc3e2417c70ae650cd66104c AS standard
 # Same as rootless: patch OS packages so a base-image digest that lags an
 # Alpine security fix doesn't trip CI's blocking Trivy gate.
 RUN apk upgrade --no-cache
