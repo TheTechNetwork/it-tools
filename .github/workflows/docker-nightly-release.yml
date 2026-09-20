@@ -147,6 +147,12 @@ jobs:
           sbom: true
           cache-from: type=gha,scope=nightly-${{ matrix.target }}
           cache-to: type=gha,mode=max,scope=nightly-${{ matrix.target }}
+          # Re-run the Dockerfile's `apk upgrade` on every build: with a stable base
+          # digest that layer is otherwise a permanent cache hit and the image
+          # keeps OS packages Alpine has since patched (Trivy then fails on
+          # fixable CVEs the rebuild was supposed to pick up).
+          build-args: |
+            APK_UPGRADE_CACHE_BUST=${{ github.run_id }}-${{ github.run_attempt }}
           tags: |
             thetechnetwork/it-tools:nightly${{ matrix.suffix }}
             ghcr.io/thetechnetwork/it-tools:nightly${{ matrix.suffix }}

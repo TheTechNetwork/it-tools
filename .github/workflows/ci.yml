@@ -461,6 +461,12 @@ jobs:
           tags: it-tools:${{ matrix.target }}
           cache-from: type=gha,scope=docker-image-${{ matrix.target }}
           cache-to: type=gha,mode=max,scope=docker-image-${{ matrix.target }}
+          # Re-run the Dockerfile's `apk upgrade` on every build: with a stable base
+          # digest that layer is otherwise a permanent cache hit and the image
+          # keeps OS packages Alpine has since patched (Trivy then fails on
+          # fixable CVEs the rebuild was supposed to pick up).
+          build-args: |
+            APK_UPGRADE_CACHE_BUST=${{ github.run_id }}-${{ github.run_attempt }}
 
       - name: Run container (${{ matrix.target }})
         run: |

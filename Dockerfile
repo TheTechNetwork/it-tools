@@ -36,8 +36,15 @@ FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:45ce1e2e699234253d1def7baa
 # The pinned base digest can lag Alpine security fixes (CI's Trivy gate blocks
 # on fixable HIGH/CRITICAL CVEs), so pull in patched OS packages at build time.
 # apk needs root; drop back to the image's unprivileged UID afterwards.
+#
+# APK_UPGRADE_CACHE_BUST: a layer cache (BuildKit / CI's type=gha cache) would
+# otherwise replay a stale `apk upgrade` layer forever - the instruction and the
+# base digest never change, so the layer is a cache hit even after Alpine ships
+# a fix, and the image keeps the vulnerable package. CI passes a per-run value
+# so the upgrade re-runs every build (the expensive stages above stay cached).
+ARG APK_UPGRADE_CACHE_BUST=0
 USER root
-RUN apk upgrade --no-cache
+RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" && apk upgrade --no-cache
 USER 101
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
@@ -66,8 +73,10 @@ CMD ["-w", "/etc/sws.toml"]
 # ---------------------------------------------------------------------------
 FROM nginx:stable-alpine@sha256:97d490c12ba55b4946b01546d1c3ed324e8d41ab1c9fcb2a616aa470620e5b46 AS standard
 # Same as rootless: patch OS packages so a base-image digest that lags an
-# Alpine security fix doesn't trip CI's blocking Trivy gate.
-RUN apk upgrade --no-cache
+# Alpine security fix doesn't trip CI's blocking Trivy gate, and cache-bust the
+# layer so a cached build can't replay a stale upgrade (see rootless above).
+ARG APK_UPGRADE_CACHE_BUST=0
+RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" && apk upgrade --no-cache
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
 ENV NGINX_PORT=8080
