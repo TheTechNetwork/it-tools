@@ -759,7 +759,12 @@ Jobs:
 - Vitest cache
 - TypeScript build info
 - Playwright browsers (per browser project)
-- Docker layer cache (`type=gha`) for the docker-image job
+- Docker layer cache (`type=gha`) for the docker-image job. The nginx stages'
+  `apk upgrade` layer is deliberately **not** reused across runs: every image
+  build (ci, releases, nightly) passes a per-run `APK_UPGRADE_CACHE_BUST`
+  build-arg, because with a pinned base digest that layer would otherwise be a
+  permanent cache hit and the image would keep OS packages Alpine has since
+  patched (the Trivy gate then fails on fixable CVEs a rebuild should fix)
 
 #### 2. **actionlint.yml** - Workflow Linting
 
