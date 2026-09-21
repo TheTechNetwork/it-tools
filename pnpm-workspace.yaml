@@ -19,3 +19,4 @@ allowBuilds:
 # our own release pipeline. Safe to drop once 0.9.1 clears the age window.
 minimumReleaseAgeExclude:
   - '@thetechnetwork/composerize-ts@0.9.1'
+  - '@unabandoned/composerize-ts@0.9.3'
