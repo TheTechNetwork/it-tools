@@ -14,8 +14,11 @@ allowBuilds:
   # message); nothing needs building, so skip it.
   tesseract.js: false
 
-# A fork we publish ourselves; allow it past the minimum-release-age
+# Forks we publish ourselves; allow them past the minimum-release-age
 # supply-chain gate that would otherwise reject a version freshly published from
-# our own release pipeline. Safe to drop once 0.9.3 clears the age window.
+# our own release pipeline. Safe to drop once each version clears the age
+# window.
 minimumReleaseAgeExclude:
   - '@unabandoned/composerize-ts@0.9.3'
+  - '@unabandoned/json-to-ts@3.0.0'
+  - '@unabandoned/stream-browserify@4.0.0'

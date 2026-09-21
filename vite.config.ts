@@ -173,7 +173,7 @@ export default defineConfig({
       // need a stand-in for Node's `crypto`; the empty stub keeps the
       // browserify crypto chain (and its vulnerable `elliptic`) out of the bundle.
       'crypto': fileURLToPath(new URL('./src/polyfills/empty-crypto.ts', import.meta.url)),
-      'stream': 'stream-browserify',
+      'stream': '@unabandoned/stream-browserify',
       'buffer': '@unabandoned/buffer',
       'events': '@unabandoned/events',
       'path': '@unabandoned/path-browserify',
