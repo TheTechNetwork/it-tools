@@ -44,6 +44,12 @@
       "overrideDatasource": "github-releases"
     },
     {
+      "description": "Hold the GitHub-hosted runner label at ubuntu-24.04. Renovate's github-runners datasource tracks Ubuntu's own release cadence, so it proposes labels like ubuntu-26.04 months before GitHub ships that runner image - actionlint rejects the unknown label, and a merged bump would fail every job at startup. Lift this cap once ubuntu-26.04 appears in GitHub's hosted-runner list.",
+      "matchDatasources": ["github-runners"],
+      "matchPackageNames": ["ubuntu"],
+      "allowedVersions": "<=24.04"
+    },
+    {
       "description": "Automerge low-risk devDependency updates once CI passes",
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor", "patch"],
