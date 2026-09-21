@@ -244,9 +244,6 @@ importers:
       dompurify:
         specifier: 3.4.14
         version: 3.4.14
-      email-normalizer:
-        specifier: 1.0.0
-        version: 1.0.0
       emojilib:
         specifier: 4.0.3
         version: 4.0.3
@@ -3429,9 +3426,6 @@ packages:
   electron-to-chromium@1.5.433:
     resolution: {integrity: sha512-5lCAbyZBjtmUt/RAGHRqrL2q0oEFRThDAsZHHDn9XHa89Qw7gMYOeSicBTy+AHfvo0r6vwsZvqNJTQIQy1BLzA==}
 
-  email-normalizer@1.0.0:
-    resolution: {integrity: sha512-wZYuuMtL4kUOmg/TPtCrf9hAZjbFq+FcjWA85Z5nr2lGllRnWJPxCJw3gy4Cx+adMoyVw4VJfGGvt/OHgIW+qg==}
-
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
 
@@ -5788,11 +5782,6 @@ packages:
   typed-function@4.2.2:
     resolution: {integrity: sha512-VwaXim9Gp1bngi/q3do8hgttYn2uC3MoT/gfuMWylnj1IeZBUAyPddHZlo1K05BDoj8DYPpMdiHqH1dDYdJf2A==}
     engines: {node: '>= 18'}
-
-  typescript@5.9.3:
-    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
-    engines: {node: '>=14.17'}
-    hasBin: true
 
   typescript@6.0.3:
     resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
@@ -9398,10 +9387,6 @@ snapshots:
 
   electron-to-chromium@1.5.433: {}
 
-  email-normalizer@1.0.0:
-    dependencies:
-      typescript: 5.9.3
-
   emoji-regex@8.0.0: {}
 
   emojilib@4.0.3: {}
@@ -12264,8 +12249,6 @@ snapshots:
       reflect.getprototypeof: 1.0.10
 
   typed-function@4.2.2: {}
-
-  typescript@5.9.3: {}
 
   typescript@6.0.3: {}
 

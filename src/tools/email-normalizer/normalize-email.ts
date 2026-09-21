@@ -1,0 +1,80 @@
+// Vendored from `email-normalizer` v1.0.0 (MIT, Copyright (c) 2024 Corentin
+// THOMASSET — https://github.com/CorentinTh/email-normalizer), which has had no
+// release since August 2024 and shipped `typescript` as a runtime dependency.
+// It is 78 dependency-free lines used by exactly one tool, so it lives here
+// rather than behind a published fork. Upstream's own test suite came with it.
+
+export {
+  normalizeEmail,
+};
+
+export interface DomainConfig {
+  removeDots: boolean;
+  renameDomain?: string;
+}
+
+const domainsConfig: Record<string, DomainConfig> = {
+  'gmail.com': {
+    removeDots: true,
+  },
+  'googlemail.com': {
+    removeDots: true,
+    renameDomain: 'gmail.com',
+  },
+  'hotmail.com': {
+    removeDots: false,
+  },
+  'live.com': {
+    removeDots: true,
+  },
+  'outlook.com': {
+    removeDots: false,
+  },
+};
+
+function normalizeEmail({ email: rawEmail }: { email: string }) {
+  if (!isValidEmail({ email: rawEmail })) {
+    throw new Error('Invalid email');
+  }
+
+  const normalizedEmail = rawEmail.trim().toLowerCase();
+  const [identifier, domain] = normalizedEmail.split('@');
+
+  const domainConfig = domainsConfig[domain];
+
+  if (!domainConfig) {
+    return normalizedEmail;
+  }
+
+  const { removeDots, renameDomain } = domainConfig;
+
+  const { normalizedIdentifier } = normalizeIdentifier({ identifier, removeDots });
+
+  const normalizedDomain = renameDomain ?? domain;
+
+  return `${normalizedIdentifier}@${normalizedDomain}`;
+}
+
+function normalizeIdentifier({ identifier, removeDots }: { identifier: string; removeDots: boolean }) {
+  let normalizedIdentifier = identifier;
+
+  if (removeDots) {
+    normalizedIdentifier = normalizedIdentifier.replace(/\./g, '');
+  }
+
+  // Every listed provider strips plus tags — upstream's `stripPlus` flag was
+  // `true` in all five entries and had no false path. A provider that did not
+  // strip them would behave exactly like an unlisted domain, which is returned
+  // untouched, so the flag could never be anything but dead config.
+  normalizedIdentifier = normalizedIdentifier.split('+')[0];
+
+  return { normalizedIdentifier };
+}
+
+function isValidEmail({ email }: { email: string }) {
+  if (typeof email !== 'string') {
+    return false;
+  }
+
+  return email.trim().match(/^[\w.%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i) !== null;
+}

@@ -1,5 +1,5 @@
-import { normalizeEmail } from 'email-normalizer';
 import { withDefaultOnError } from '@/utils/defaults';
+import { normalizeEmail } from './normalize-email';
 
 export function normalizeEmails(rawEmails: string): string {
   if (!rawEmails) {
