@@ -1,4 +1,4 @@
-import { MessageType } from '@thetechnetwork/composerize-ts';
+import { MessageType } from '@unabandoned/composerize-ts';
 import { describe, expect, it } from 'vitest';
 import { convertDockerRunToDockerCompose, getMessagesOfType } from './docker-run-to-docker-compose-converter.service';
 

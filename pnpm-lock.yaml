@@ -32,9 +32,6 @@ importers:
       '@tabler/icons-vue':
         specifier: 3.46.0
         version: 3.46.0(vue@3.5.42(typescript@6.0.3))
-      '@thetechnetwork/composerize-ts':
-        specifier: 0.9.1
-        version: 0.9.1
       '@tiptap/pm':
         specifier: 3.30.6
         version: 3.30.6
@@ -44,6 +41,9 @@ importers:
       '@tiptap/vue-3':
         specifier: 3.30.6
         version: 3.30.6(@floating-ui/dom@1.8.0)(@tiptap/core@3.30.6(@tiptap/pm@3.30.6))(@tiptap/pm@3.30.6)(vue@3.5.42(typescript@6.0.3))
+      '@unabandoned/composerize-ts':
+        specifier: 0.9.3
+        version: 0.9.3
       '@unabandoned/randexp':
         specifier: 0.5.8
         version: 0.5.8
@@ -2049,11 +2049,6 @@ packages:
   '@tabler/icons@3.46.0':
     resolution: {integrity: sha512-f2RYFl3fzPwj5WO82x6en0dmkjefxEfOm16D1ByM6cj/McNiwOkL4VaPUoP9VVIrXAD9WnTSVFr70px703b//A==}
 
-  '@thetechnetwork/composerize-ts@0.9.1':
-    resolution: {integrity: sha512-z2TzIpt5o7dDV/CynzA1n4QoSTJ7Bc9tZN5rysEBGhnO70/TQN7ml5gzL8f6p+NdK2C/3hZeddtIWg8H9aWy1A==}
-    engines: {node: '>=22'}
-    hasBin: true
-
   '@tiptap/core@3.30.6':
     resolution: {integrity: sha512-M32+WOx1IrPRbPunhG1Xl7ETgUZJGABpGi/y969Uio6rR4tPBnOgFG5xXE3Xw6OQtYUqUE2n9nnnckoObZwBzA==}
     peerDependencies:
@@ -2398,6 +2393,11 @@ packages:
   '@unabandoned/buffer@6.0.6':
     resolution: {integrity: sha512-/46ekXg10d3AnBh1BVHP68Yny9dTuWCJ4e+9eh+6T4QRK0tx1qDblUFA3SnMdzYE82NtnXD+uxLaUZPJQFD9wA==}
     engines: {node: '>=14'}
+
+  '@unabandoned/composerize-ts@0.9.3':
+    resolution: {integrity: sha512-VdCkumSPeF5v05tJERQB8KPM9jlk7WXKGwJFx1B/DNC6y9wKhSZseEC6fcgYa516+7GOoJ6Eamu4npVfLYi8Eg==}
+    engines: {node: '>=22'}
+    hasBin: true
 
   '@unabandoned/events@3.3.5':
     resolution: {integrity: sha512-jPrPTdvBm22XoscYEGd0moPUsQru7WACKciz1R/2/TimK/5/VZ3Hk41hJ52TE5xpPTdNBQ8Pv/ktKEBW9GuUgA==}
@@ -3963,8 +3963,8 @@ packages:
     resolution: {integrity: sha512-4gd7VpWNQNB4UKKCFFVcp1AVv+FMOgs9NKzjHKusc8jTMhd5eL1NqQqOpE0KzMds804/yHlglp3uxgluOqAPLw==}
     engines: {node: '>= 0.4'}
 
-  ip-address@10.4.0:
-    resolution: {integrity: sha512-oSK96Grm3aP6OrS263xVxbNDGVL7rzBtYdpGqlDG8iQdoenDoTs/nkki+DflYbAEE8Xl6o5YxhxlrKvI3nqKXQ==}
+  ip-address@10.7.2:
+    resolution: {integrity: sha512-7H/2gFSIitxc0hG3nOI1glS8QLo/EHBFFLk8vEUjXY/xu0AdL8jZ9U1IzO2PUm0d2D/ofQcAifb0g6OBkt8U7w==}
     engines: {node: '>= 12'}
 
   is-array-buffer@3.0.5:
@@ -7801,13 +7801,6 @@ snapshots:
 
   '@tabler/icons@3.46.0': {}
 
-  '@thetechnetwork/composerize-ts@0.9.1':
-    dependencies:
-      commander: 15.0.0
-      ip-address: 10.4.0
-      set-value: 4.1.0
-      yaml: 2.9.0
-
   '@tiptap/core@3.30.6(@tiptap/pm@3.30.6)':
     dependencies:
       '@tiptap/pm': 3.30.6
@@ -8216,6 +8209,13 @@ snapshots:
       eslint-visitor-keys: 5.0.1
 
   '@unabandoned/buffer@6.0.6': {}
+
+  '@unabandoned/composerize-ts@0.9.3':
+    dependencies:
+      commander: 15.0.0
+      ip-address: 10.7.2
+      set-value: 4.1.0
+      yaml: 2.9.0
 
   '@unabandoned/events@3.3.5': {}
 
@@ -10077,7 +10077,7 @@ snapshots:
       hasown: 2.0.4
       side-channel: 1.1.1
 
-  ip-address@10.4.0: {}
+  ip-address@10.7.2: {}
 
   is-array-buffer@3.0.5:
     dependencies:

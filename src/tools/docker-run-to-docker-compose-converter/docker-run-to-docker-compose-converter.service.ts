@@ -1,5 +1,5 @@
-import type { ComposerizeResult, Message, MessageType } from '@thetechnetwork/composerize-ts';
-import { composerize } from '@thetechnetwork/composerize-ts';
+import type { ComposerizeResult, Message, MessageType } from '@unabandoned/composerize-ts';
+import { composerize } from '@unabandoned/composerize-ts';
 
 export function convertDockerRunToDockerCompose(dockerRun: string): ComposerizeResult {
   return composerize(dockerRun.trim());
