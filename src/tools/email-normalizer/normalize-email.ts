@@ -10,31 +10,25 @@ export {
 
 export interface DomainConfig {
   removeDots: boolean;
-  stripPlus: boolean;
   renameDomain?: string;
 }
 
 const domainsConfig: Record<string, DomainConfig> = {
   'gmail.com': {
     removeDots: true,
-    stripPlus: true,
   },
   'googlemail.com': {
     removeDots: true,
-    stripPlus: true,
     renameDomain: 'gmail.com',
   },
   'hotmail.com': {
     removeDots: false,
-    stripPlus: true,
   },
   'live.com': {
     removeDots: true,
-    stripPlus: true,
   },
   'outlook.com': {
     removeDots: false,
-    stripPlus: true,
   },
 };
 
@@ -52,25 +46,27 @@ function normalizeEmail({ email: rawEmail }: { email: string }) {
     return normalizedEmail;
   }
 
-  const { removeDots, stripPlus, renameDomain } = domainConfig;
+  const { removeDots, renameDomain } = domainConfig;
 
-  const { normalizedIdentifier } = normalizeIdentifier({ identifier, removeDots, stripPlus });
+  const { normalizedIdentifier } = normalizeIdentifier({ identifier, removeDots });
 
   const normalizedDomain = renameDomain ?? domain;
 
   return `${normalizedIdentifier}@${normalizedDomain}`;
 }
 
-function normalizeIdentifier({ identifier, removeDots, stripPlus }: { identifier: string; removeDots: boolean; stripPlus: boolean }) {
+function normalizeIdentifier({ identifier, removeDots }: { identifier: string; removeDots: boolean }) {
   let normalizedIdentifier = identifier;
 
   if (removeDots) {
     normalizedIdentifier = normalizedIdentifier.replace(/\./g, '');
   }
 
-  if (stripPlus) {
-    normalizedIdentifier = normalizedIdentifier.split('+')[0];
-  }
+  // Every listed provider strips plus tags — upstream's `stripPlus` flag was
+  // `true` in all five entries and had no false path. A provider that did not
+  // strip them would behave exactly like an unlisted domain, which is returned
+  // untouched, so the flag could never be anything but dead config.
+  normalizedIdentifier = normalizedIdentifier.split('+')[0];
 
   return { normalizedIdentifier };
 }
