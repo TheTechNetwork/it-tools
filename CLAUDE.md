@@ -655,9 +655,9 @@ Node.js modules are polyfilled for browser:
 
 - `crypto` → `crypto-browserify`
 - `stream` → `stream-browserify`
-- `buffer` → `buffer`
-- `events` → `events`
-- `path` → `path-browserify`
+- `buffer` → `@unabandoned/buffer`
+- `events` → `@unabandoned/events`
+- `path` → `@unabandoned/path-browserify`
 - `vm` → `vm-browserify`
 
 ### Build Commands

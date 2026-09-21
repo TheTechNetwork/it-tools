@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ShadowRootExpose } from 'vue-shadow-dom';
 import { render } from '@regexper/render';
-import RandExp from 'randexp';
+import RandExp from '@unabandoned/randexp';
 import { useQueryParamOrStorage } from '@/composable/queryParams';
 import { useValidation } from '@/composable/validation';
 import { matchRegex } from './regex-tester.service';
