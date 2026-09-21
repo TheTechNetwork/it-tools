@@ -44,7 +44,7 @@
     "release": "node ./scripts/release.mjs"
   },
   "dependencies": {
-    "@awasm/compiler": "0.1.3",
+    "@awasm/compiler": "0.1.5",
     "@awasm/noble": "0.1.4",
     "@noble/ciphers": "2.4.0",
     "@noble/hashes": "2.4.0",
