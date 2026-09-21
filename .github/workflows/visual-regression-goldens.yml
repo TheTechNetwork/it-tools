@@ -55,7 +55,7 @@ jobs:
   # Pick the tools to test from the diff. Empty output when nothing relevant
   # changed, so build + browsers are skipped entirely.
   scope:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     outputs:
       run: ${{ steps.detect.outputs.run }}
@@ -129,7 +129,7 @@ jobs:
   build:
     needs: scope
     if: needs.scope.outputs.run == 'true'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -166,7 +166,7 @@ jobs:
   goldens:
     needs: [scope, build]
     if: needs.scope.outputs.run == 'true'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 20
     strategy:
       fail-fast: false

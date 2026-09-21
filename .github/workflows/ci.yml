@@ -52,7 +52,7 @@ jobs:
     if: >-
       always() &&
       (github.event_name != 'pull_request' || needs.changes.outputs.app == 'true')
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     permissions:
       contents: read
@@ -148,7 +148,7 @@ jobs:
     if: >-
       always() &&
       (github.event_name != 'pull_request' || needs.changes.outputs.app == 'true')
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -188,7 +188,7 @@ jobs:
   # which covers the ~350-test suite well within the timeout.
   e2e:
     needs: build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -278,7 +278,7 @@ jobs:
     # Merge whatever shards ran; skip entirely when e2e itself was skipped
     # (non-app PR) so there are no absent blob reports to merge.
     if: ${{ !cancelled() && needs.e2e.result != 'skipped' }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -327,7 +327,7 @@ jobs:
   # (docker-only, workflow-only, …) additionally skip checks/build/e2e.
   changes:
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     outputs:
       app: ${{ steps.filter.outputs.app }}
@@ -385,7 +385,7 @@ jobs:
     if: >-
       always() &&
       (github.event_name != 'pull_request' || needs.changes.outputs.toolchain == 'true')
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
@@ -428,7 +428,7 @@ jobs:
     if: >-
       always() &&
       (github.event_name != 'pull_request' || needs.changes.outputs.docker == 'true')
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     # security-events: write lets the Trivy SARIF upload reach code scanning.
     permissions:
@@ -584,7 +584,7 @@ jobs:
   # existing deps current) by gating what a change brings in.
   dependency-review:
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
     permissions:
       contents: read

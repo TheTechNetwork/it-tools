@@ -27,7 +27,7 @@ permissions:
 jobs:
   # Single production build, shared with every browser's regeneration job.
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -55,7 +55,7 @@ jobs:
   # Regenerate + commit one browser's goldens per matrix leg, in parallel.
   regenerate:
     needs: build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 20
     # Serialise nothing at the job level; the push step self-serialises via a
     # fetch+rebase+retry loop so the three legs can commit concurrently.
