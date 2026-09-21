@@ -1,5 +1,5 @@
+import JsonToTS from '@unabandoned/json-to-ts';
 import JSON5 from 'json5';
-import JsonToTS from 'json-to-ts';
 
 export function convertJsonToTypescript(json: string, { rootName = 'RootObject' }: { rootName?: string } = {}): string {
   const parsed = JSON5.parse(json);

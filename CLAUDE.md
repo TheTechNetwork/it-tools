@@ -654,7 +654,7 @@ import MyComponent from '@/components/MyComponent.vue';
 Node.js modules are polyfilled for browser:
 
 - `crypto` → `crypto-browserify`
-- `stream` → `stream-browserify`
+- `stream` → `@unabandoned/stream-browserify`
 - `buffer` → `@unabandoned/buffer`
 - `events` → `@unabandoned/events`
 - `path` → `@unabandoned/path-browserify`
