@@ -71,7 +71,7 @@ CMD ["-w", "/etc/sws.toml"]
 # standard (default target): stock nginx, runs as root. Listens on 8080 like
 # the other variants so every image uses the same container port.
 # ---------------------------------------------------------------------------
-FROM nginx:stable-alpine@sha256:97d490c12ba55b4946b01546d1c3ed324e8d41ab1c9fcb2a616aa470620e5b46 AS standard
+FROM nginx:stable-alpine@sha256:ef8676b33d681f272ba429b27658bdd7e640963279714c96bddf1dc76307f7b6 AS standard
 # Same as rootless: patch OS packages so a base-image digest that lags an
 # Alpine security fix doesn't trip CI's blocking Trivy gate, and cache-bust the
 # layer so a cached build can't replay a stale upgrade (see rootless above).
