@@ -174,9 +174,9 @@ export default defineConfig({
       // browserify crypto chain (and its vulnerable `elliptic`) out of the bundle.
       'crypto': fileURLToPath(new URL('./src/polyfills/empty-crypto.ts', import.meta.url)),
       'stream': 'stream-browserify',
-      'buffer': 'buffer',
-      'events': 'events',
-      'path': 'path-browserify',
+      'buffer': '@unabandoned/buffer',
+      'events': '@unabandoned/events',
+      'path': '@unabandoned/path-browserify',
       'vm': 'vm-browserify',
     },
   },
