@@ -269,8 +269,8 @@ importers:
         specifier: 6.2.12
         version: 6.2.12
       js-base64:
-        specifier: 3.9.3
-        version: 3.9.3
+        specifier: 3.9.4
+        version: 3.9.4
       json5:
         specifier: 2.2.3
         version: 2.2.3
@@ -4298,8 +4298,8 @@ packages:
   jose@6.2.12:
     resolution: {integrity: sha512-9NiFmJEex0sy2Dk58j2UGBSHgUs2ypF9eZSu4L6vjOX3Dp96Sw1F3uL+H+D1sx02jZZdzUT0HgvCy59CuvXcWw==}
 
-  js-base64@3.9.3:
-    resolution: {integrity: sha512-uwYQp+VJ38FVvtim6qNbit6e9uT6dwWQ4Y1+H9TxhW5hcHjpHwoxlR0nMpqUmIFOmu4VqMxwdJA88gIVuZJQ/g==}
+  js-base64@3.9.4:
+    resolution: {integrity: sha512-PtOMXpEGuP0RRiRXsjzHzl44dMHxSu2CPvAhinupR1tBa88me+1DPqsobl7eupn5UukjLkln1ZnAOAOXOrYG0Q==}
 
   js-beautify@2.0.3:
     resolution: {integrity: sha512-cyFbh3tkPhknnTD/0bLf0T0yy2ZIbqL05mttzbt4y1Zfr7NxqXQZ62dkBLKs3oHH/lpjmDRAnciJiSUyOy8XwQ==}
@@ -10276,7 +10276,7 @@ snapshots:
 
   jose@6.2.12: {}
 
-  js-base64@3.9.3: {}
+  js-base64@3.9.4: {}
 
   js-beautify@2.0.3:
     dependencies:
