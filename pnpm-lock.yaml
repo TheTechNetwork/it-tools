@@ -417,8 +417,8 @@ importers:
         specifier: 5.0.6
         version: 5.0.6
       '@unabandoned/buffer':
-        specifier: 6.0.6
-        version: 6.0.6
+        specifier: 6.0.7
+        version: 6.0.7
       '@unabandoned/events':
         specifier: 3.3.5
         version: 3.3.5
@@ -2495,6 +2495,10 @@ packages:
 
   '@unabandoned/buffer@6.0.6':
     resolution: {integrity: sha512-/46ekXg10d3AnBh1BVHP68Yny9dTuWCJ4e+9eh+6T4QRK0tx1qDblUFA3SnMdzYE82NtnXD+uxLaUZPJQFD9wA==}
+    engines: {node: '>=14'}
+
+  '@unabandoned/buffer@6.0.7':
+    resolution: {integrity: sha512-folFagqco5l0majInZpRPFbdLXWSntnlgajefQ9DASdwtsIISDKotZVZX1ijCkbQMFXb1YEDDnYulDEp/9AHWg==}
     engines: {node: '>=14'}
 
   '@unabandoned/composerize-ts@0.9.3':
@@ -8233,6 +8237,8 @@ snapshots:
       eslint-visitor-keys: 5.0.1
 
   '@unabandoned/buffer@6.0.6': {}
+
+  '@unabandoned/buffer@6.0.7': {}
 
   '@unabandoned/composerize-ts@0.9.3':
     dependencies:
