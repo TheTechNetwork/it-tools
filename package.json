@@ -131,7 +131,7 @@
     "@unabandoned/buffer": "6.0.7",
     "@unabandoned/events": "3.3.6",
     "@unabandoned/path-browserify": "1.0.2",
-    "@unabandoned/stream-browserify": "4.0.0",
+    "@unabandoned/stream-browserify": "4.0.1",
     "@unocss/eslint-config": "66.10.5",
     "@vitejs/plugin-vue": "6.0.9",
     "@vitejs/plugin-vue-jsx": "5.1.6",

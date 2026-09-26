@@ -426,8 +426,8 @@ importers:
         specifier: 1.0.2
         version: 1.0.2
       '@unabandoned/stream-browserify':
-        specifier: 4.0.0
-        version: 4.0.0
+        specifier: 4.0.1
+        version: 4.0.1
       '@unocss/eslint-config':
         specifier: 66.10.5
         version: 66.10.5(eslint@10.11.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
@@ -2493,10 +2493,6 @@ packages:
     resolution: {integrity: sha512-BoC8PiO4Hkdo0TVJh9Ntxr5MxPDI7/oFsrygN5ADelFSeXG/qgNuucIGA+L5Z6JpPTE/uRfcTWtscjbUaufepQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@unabandoned/buffer@6.0.6':
-    resolution: {integrity: sha512-/46ekXg10d3AnBh1BVHP68Yny9dTuWCJ4e+9eh+6T4QRK0tx1qDblUFA3SnMdzYE82NtnXD+uxLaUZPJQFD9wA==}
-    engines: {node: '>=14'}
-
   '@unabandoned/buffer@6.0.7':
     resolution: {integrity: sha512-folFagqco5l0majInZpRPFbdLXWSntnlgajefQ9DASdwtsIISDKotZVZX1ijCkbQMFXb1YEDDnYulDEp/9AHWg==}
     engines: {node: '>=14'}
@@ -2505,10 +2501,6 @@ packages:
     resolution: {integrity: sha512-VdCkumSPeF5v05tJERQB8KPM9jlk7WXKGwJFx1B/DNC6y9wKhSZseEC6fcgYa516+7GOoJ6Eamu4npVfLYi8Eg==}
     engines: {node: '>=22'}
     hasBin: true
-
-  '@unabandoned/events@3.3.5':
-    resolution: {integrity: sha512-jPrPTdvBm22XoscYEGd0moPUsQru7WACKciz1R/2/TimK/5/VZ3Hk41hJ52TE5xpPTdNBQ8Pv/ktKEBW9GuUgA==}
-    engines: {node: '>=0.8.x'}
 
   '@unabandoned/events@3.3.6':
     resolution: {integrity: sha512-6jgyskag6HZqbIX4gXZMpohOl7bgwIqbCWd//o9uSBtdMGrZMTLbjGP/spQLCM+4vcYtZYaA2AfuiclbrkFT3A==}
@@ -2533,8 +2525,8 @@ packages:
     resolution: {integrity: sha512-zLtOmZklgY9MPYK8I9tKCJSVU2bdxJQcoYctBQvy2ryR2hF3KEU7ZwuiSqqlwDRdxPC3W6MLieBMwg/aOmgkRg==}
     engines: {node: '>=22.12'}
 
-  '@unabandoned/stream-browserify@4.0.0':
-    resolution: {integrity: sha512-U3jr/EqsBj9/pSZboXgDha+T1nm7nF+3Ddyqdy8yONtbPYCB1E3UkQFPW87kIdoLKQ3GVAWfgVqYztX/q3RNZw==}
+  '@unabandoned/stream-browserify@4.0.1':
+    resolution: {integrity: sha512-WTYfmkCwqC61Mqn8QaRl9MgoloHIjs0UoM7JpINRa9XtHq1Hk8a43k8PoPJd4OD9l+OLRzyO0HaMM7yJ29aEnw==}
 
   '@unabandoned/xml-js@1.6.14':
     resolution: {integrity: sha512-ZNa/Q7C4hoya/flOhPDH6Q6p9+ki4IEOv88mCMZihsuEOvSatSv9Dy8kDXYyqjQ3XAl6iiPan770l0/fe5NqAw==}
@@ -8240,8 +8232,6 @@ snapshots:
       '@typescript-eslint/types': 8.70.0
       eslint-visitor-keys: 5.0.1
 
-  '@unabandoned/buffer@6.0.6': {}
-
   '@unabandoned/buffer@6.0.7': {}
 
   '@unabandoned/composerize-ts@0.9.3':
@@ -8250,8 +8240,6 @@ snapshots:
       ip-address: 10.7.2
       set-value: 4.1.0
       yaml: 2.9.1
-
-  '@unabandoned/events@3.3.5': {}
 
   '@unabandoned/events@3.3.6': {}
 
@@ -8268,13 +8256,13 @@ snapshots:
 
   '@unabandoned/readable-stream@4.8.3':
     dependencies:
-      buffer: '@unabandoned/buffer@6.0.6'
-      events: '@unabandoned/events@3.3.5'
+      buffer: '@unabandoned/buffer@6.0.7'
+      events: '@unabandoned/events@3.3.6'
       process: 0.11.10
 
   '@unabandoned/ret@0.5.2': {}
 
-  '@unabandoned/stream-browserify@4.0.0':
+  '@unabandoned/stream-browserify@4.0.1':
     dependencies:
       '@unabandoned/readable-stream': 4.8.3
       inherits: 2.0.4
