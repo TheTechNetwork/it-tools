@@ -129,7 +129,7 @@
     "@types/qrcode": "1.5.6",
     "@types/turndown": "5.0.6",
     "@unabandoned/buffer": "6.0.7",
-    "@unabandoned/events": "3.3.5",
+    "@unabandoned/events": "3.3.6",
     "@unabandoned/path-browserify": "1.0.2",
     "@unabandoned/stream-browserify": "4.0.0",
     "@unocss/eslint-config": "66.10.5",
