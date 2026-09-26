@@ -426,8 +426,8 @@ importers:
         specifier: 1.0.2
         version: 1.0.2
       '@unabandoned/stream-browserify':
-        specifier: 4.0.1
-        version: 4.0.1
+        specifier: 4.0.2
+        version: 4.0.2
       '@unocss/eslint-config':
         specifier: 66.10.5
         version: 66.10.5(eslint@10.11.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)
@@ -2525,8 +2525,8 @@ packages:
     resolution: {integrity: sha512-zLtOmZklgY9MPYK8I9tKCJSVU2bdxJQcoYctBQvy2ryR2hF3KEU7ZwuiSqqlwDRdxPC3W6MLieBMwg/aOmgkRg==}
     engines: {node: '>=22.12'}
 
-  '@unabandoned/stream-browserify@4.0.1':
-    resolution: {integrity: sha512-WTYfmkCwqC61Mqn8QaRl9MgoloHIjs0UoM7JpINRa9XtHq1Hk8a43k8PoPJd4OD9l+OLRzyO0HaMM7yJ29aEnw==}
+  '@unabandoned/stream-browserify@4.0.2':
+    resolution: {integrity: sha512-R8MDwqrlzz6c6h45+fHT7MFYG7Cbm0CwZJsAEs/psXiaM6VRjv5WUD1l+HJtThrL4kKSlKguZWq+ypWNAgL8AQ==}
 
   '@unabandoned/xml-js@1.6.14':
     resolution: {integrity: sha512-ZNa/Q7C4hoya/flOhPDH6Q6p9+ki4IEOv88mCMZihsuEOvSatSv9Dy8kDXYyqjQ3XAl6iiPan770l0/fe5NqAw==}
@@ -8262,7 +8262,7 @@ snapshots:
 
   '@unabandoned/ret@0.5.2': {}
 
-  '@unabandoned/stream-browserify@4.0.1':
+  '@unabandoned/stream-browserify@4.0.2':
     dependencies:
       '@unabandoned/readable-stream': 4.8.3
       inherits: 2.0.4
