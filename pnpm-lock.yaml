@@ -206,8 +206,8 @@ importers:
         specifier: 3.0.0
         version: 3.0.0
       '@unabandoned/randexp':
-        specifier: 0.5.8
-        version: 0.5.8
+        specifier: 0.5.9
+        version: 0.5.9
       '@unabandoned/xml-js':
         specifier: 1.6.14
         version: 1.6.14
@@ -2513,8 +2513,8 @@ packages:
     resolution: {integrity: sha512-paHRCI+jUmk8fVTeVTo0gwiXoQEFo4YgUSWyCcBxUwonCT9RmQOOmqkMLHP03FAmHjo0eFWgAtXltSerpRnUnA==}
     engines: {node: '>=14'}
 
-  '@unabandoned/randexp@0.5.8':
-    resolution: {integrity: sha512-uqeGSQrEmQ9ZdvfRXkasp6zQ63QsbQGOEGEvJmkszgpnAcyUExOLyZgbBPFuvsZdsWdI3XNlTg0VECZy1VzbDw==}
+  '@unabandoned/randexp@0.5.9':
+    resolution: {integrity: sha512-8wnCcIw8VisxIYVnlo/Y8DGFCuWsQYOUffq2TGBzKmfhJP9zQCo7d8cgR52uqMMCVfbcWZki+936/ieBwBrOkw==}
     engines: {node: '>=14'}
 
   '@unabandoned/readable-stream@4.8.3':
@@ -8250,7 +8250,7 @@ snapshots:
 
   '@unabandoned/path-browserify@1.0.2': {}
 
-  '@unabandoned/randexp@0.5.8':
+  '@unabandoned/randexp@0.5.9':
     dependencies:
       ret: '@unabandoned/ret@0.5.2'
 
