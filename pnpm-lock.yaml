@@ -423,8 +423,8 @@ importers:
         specifier: 3.3.6
         version: 3.3.6
       '@unabandoned/path-browserify':
-        specifier: 1.0.2
-        version: 1.0.2
+        specifier: 1.0.4
+        version: 1.0.4
       '@unabandoned/stream-browserify':
         specifier: 4.0.2
         version: 4.0.2
@@ -2509,8 +2509,8 @@ packages:
   '@unabandoned/json-to-ts@3.0.0':
     resolution: {integrity: sha512-l0UOYzLu4pON/cV/pRhWbBx3f5Te6owmOtmrXTyogNldLpyOOSzeEgwxEsJigmlckEiHb3qehXMNhQTNV0VgQQ==}
 
-  '@unabandoned/path-browserify@1.0.2':
-    resolution: {integrity: sha512-paHRCI+jUmk8fVTeVTo0gwiXoQEFo4YgUSWyCcBxUwonCT9RmQOOmqkMLHP03FAmHjo0eFWgAtXltSerpRnUnA==}
+  '@unabandoned/path-browserify@1.0.4':
+    resolution: {integrity: sha512-Wpg1pSmLUXtxt6bWaRcGzx4IZHecoHQ3GSHiKqGaFKWlnA4DYJH7gzWMVZTPwl15IizFMihqCo+ylgI13fSXGw==}
     engines: {node: '>=14'}
 
   '@unabandoned/randexp@0.5.8':
@@ -8248,7 +8248,7 @@ snapshots:
       hash.js: 1.1.7
       pluralize: 8.0.0
 
-  '@unabandoned/path-browserify@1.0.2': {}
+  '@unabandoned/path-browserify@1.0.4': {}
 
   '@unabandoned/randexp@0.5.8':
     dependencies:
