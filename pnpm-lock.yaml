@@ -481,7 +481,7 @@ importers:
         version: 4.0.0(unocss@66.10.5(cac@7.0.0)(rolldown@1.2.12)(rollup@4.63.6)(srvx@1.0.5)(vite@8.3.0(@types/node@24.13.6)(jiti@2.7.0)(less@4.9.1(supports-color@7.2.0))(terser@5.51.2)(yaml@2.9.1)))
       unplugin-icons:
         specifier: 24.0.0
-        version: 24.0.0(@vue/compiler-sfc@3.5.43)(rolldown@1.2.9)(rollup@4.63.4)(vite@8.3.0(@types/node@24.13.6)(jiti@2.7.0)(less@4.9.1(supports-color@7.2.0))(terser@5.51.2)(yaml@2.9.1))
+        version: 24.0.0(@vue/compiler-sfc@3.5.43)(rolldown@1.2.12)(rollup@4.63.6)(vite@8.3.0(@types/node@24.13.6)(jiti@2.7.0)(less@4.9.1(supports-color@7.2.0))(terser@5.51.2)(yaml@2.9.1))
       unplugin-vue-components:
         specifier: 32.1.0
         version: 32.1.0(rolldown@1.2.12)(rollup@4.63.6)(vite@8.3.0(@types/node@24.13.6)(jiti@2.7.0)(less@4.9.1(supports-color@7.2.0))(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@6.0.3))
@@ -12191,13 +12191,13 @@ snapshots:
       - vite
       - webpack
 
-  unplugin-icons@24.0.0(@vue/compiler-sfc@3.5.43)(rolldown@1.2.9)(rollup@4.63.4)(vite@8.3.0(@types/node@24.13.6)(jiti@2.7.0)(less@4.9.1(supports-color@7.2.0))(terser@5.51.2)(yaml@2.9.1)):
+  unplugin-icons@24.0.0(@vue/compiler-sfc@3.5.43)(rolldown@1.2.12)(rollup@4.63.6)(vite@8.3.0(@types/node@24.13.6)(jiti@2.7.0)(less@4.9.1(supports-color@7.2.0))(terser@5.51.2)(yaml@2.9.1)):
     dependencies:
       '@antfu/install-pkg': 1.1.0
       '@iconify/utils': 3.1.7
       local-pkg: 1.2.1
       obug: 2.2.1
-      unplugin: 3.4.0(rolldown@1.2.9)(rollup@4.63.4)(vite@8.3.0(@types/node@24.13.6)(jiti@2.7.0)(less@4.9.1(supports-color@7.2.0))(terser@5.51.2)(yaml@2.9.1))
+      unplugin: 3.4.0(rolldown@1.2.12)(rollup@4.63.6)(vite@8.3.0(@types/node@24.13.6)(jiti@2.7.0)(less@4.9.1(supports-color@7.2.0))(terser@5.51.2)(yaml@2.9.1))
     optionalDependencies:
       '@vue/compiler-sfc': 3.5.43
     transitivePeerDependencies:
