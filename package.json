@@ -56,7 +56,7 @@
     "@tiptap/vue-3": "3.31.3",
     "@unabandoned/composerize-ts": "0.9.3",
     "@unabandoned/json-to-ts": "3.0.0",
-    "@unabandoned/randexp": "0.5.8",
+    "@unabandoned/randexp": "0.5.9",
     "@unabandoned/xml-js": "1.6.14",
     "@unhead/vue": "3.4.1",
     "@vicons/material": "0.13.0",
