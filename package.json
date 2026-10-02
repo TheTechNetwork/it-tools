@@ -130,7 +130,7 @@
     "@types/turndown": "5.0.6",
     "@unabandoned/buffer": "6.0.7",
     "@unabandoned/events": "3.3.6",
-    "@unabandoned/path-browserify": "1.0.2",
+    "@unabandoned/path-browserify": "1.0.4",
     "@unabandoned/stream-browserify": "4.0.2",
     "@unocss/eslint-config": "66.10.5",
     "@vitejs/plugin-vue": "6.0.9",
