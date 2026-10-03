@@ -203,8 +203,8 @@ importers:
         specifier: 0.9.5
         version: 0.9.5
       '@unabandoned/json-to-ts':
-        specifier: 3.0.0
-        version: 3.0.0
+        specifier: 3.1.1
+        version: 3.1.1
       '@unabandoned/randexp':
         specifier: 0.5.9
         version: 0.5.9
@@ -2507,8 +2507,11 @@ packages:
     resolution: {integrity: sha512-6jgyskag6HZqbIX4gXZMpohOl7bgwIqbCWd//o9uSBtdMGrZMTLbjGP/spQLCM+4vcYtZYaA2AfuiclbrkFT3A==}
     engines: {node: '>=0.8.x'}
 
-  '@unabandoned/json-to-ts@3.0.0':
-    resolution: {integrity: sha512-l0UOYzLu4pON/cV/pRhWbBx3f5Te6owmOtmrXTyogNldLpyOOSzeEgwxEsJigmlckEiHb3qehXMNhQTNV0VgQQ==}
+  '@unabandoned/hash.js@1.4.2':
+    resolution: {integrity: sha512-7KOZygiAlM69loN7aPt05ROkLwLrwLpWtw7vgu31Myskqr3oJxxV4pUd754pVIHCCRBb5mCXvE8F3DRT6/+IEA==}
+
+  '@unabandoned/json-to-ts@3.1.1':
+    resolution: {integrity: sha512-rHZJpO8Ols5EAGoN7bdJsT/G2jky6TArfwNKMOu+41HEVj2VXPlx86Qk42aO5Lhi9+4x1F1n1jhVONLIU3loHw==}
 
   '@unabandoned/path-browserify@1.0.4':
     resolution: {integrity: sha512-Wpg1pSmLUXtxt6bWaRcGzx4IZHecoHQ3GSHiKqGaFKWlnA4DYJH7gzWMVZTPwl15IizFMihqCo+ylgI13fSXGw==}
@@ -3987,9 +3990,6 @@ packages:
     resolution: {integrity: sha512-NqADB8VjPFLM2V0VvHUewwwsw0ZWBaIdgo+ieHtK3hasLz4qeCRjYcqfB6AQrBggRKppKF8L52/VqdVsO47Dlw==}
     engines: {node: '>= 0.4'}
 
-  hash.js@1.1.7:
-    resolution: {integrity: sha512-taOaskGt4z4SOANNseOviYDvjEJinIkRgmp7LbKP2YTTmVxWBl87s/uzK9r+44BclBSp2X7K1hqeNfz9JbBeXA==}
-
   hashery@1.5.1:
     resolution: {integrity: sha512-iZyKG96/JwPz1N55vj2Ie2vXbhu440zfUfJvSwEqEbeLluk7NnapfGqa7LH0mOsnDxTF85Mx8/dyR6HfqcbmbQ==}
     engines: {node: '>=20'}
@@ -4755,9 +4755,6 @@ packages:
   mimic-fn@2.1.0:
     resolution: {integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==}
     engines: {node: '>=6'}
-
-  minimalistic-assert@1.0.1:
-    resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
 
   minimatch@10.2.6:
     resolution: {integrity: sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==}
@@ -8212,9 +8209,11 @@ snapshots:
 
   '@unabandoned/events@3.3.6': {}
 
-  '@unabandoned/json-to-ts@3.0.0':
+  '@unabandoned/hash.js@1.4.2': {}
+
+  '@unabandoned/json-to-ts@3.1.1':
     dependencies:
-      hash.js: 1.1.7
+      '@unabandoned/hash.js': 1.4.2
       pluralize: 8.0.0
 
   '@unabandoned/path-browserify@1.0.4': {}
@@ -9959,11 +9958,6 @@ snapshots:
     dependencies:
       has-symbols: 1.1.0
 
-  hash.js@1.1.7:
-    dependencies:
-      inherits: 2.0.4
-      minimalistic-assert: 1.0.1
-
   hashery@1.5.1:
     dependencies:
       hookified: 1.15.1
@@ -10932,8 +10926,6 @@ snapshots:
     optional: true
 
   mimic-fn@2.1.0: {}
-
-  minimalistic-assert@1.0.1: {}
 
   minimatch@10.2.6:
     dependencies:

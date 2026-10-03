@@ -55,7 +55,7 @@
     "@tiptap/starter-kit": "3.31.3",
     "@tiptap/vue-3": "3.31.3",
     "@unabandoned/composerize-ts": "0.9.5",
-    "@unabandoned/json-to-ts": "3.0.0",
+    "@unabandoned/json-to-ts": "3.1.1",
     "@unabandoned/randexp": "0.5.9",
     "@unabandoned/xml-js": "1.6.15",
     "@unhead/vue": "3.4.2",
