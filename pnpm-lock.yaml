@@ -375,8 +375,8 @@ importers:
         specifier: 9.5.1
         version: 9.5.1(@typescript-eslint/typescript-estree@8.71.0(supports-color@7.2.0)(typescript@6.0.3))(@typescript-eslint/utils@8.71.0(eslint@10.11.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3))(@unocss/eslint-plugin@66.10.5(eslint@10.11.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3))(@vue/compiler-sfc@3.5.43)(eslint@10.11.0(jiti@2.7.0)(supports-color@7.2.0))(supports-color@7.2.0)(typescript@6.0.3)(vitest@5.0.2)
       '@cloudflare/workers-types':
-        specifier: 5.20260930.1
-        version: 5.20260930.1
+        specifier: 5.20260930.2
+        version: 5.20260930.2
       '@eslint/eslintrc':
         specifier: 3.3.7
         version: 3.3.7(supports-color@7.2.0)
@@ -1162,8 +1162,8 @@ packages:
     resolution: {integrity: sha512-dlT1m5e/0yUL0kRNcQn7yGLVThkgbB0Ga/1AmfDDC/8ik6AIiSf2QLQO2zPYvefsHP0aFgxO93cVLCCfDp7kzQ==}
     engines: {node: '>= 20.12.0'}
 
-  '@cloudflare/workers-types@5.20260930.1':
-    resolution: {integrity: sha512-ZUHwK/kG4GD6owwHY+Le+QYq/LO+R0f8b51cE3+IXe4bcKefKWIVYYqsUrKwSTo9su1LSIxKEfqui4r7LrxU1Q==}
+  '@cloudflare/workers-types@5.20260930.2':
+    resolution: {integrity: sha512-zOJM3vdCVB7iszFDvXvusORu1Ssre6+6x1t+opmbJ4ahi4keylnK/hB6/dKuRPLG7eqS/DO7W4IMjvas6pCvJg==}
 
   '@css-render/plugin-bem@0.15.14':
     resolution: {integrity: sha512-QK513CJ7yEQxm/P3EwsI+d+ha8kSOcjGvD6SevM41neEMxdULE+18iuQK6tEChAWMOQNQPLG/Rw3Khb69r5neg==}
@@ -6927,7 +6927,7 @@ snapshots:
       fast-wrap-ansi: 0.2.2
       sisteransi: 1.0.5
 
-  '@cloudflare/workers-types@5.20260930.1': {}
+  '@cloudflare/workers-types@5.20260930.2': {}
 
   '@css-render/plugin-bem@0.15.14(css-render@0.15.14)':
     dependencies:
