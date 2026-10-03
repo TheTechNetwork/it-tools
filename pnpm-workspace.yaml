@@ -25,3 +25,4 @@ minimumReleaseAgeExclude:
   - '@unabandoned/pdf-signature-reader@1.4.4'
   - '@unabandoned/regexper-parser@1.0.1'
   - '@unabandoned/regexper-render@1.0.1'
+  - '@unabandoned/qrcode@1.6.0'
