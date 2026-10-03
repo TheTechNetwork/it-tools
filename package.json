@@ -40,7 +40,7 @@
     "script:ocr:sync": "node scripts/sync-ocr-assets.mjs",
     "script:figlet:fonts": "node scripts/prepare-figlet-fonts.mjs",
     "script:figlet:sync": "node scripts/sync-figlet-assets.mjs",
-    "script:create:ui": "hygen generator ui-component",
+    "script:create:ui": "node scripts/create-ui-component.mjs",
     "release": "node ./scripts/release.mjs"
   },
   "dependencies": {
@@ -142,7 +142,6 @@
     "@vue/tsconfig": "0.9.1",
     "consola": "3.4.2",
     "eslint": "10.11.0",
-    "hygen": "6.2.11",
     "jsdom": "30.1.1",
     "less": "4.9.1",
     "prettier": "3.9.9",
