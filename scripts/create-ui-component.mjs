@@ -13,11 +13,11 @@
 // The prompt is kept. Hygen asked for a name when you omitted one, and a
 // script that threw instead would be a worse tool than the one it replaced.
 
-import { mkdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import { createInterface } from 'node:readline/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import process from 'node:process';
+import { createInterface } from 'node:readline/promises';
 import { fileURLToPath } from 'node:url';
 import { kebabCase } from 'change-case';
 
