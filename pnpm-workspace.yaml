@@ -22,3 +22,6 @@ minimumReleaseAgeExclude:
   - '@unabandoned/composerize-ts@0.9.3'
   - '@unabandoned/json-to-ts@3.0.0'
   - '@unabandoned/stream-browserify@4.0.0'
+  - '@unabandoned/pdf-signature-reader@1.4.4'
+  - '@unabandoned/regexper-parser@1.0.1'
+  - '@unabandoned/regexper-render@1.0.1'
