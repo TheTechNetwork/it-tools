@@ -2,6 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:best-practices",
+    "github>unabandoned/renovate-config:abandoned-exclusions",
     "helpers:pinGitHubActionDigestsToSemver",
     "helpers:disableTypesNodeMajor",
     "security:openssf-scorecard",
@@ -12,7 +13,9 @@
   "rangeStrategy": "pin",
   "minimumReleaseAge": "3 days",
   "rebaseWhen": "behind-base-branch",
-  "labels": ["dependencies"],
+  "labels": [
+    "dependencies"
+  ],
   "ignorePaths": [
     "**/node_modules/**",
     "**/bower_components/**",
@@ -26,7 +29,9 @@
     {
       "description": "Track versions hard-coded in source (e.g. CDN URLs) that the standard managers can't see. Annotate the line above the version with: // renovate: datasource=<ds> depName=<pkg> [versioning=<v>]",
       "customType": "regex",
-      "managerFilePatterns": ["/\\.(?:ts|mjs|cjs|js|vue)$/"],
+      "managerFilePatterns": [
+        "/\\.(?:ts|mjs|cjs|js|vue)$/"
+      ],
       "matchStrings": [
         "\\/\\/\\s*renovate:\\s*datasource=(?<datasource>[a-z0-9-]+?)\\s+depName=(?<depName>[^\\s]+?)(?:\\s+versioning=(?<versioning>[^\\s]+?))?\\s*[\\r\\n]+[^\\r\\n]*?(?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ]
@@ -35,29 +40,49 @@
   "packageRules": [
     {
       "description": "Never pin engines - .npmrc engine-strict and Vercel require a version range",
-      "matchDepTypes": ["engines"],
+      "matchDepTypes": [
+        "engines"
+      ],
       "rangeStrategy": "replace"
     },
     {
       "description": "Resolve aquasecurity/trivy-action versions from GitHub Releases instead of tags. Renovate's default github-tags lookup for this action intermittently returns no-result (its tags were unavailable to the API during the action's supply-chain incident remediation). The action cuts a GitHub Release for every version, so github-releases is a more reliable source; digest pinning is unaffected.",
-      "matchPackageNames": ["aquasecurity/trivy-action"],
+      "matchPackageNames": [
+        "aquasecurity/trivy-action"
+      ],
       "overrideDatasource": "github-releases"
     },
     {
       "description": "Automerge low-risk devDependency updates once CI passes",
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true
     },
     {
       "description": "Label major updates",
-      "matchUpdateTypes": ["major"],
-      "addLabels": ["major-update"]
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "addLabels": [
+        "major-update"
+      ]
     },
     {
       "groupName": "TypeScript toolchain",
-      "matchPackageNames": ["typescript", "vue-tsc"],
-      "matchUpdateTypes": ["major", "minor", "patch"]
+      "matchPackageNames": [
+        "typescript",
+        "vue-tsc"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ]
     },
     {
       "groupName": "Vue ecosystem",
@@ -68,7 +93,11 @@
         "@vue/test-utils",
         "@vue/tsconfig"
       ],
-      "matchUpdateTypes": ["major", "minor", "patch"]
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ]
     },
     {
       "groupName": "Vite ecosystem",
@@ -80,7 +109,11 @@
         "vite-plugin-vue-markdown",
         "vite-svg-loader"
       ],
-      "matchUpdateTypes": ["major", "minor", "patch"]
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ]
     },
     {
       "groupName": "UnoCSS ecosystem",
@@ -89,7 +122,11 @@
         "@unocss/eslint-config",
         "unocss-preset-scrollbar"
       ],
-      "matchUpdateTypes": ["major", "minor", "patch"]
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ]
     },
     {
       "groupName": "Unplugin ecosystem",
@@ -98,27 +135,58 @@
         "unplugin-icons",
         "unplugin-vue-components"
       ],
-      "matchUpdateTypes": ["major", "minor", "patch"]
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ]
     },
     {
       "groupName": "Icons",
-      "matchPackageNames": ["@vicons/material", "@tabler/icons-vue"],
-      "matchUpdateTypes": ["major", "minor", "patch"]
+      "matchPackageNames": [
+        "@vicons/material",
+        "@tabler/icons-vue"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ]
     },
     {
       "groupName": "VueUse",
-      "matchPackageNames": ["@vueuse/core", "@vueuse/head", "@vueuse/router"],
-      "matchUpdateTypes": ["major", "minor", "patch"]
+      "matchPackageNames": [
+        "@vueuse/core",
+        "@vueuse/head",
+        "@vueuse/router"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ]
     },
     {
       "groupName": "uuid with types",
-      "matchPackageNames": ["uuid", "@types/uuid"],
-      "matchUpdateTypes": ["major", "minor", "patch"]
+      "matchPackageNames": [
+        "uuid",
+        "@types/uuid"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ]
     },
     {
       "groupName": "Type packages",
-      "matchDepTypes": ["devDependencies"],
-      "matchPackageNames": ["/^@types//", "!@types/uuid"]
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "matchPackageNames": [
+        "/^@types//",
+        "!@types/uuid"
+      ]
     }
   ]
 }
