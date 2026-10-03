@@ -9,6 +9,7 @@ import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import Unocss from 'unocss/vite';
 import AutoImport from 'unplugin-auto-import/vite';
+import { FileSystemIconLoader } from 'unplugin-icons/loaders';
 import IconsResolver from 'unplugin-icons/resolver';
 import Icons from 'unplugin-icons/vite';
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers';
@@ -76,7 +77,18 @@ export default defineConfig({
       },
       viteOptimizeDeps: false,
     }),
-    Icons({ compiler: 'vue3' }),
+    Icons({
+      compiler: 'vue3',
+      // The three `mdi` icons this app uses, kept as files instead of as a
+      // dependency. @iconify-json/mdi is 7638 icons and has had no release since
+      // January 2025 — not because Iconify stopped publishing (it ships daily)
+      // but because the Material Design Icons set itself stopped changing. The
+      // collection name stays `mdi`, so every `<icon-mdi:…>` in the templates is
+      // untouched, and the files are the exact `body` Iconify had for them.
+      customCollections: {
+        mdi: FileSystemIconLoader(resolve(__dirname, 'src/assets/icons/mdi')),
+      },
+    }),
     vue({
       include: [/\.vue$/, /\.md$/],
     }),
