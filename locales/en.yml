@@ -1517,6 +1517,20 @@ tools:
     title: Regex cheatsheet
     description: Javascript Regex/Regular Expression cheatsheet
 
+  recipe-builder:
+    title: Recipe builder
+    description: Chain tools together, so the output of one becomes the input of the next. Share a recipe by copying its link.
+    input: Input
+    recipe: Recipe
+    output: Output
+    addStep: Add step
+    removeStep: Remove
+    muteStep: Mute
+    enableStep: Enable
+    copyOutput: Copy output
+    copyLink: Copy recipe link
+    outputCopied: Output copied to the clipboard
+    linkCopied: Recipe link copied to the clipboard
   regex-tester:
     title: Regex Tester
     description: Test your regular expressions with sample text.

@@ -73,6 +73,7 @@ import { tool as percentageCalculator } from './percentage-calculator';
 import { tool as phoneParserAndFormatter } from './phone-parser-and-formatter';
 import { tool as qrCodeGenerator } from './qr-code-generator';
 import { tool as randomPortGenerator } from './random-port-generator';
+import { tool as recipeBuilder } from './recipe-builder';
 import { tool as regexMemo } from './regex-memo';
 import { tool as regexTester } from './regex-tester';
 import { tool as romanNumeralConverter } from './roman-numeral-converter';
@@ -115,6 +116,7 @@ export const toolsByCategory: ToolCategory[] = [
   {
     name: 'Converter',
     components: [
+      recipeBuilder,
       dateTimeConverter,
       baseConverter,
       romanNumeralConverter,
