@@ -61,6 +61,20 @@ describe('runRecipe', () => {
     expect(result.steps[0].output).toBe('HELLO');
   });
 
+  it('reports something thrown that is not an Error', async () => {
+    // A service that rejects with a string rather than an Error should still
+    // name itself in the step, not surface as "undefined".
+    const rude = new Map<string, Operation>([['rude', {
+      id: 'rude',
+      name: 'Rude',
+      // eslint-disable-next-line no-throw-literal -- throwing a non-Error is the thing under test
+      run: () => { throw 'just a string'; },
+    }]]);
+
+    const result = await runRecipe([{ op: 'rude' }], 'x', rude);
+    expect(result.steps[0].error).toBe('just a string');
+  });
+
   it('reports an operation it does not know instead of silently skipping it', async () => {
     const result = await runRecipe([{ op: 'nope' }], 'hello', registry);
 
@@ -108,6 +122,48 @@ describe('the real operations', () => {
   it('rejects an unknown case style by name', async () => {
     const result = await runRecipe([{ op: 'change-case', args: { style: 'klingon' } }], 'x', operationsById);
     expect(result.steps[0].error).toContain('klingon');
+  });
+
+  it('round-trips every operation that has an inverse', async () => {
+    // Each pair proves both halves of the registry wire up to a real service;
+    // a typo in an import shows up here rather than the first time someone
+    // builds a recipe with it.
+    // The JSON pair compares parsed values rather than text: a round-trip
+    // through YAML preserves the data, and the indentation the formatter picks
+    // is not something this test should pin.
+    const pairs: Array<[string, string, string, 'text' | 'json']> = [
+      ['base64-encode', 'base64-decode', 'hello world', 'text'],
+      ['url-encode', 'url-decode', 'a b&c=d', 'text'],
+      ['html-escape', 'html-unescape', '<a href="x">1 & 2</a>', 'text'],
+      ['json-to-yaml', 'yaml-to-json', '{"a":1,"b":["x","y"]}', 'json'],
+    ];
+
+    for (const [forward, backward, sample, compare] of pairs) {
+      const there = await runRecipe([{ op: forward }], sample, operationsById);
+      expect(there.ok, `${forward} failed`).toBe(true);
+      expect(there.output, `${forward} did nothing`).not.toBe(sample);
+
+      const back = await runRecipe([{ op: backward }], there.output, operationsById);
+      expect(back.ok, `${backward} failed`).toBe(true);
+
+      if (compare === 'json') {
+        expect(JSON.parse(back.output), `${forward} -> ${backward}`).toEqual(JSON.parse(sample));
+      }
+      else {
+        expect(back.output, `${forward} -> ${backward}`).toBe(sample);
+      }
+    }
+  });
+
+  it('offers every case style it advertises', async () => {
+    const styles = operationsById.get('change-case')?.args?.[0];
+    expect(styles?.type).toBe('select');
+
+    for (const style of (styles as { options: readonly string[] }).options) {
+      const result = await runRecipe([{ op: 'change-case', args: { style } }], 'some mixed Value', operationsById);
+      expect(result.ok, `style ${style} failed`).toBe(true);
+      expect(result.output.length, `style ${style} produced nothing`).toBeGreaterThan(0);
+    }
   });
 
   it('gives every operation a unique id', () => {
