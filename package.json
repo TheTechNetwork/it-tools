@@ -48,7 +48,7 @@
     "@awasm/noble": "0.1.4",
     "@noble/ciphers": "2.4.0",
     "@noble/hashes": "2.4.0",
-    "@regexper/render": "npm:@unabandoned/regexper-render@1.0.1",
+    "@regexper/render": "npm:@unabandoned/regexper-render@1.0.2",
     "@sindresorhus/slugify": "3.0.1",
     "@tabler/icons-vue": "3.48.0",
     "@tiptap/pm": "3.31.4",

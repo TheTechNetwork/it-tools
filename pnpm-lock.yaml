@@ -182,8 +182,8 @@ importers:
         specifier: 2.4.0
         version: 2.4.0
       '@regexper/render':
-        specifier: npm:@unabandoned/regexper-render@1.0.1
-        version: '@unabandoned/regexper-render@1.0.1(@svgdotjs/svg.js@3.2.8)'
+        specifier: npm:@unabandoned/regexper-render@1.0.2
+        version: '@unabandoned/regexper-render@1.0.2(@svgdotjs/svg.js@3.2.8)'
       '@sindresorhus/slugify':
         specifier: 3.0.1
         version: 3.0.1
@@ -2516,12 +2516,12 @@ packages:
     resolution: {integrity: sha512-gxwWwVRVV6x1oUsg86MeUOPcimlCBsoKOF50QKGB/DD6cu8LID49e1PW2Zg2t+IvbhkRu4WMWBHH1OEk4GlbMw==}
     engines: {node: '>=22.12'}
 
-  '@unabandoned/regexper-parser@1.0.1':
-    resolution: {integrity: sha512-d6klEwNFZZ5mRT5oFTP4lJOnM0/2vlE6LQFpGsL9Cc9jv/TnaiNLSX8nMNr93uh47JnMry6sgCIYrPwAzXsxdg==}
+  '@unabandoned/regexper-parser@1.0.2':
+    resolution: {integrity: sha512-d8u3UcymU3JfeW+eADw+zAFkp1Z9Eg6UIBxGOZxb+1uc6NpFXmdwYHycghjqvMKt2+RxUlR8+TiNnUX0Qc4zpg==}
     engines: {node: '>=22.12'}
 
-  '@unabandoned/regexper-render@1.0.1':
-    resolution: {integrity: sha512-6qvb+XS24BBz+bWp0s1sxXEjTSTbQ3gmfLRfxp5G1j0dGGdrqSXIyHBZ1m+aVGdshu7O9QFgNfIc+YZHhIQkjA==}
+  '@unabandoned/regexper-render@1.0.2':
+    resolution: {integrity: sha512-H3ZPRxqGYUVreQySZ36ezOUwEoyUPoPWq+9Eiwydph4jnGeH4zq/Y+HYrEOUOOnuQMAobKGgG+x1OTyq7r37mw==}
     engines: {node: '>=22.12'}
     peerDependencies:
       '@svgdotjs/svg.js': ^3.1.2
@@ -7984,12 +7984,12 @@ snapshots:
       events: '@unabandoned/events@3.3.6'
       process: 0.11.10
 
-  '@unabandoned/regexper-parser@1.0.1': {}
+  '@unabandoned/regexper-parser@1.0.2': {}
 
-  '@unabandoned/regexper-render@1.0.1(@svgdotjs/svg.js@3.2.8)':
+  '@unabandoned/regexper-render@1.0.2(@svgdotjs/svg.js@3.2.8)':
     dependencies:
       '@svgdotjs/svg.js': 3.2.8
-      '@unabandoned/regexper-parser': 1.0.1
+      '@unabandoned/regexper-parser': 1.0.2
 
   '@unabandoned/ret@0.5.4': {}
 
