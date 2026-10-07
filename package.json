@@ -91,7 +91,7 @@
     "node-forge": "1.4.0",
     "oui-data": "2.1.35",
     "pdf-signature-reader": "npm:@unabandoned/pdf-signature-reader@1.4.4",
-    "pdfjs-dist": "6.3.289",
+    "pdfjs-dist": "6.4.299",
     "pinia": "4.0.3",
     "qrcode": "npm:@unabandoned/qrcode@1.6.1",
     "smol-toml": "1.9.0",
