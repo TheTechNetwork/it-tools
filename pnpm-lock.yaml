@@ -317,8 +317,8 @@ importers:
         specifier: 4.0.3
         version: 4.0.3(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.43(typescript@6.0.3))
       qrcode:
-        specifier: npm:@unabandoned/qrcode@1.6.0
-        version: '@unabandoned/qrcode@1.6.0'
+        specifier: npm:@unabandoned/qrcode@1.6.1
+        version: '@unabandoned/qrcode@1.6.1'
       smol-toml:
         specifier: 1.9.0
         version: 1.9.0
@@ -2503,8 +2503,8 @@ packages:
     resolution: {integrity: sha512-FBXJ/TRJGFL+wyuPXWDayTDULDkBWLncwoG2DhizOozLoDpAFYl7WtGkrhw00aS5rf+FOUVF7LhceNTTeU5tng==}
     engines: {node: '>=22.12'}
 
-  '@unabandoned/qrcode@1.6.0':
-    resolution: {integrity: sha512-PbvKAWsRNU5pF1CaVrvpKtTUBBzsnUYXs3+MZ/Z3awmVpdAQxPDkvPNRZJnmTDmCBezn9Y4LxAssc8NNlnG/eQ==}
+  '@unabandoned/qrcode@1.6.1':
+    resolution: {integrity: sha512-/KAdw6JsdeXqo9EU9YaeIkQ7QY3hBBkHm3HrlCUdiTX/ybpxy/HHLEC/3JYKpJXOhRImv6CZoO6WW0bV8Pjj1A==}
     engines: {node: '>=22.12'}
     hasBin: true
 
@@ -4889,9 +4889,9 @@ packages:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
 
-  pngjs@5.0.0:
-    resolution: {integrity: sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==}
-    engines: {node: '>=10.13.0'}
+  pngjs@7.0.0:
+    resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
+    engines: {node: '>=14.19.0'}
 
   pnpm-workspace-yaml@1.9.1:
     resolution: {integrity: sha512-Xj/T2X6DNAWbtk/9UQ0/TJRswltiHZevmcMjqoL7WrpJi67lu3qaslU4+I+zJ8wtwqmuvAE0KkB8rbv2ZdogBg==}
@@ -7960,10 +7960,10 @@ snapshots:
       '@unabandoned/buffer': 6.0.7
       node-forge: 1.4.0
 
-  '@unabandoned/qrcode@1.6.0':
+  '@unabandoned/qrcode@1.6.1':
     dependencies:
       dijkstrajs: 1.0.3
-      pngjs: 5.0.0
+      pngjs: 7.0.0
       yargs: 18.2.0
 
   '@unabandoned/randexp@0.5.9':
@@ -10774,7 +10774,7 @@ snapshots:
 
   pluralize@8.0.0: {}
 
-  pngjs@5.0.0: {}
+  pngjs@7.0.0: {}
 
   pnpm-workspace-yaml@1.9.1:
     dependencies:
