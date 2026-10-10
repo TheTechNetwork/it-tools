@@ -239,8 +239,8 @@ importers:
         specifier: 1.4.0
         version: 1.4.0
       cronstrue:
-        specifier: 3.29.0
-        version: 3.29.0
+        specifier: 3.30.0
+        version: 3.30.0
       date-fns:
         specifier: 4.4.0
         version: 4.4.0
@@ -3141,8 +3141,8 @@ packages:
   cron-validator@1.4.0:
     resolution: {integrity: sha512-wGcJ9FCy65iaU6egSH8b5dZYJF7GU/3Jh06wzaT9lsa5dbqExjljmu+0cJ8cpKn+vUyZa/EM4WAxeLR6SypJXw==}
 
-  cronstrue@3.29.0:
-    resolution: {integrity: sha512-jSs7/VEuy9o449mDY5eZFb7lYMByQ7uZWHnIjzOQE5kfpKnwcqFGtfVvKgxLtDOmZkbD0e37BMFGHdpOvESpdg==}
+  cronstrue@3.30.0:
+    resolution: {integrity: sha512-yyID2G7xhMPgVy+Kd6VPJC9s1czj5z1J8AaVsBmt5K5q9Ck9eEkWezMtm4Oe/D01Jg2K43edfhPIjk0qYEjZqA==}
     hasBin: true
 
   cross-spawn@7.0.6:
@@ -8700,7 +8700,7 @@ snapshots:
 
   cron-validator@1.4.0: {}
 
-  cronstrue@3.29.0: {}
+  cronstrue@3.30.0: {}
 
   cross-spawn@7.0.6:
     dependencies:
