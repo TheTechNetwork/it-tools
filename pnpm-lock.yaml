@@ -308,8 +308,8 @@ importers:
         specifier: 2.1.37
         version: 2.1.37
       pdf-signature-reader:
-        specifier: npm:@unabandoned/pdf-signature-reader@1.4.4
-        version: '@unabandoned/pdf-signature-reader@1.4.4'
+        specifier: npm:@unabandoned/pdf-signature-reader@1.4.5
+        version: '@unabandoned/pdf-signature-reader@1.4.5'
       pdfjs-dist:
         specifier: 6.4.299
         version: 6.4.299
@@ -2516,8 +2516,8 @@ packages:
     resolution: {integrity: sha512-Wpg1pSmLUXtxt6bWaRcGzx4IZHecoHQ3GSHiKqGaFKWlnA4DYJH7gzWMVZTPwl15IizFMihqCo+ylgI13fSXGw==}
     engines: {node: '>=14'}
 
-  '@unabandoned/pdf-signature-reader@1.4.4':
-    resolution: {integrity: sha512-FBXJ/TRJGFL+wyuPXWDayTDULDkBWLncwoG2DhizOozLoDpAFYl7WtGkrhw00aS5rf+FOUVF7LhceNTTeU5tng==}
+  '@unabandoned/pdf-signature-reader@1.4.5':
+    resolution: {integrity: sha512-vIrmWijcuUkMTUi4ZhhG+4GlFfV3avUCWKGjTxDPr5pQJAssLJOvioRuW91RU/zcnIELVL+Yy19tZwLTTZn52Q==}
     engines: {node: '>=22.12'}
 
   '@unabandoned/qrcode@1.6.1':
@@ -7990,9 +7990,8 @@ snapshots:
 
   '@unabandoned/path-browserify@1.0.4': {}
 
-  '@unabandoned/pdf-signature-reader@1.4.4':
+  '@unabandoned/pdf-signature-reader@1.4.5':
     dependencies:
-      '@unabandoned/buffer': 6.0.7
       node-forge: 1.4.0
 
   '@unabandoned/qrcode@1.6.1':
