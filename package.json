@@ -132,7 +132,7 @@
     "@unabandoned/path-browserify": "1.0.4",
     "@unabandoned/stream-browserify": "4.0.3",
     "@unocss/eslint-config": "66.10.5",
-    "@vitejs/plugin-vue": "6.0.9",
+    "@vitejs/plugin-vue": "6.0.10",
     "@vitejs/plugin-vue-jsx": "5.1.6",
     "@vitest/coverage-v8": "5.0.3",
     "@vue/compiler-sfc": "3.5.43",
