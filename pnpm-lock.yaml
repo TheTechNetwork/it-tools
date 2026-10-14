@@ -200,8 +200,8 @@ importers:
         specifier: 3.31.4
         version: 3.31.4(@floating-ui/dom@1.8.0)(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4)(vue@3.5.43(typescript@6.0.3))
       '@unabandoned/composerize-ts':
-        specifier: 0.9.5
-        version: 0.9.5
+        specifier: 0.9.6
+        version: 0.9.6
       '@unabandoned/json-to-ts':
         specifier: 3.1.1
         version: 3.1.1
@@ -2505,8 +2505,8 @@ packages:
     resolution: {integrity: sha512-folFagqco5l0majInZpRPFbdLXWSntnlgajefQ9DASdwtsIISDKotZVZX1ijCkbQMFXb1YEDDnYulDEp/9AHWg==}
     engines: {node: '>=14'}
 
-  '@unabandoned/composerize-ts@0.9.5':
-    resolution: {integrity: sha512-5bh4d0gkWvJUJc5i/XSv2lSMC3BU3b0KgoJHRiJegGPQHOgfOL5RdzlHFd37OJmw7psbgdgInJ+xy3v4HGuUVg==}
+  '@unabandoned/composerize-ts@0.9.6':
+    resolution: {integrity: sha512-I4VDg/gpsCJg4GnJicC5EPi1GYhXWcR6kME97NJ2HC49hAD71WqVq0IDQRRz8GY8FmDze2fU9bF6c9PYgY5NKw==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -3990,8 +3990,8 @@ packages:
     resolution: {integrity: sha512-4gd7VpWNQNB4UKKCFFVcp1AVv+FMOgs9NKzjHKusc8jTMhd5eL1NqQqOpE0KzMds804/yHlglp3uxgluOqAPLw==}
     engines: {node: '>= 0.4'}
 
-  ip-address@10.7.2:
-    resolution: {integrity: sha512-7H/2gFSIitxc0hG3nOI1glS8QLo/EHBFFLk8vEUjXY/xu0AdL8jZ9U1IzO2PUm0d2D/ofQcAifb0g6OBkt8U7w==}
+  ip-address@10.7.3:
+    resolution: {integrity: sha512-A1kdq/tSb5QjvKvAMgIoEvDBIgL7qaqVP/jkvSwYYRZ9iEzvPpopxp2wQfu3SuZRHtpHNxMn8Fs0bS+gf5Xmwg==}
     engines: {node: '>= 12'}
 
   is-array-buffer@3.0.5:
@@ -7937,10 +7937,10 @@ snapshots:
 
   '@unabandoned/buffer@6.0.7': {}
 
-  '@unabandoned/composerize-ts@0.9.5':
+  '@unabandoned/composerize-ts@0.9.6':
     dependencies:
       commander: 15.0.0
-      ip-address: 10.7.2
+      ip-address: 10.7.3
       yaml: 2.9.1
 
   '@unabandoned/events@3.3.6': {}
@@ -9645,7 +9645,7 @@ snapshots:
       hasown: 2.0.4
       side-channel: 1.1.1
 
-  ip-address@10.7.2: {}
+  ip-address@10.7.3: {}
 
   is-array-buffer@3.0.5:
     dependencies:
