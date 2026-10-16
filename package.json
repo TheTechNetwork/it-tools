@@ -65,7 +65,7 @@
     "bcryptjs": "3.0.3",
     "change-case": "5.4.4",
     "colord": "2.10.0",
-    "country-code-lookup": "0.1.5",
+    "country-code-lookup": "0.2.1",
     "cron-validator": "1.4.0",
     "cronstrue": "3.31.0",
     "date-fns": "4.4.0",
