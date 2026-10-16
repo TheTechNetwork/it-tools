@@ -212,8 +212,8 @@ importers:
         specifier: 1.6.15
         version: 1.6.15
       '@unhead/vue':
-        specifier: 3.4.2
-        version: 3.4.2(@oxc-project/types@0.153.0)(lightningcss@1.33.0)(oxc-parser@0.153.0)(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@6.0.3))
+        specifier: 3.4.3
+        version: 3.4.3(@oxc-project/types@0.153.0)(lightningcss@1.33.0)(oxc-parser@0.153.0)(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@6.0.3))
       '@vicons/material':
         specifier: 0.13.0
         version: 0.13.0
@@ -2555,16 +2555,16 @@ packages:
     engines: {node: '>=14'}
     hasBin: true
 
-  '@unhead/bundler@3.4.2':
-    resolution: {integrity: sha512-rTMyDAjirL+fY9MzvlgY91+irU6p6VY/rklJtIfyVVaE4/VI0R2E2R1lQdatVz5gnGWZxQVeleBMqQwL2gTEwQ==}
+  '@unhead/bundler@3.4.3':
+    resolution: {integrity: sha512-noUTzazRB4fMgO/nluoirrZJXngNbNb3sQzIslA805tKkwakRv2fib4Xe4EdiTuNB7V5XmpUFvfQkKRdBQ9qAA==}
     peerDependencies:
-      '@unhead/cli': ^3.4.2
-      '@vitejs/devtools-kit': ^0.4.1
+      '@unhead/cli': ^3.4.3
+      '@vitejs/devtools-kit': ^0.7.6
       esbuild: '>=0.17.0'
       lightningcss: '>=1.20.0'
       oxc-parser: '>=0.98.0'
       rolldown: '>=1.0.0'
-      unhead: ^3.4.2
+      unhead: ^3.4.3
       vite: '>=6.4.2'
       webpack: '>=5.0.0'
     peerDependenciesMeta:
@@ -2585,8 +2585,8 @@ packages:
       webpack:
         optional: true
 
-  '@unhead/vue@3.4.2':
-    resolution: {integrity: sha512-kIe9HaBEUvueM8HIyGw7Eu1c/1pcGy0gnCwC80rLhNJvxNwxXKywvnGSn1rKv9rAVxQTmbEL6Xec3UFXPoIwWA==}
+  '@unhead/vue@3.4.3':
+    resolution: {integrity: sha512-Wrmk62oC/V1EcBSKRDuy77kVaBtBXXsj6b+vEEWvmfo9AQfpLlc2b6vvvSj9WnXr8VY1ksKHj49Ejo8J/wLSOA==}
     peerDependencies:
       vite: '>=6.4.2'
       vue: '>=3.5.18'
@@ -5481,8 +5481,8 @@ packages:
     resolution: {integrity: sha512-u4UB2/IrKdU6lFxumHmmo1a3fCQO5tzQllRorfoRS63txhrB7xTpSn1PftwC4qEHkOaqP95fCWW4lJzwErwzhQ==}
     engines: {node: '>=22.19.0'}
 
-  unhead@3.4.2:
-    resolution: {integrity: sha512-LmD1cV1QFIru0AyJi404no2p0ivXUli+lOLs2/fxP56ATJzTF2wSTJNh45YSYGtFD5QmQTWNHmhnXHkVAET1dA==}
+  unhead@3.4.3:
+    resolution: {integrity: sha512-0FZI/qCCyIey14CKlGMFpiQumWSatlthJy7Xvro7H3nmi/V2owkcCXG03k0GXDc2/TV1K6bvrbAwhzTRe5Nhdw==}
     peerDependencies:
       vite: '>=6.4.2'
     peerDependenciesMeta:
@@ -7992,11 +7992,11 @@ snapshots:
     dependencies:
       sax: 1.6.1
 
-  '@unhead/bundler@3.4.2(@oxc-project/types@0.153.0)(lightningcss@1.33.0)(oxc-parser@0.153.0)(rolldown@1.2.13)(rollup@4.64.6)(unhead@3.4.2(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1)))(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))':
+  '@unhead/bundler@3.4.3(@oxc-project/types@0.153.0)(lightningcss@1.33.0)(oxc-parser@0.153.0)(rolldown@1.2.13)(rollup@4.64.6)(unhead@3.4.3(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1)))(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))':
     dependencies:
       magic-string: 1.4.3
       oxc-walker: 1.1.1(@oxc-project/types@0.153.0)(oxc-parser@0.153.0)(rolldown@1.2.13)
-      unhead: 3.4.2(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))
+      unhead: 3.4.3(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))
       unplugin: 3.4.0(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))
     optionalDependencies:
       lightningcss: 1.33.0
@@ -8012,11 +8012,11 @@ snapshots:
       - rollup
       - unloader
 
-  '@unhead/vue@3.4.2(@oxc-project/types@0.153.0)(lightningcss@1.33.0)(oxc-parser@0.153.0)(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@6.0.3))':
+  '@unhead/vue@3.4.3(@oxc-project/types@0.153.0)(lightningcss@1.33.0)(oxc-parser@0.153.0)(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))(vue@3.5.43(typescript@6.0.3))':
     dependencies:
-      '@unhead/bundler': 3.4.2(@oxc-project/types@0.153.0)(lightningcss@1.33.0)(oxc-parser@0.153.0)(rolldown@1.2.13)(rollup@4.64.6)(unhead@3.4.2(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1)))(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))
+      '@unhead/bundler': 3.4.3(@oxc-project/types@0.153.0)(lightningcss@1.33.0)(oxc-parser@0.153.0)(rolldown@1.2.13)(rollup@4.64.6)(unhead@3.4.3(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1)))(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))
       hookable: 6.1.2
-      unhead: 3.4.2(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))
+      unhead: 3.4.3(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))
       unplugin: 3.4.0(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))
       vue: 3.5.43(typescript@6.0.3)
     optionalDependencies:
@@ -11476,7 +11476,7 @@ snapshots:
 
   undici@8.11.2: {}
 
-  unhead@3.4.2(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1)):
+  unhead@3.4.3(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1)):
     dependencies:
       hookable: 6.1.2
       unplugin: 3.4.0(rolldown@1.2.13)(rollup@4.64.6)(vite@8.3.4(@types/node@24.19.2)(jiti@2.7.0)(less@4.9.1)(terser@5.51.2)(yaml@2.9.1))
