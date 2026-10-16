@@ -305,8 +305,8 @@ importers:
         specifier: 1.4.0
         version: 1.4.0
       oui-data:
-        specifier: 2.1.38
-        version: 2.1.38
+        specifier: 2.1.39
+        version: 2.1.39
       pdf-signature-reader:
         specifier: npm:@unabandoned/pdf-signature-reader@1.4.5
         version: '@unabandoned/pdf-signature-reader@1.4.5'
@@ -4759,8 +4759,8 @@ packages:
   orderedmap@2.1.1:
     resolution: {integrity: sha512-TvAWxi0nDe1j/rtMcWcIj94+Ffe6n7zhow33h40SKxmsmozs6dz/e+EajymfoFcHd7sxNn8yHM8839uixMOV6g==}
 
-  oui-data@2.1.38:
-    resolution: {integrity: sha512-joxLlJG/0SjsN4sdfLgjaTwVnT3EWGbfzcJfz1EJ1PiuKRVWWjxJJU1DP4EKWHzrvYbd0++NjCD0Pf1YV24HKA==}
+  oui-data@2.1.39:
+    resolution: {integrity: sha512-upxOgE3n8ayoJuD316oA0nT4rE5WCkx4PcmwJKJgJoahullM5uF9k5aEl31UkapkdzYIg8vELyllPoOK6VWgAw==}
 
   own-keys@1.0.2:
     resolution: {integrity: sha512-19YVAg7T+WTrxggPukVq7DjTv6+PJ867TmhCvBsYwmbFCsZd344rq2Ld1p0wo8f8Qrrhgp82c6FJRqdXWtSEhg==}
@@ -10653,7 +10653,7 @@ snapshots:
 
   orderedmap@2.1.1: {}
 
-  oui-data@2.1.38: {}
+  oui-data@2.1.39: {}
 
   own-keys@1.0.2:
     dependencies:
