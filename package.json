@@ -92,7 +92,7 @@
     "oui-data": "2.1.39",
     "pdf-signature-reader": "npm:@unabandoned/pdf-signature-reader@1.4.5",
     "pdfjs-dist": "6.4.299",
-    "pinia": "4.0.3",
+    "pinia": "4.1.0",
     "qrcode": "npm:@unabandoned/qrcode@1.6.2",
     "smol-toml": "1.9.1",
     "sql-formatter": "15.9.0",
