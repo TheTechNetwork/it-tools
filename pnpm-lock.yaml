@@ -305,8 +305,8 @@ importers:
         specifier: 1.4.3
         version: 1.4.3
       oui-data:
-        specifier: 2.1.39
-        version: 2.1.39
+        specifier: 2.1.55
+        version: 2.1.55
       pdf-signature-reader:
         specifier: npm:@unabandoned/pdf-signature-reader@1.4.5
         version: '@unabandoned/pdf-signature-reader@1.4.5'
@@ -4664,10 +4664,6 @@ packages:
       encoding:
         optional: true
 
-  node-forge@1.4.1:
-    resolution: {integrity: sha512-w5/MfWaeMrpR/5ba6fZyAUTLSuE6aYz7H/3cYrqwZEmf5eQS3IaaLgJt4MBv7HglGFWmV22K8h4U18RJQmw/ow==}
-    engines: {node: '>= 6.13.0'}
-
   node-forge@1.4.3:
     resolution: {integrity: sha512-P6wzfh6t70avmV8FrVEAd/36sOPJQ+hkaJVX1Laap9J/77m7M0eyozDvc8SwnDf4P7MP94gwbAAo0rg3YVXT+g==}
     engines: {node: '>= 6.13.0'}
@@ -4724,8 +4720,8 @@ packages:
   orderedmap@2.1.1:
     resolution: {integrity: sha512-TvAWxi0nDe1j/rtMcWcIj94+Ffe6n7zhow33h40SKxmsmozs6dz/e+EajymfoFcHd7sxNn8yHM8839uixMOV6g==}
 
-  oui-data@2.1.39:
-    resolution: {integrity: sha512-upxOgE3n8ayoJuD316oA0nT4rE5WCkx4PcmwJKJgJoahullM5uF9k5aEl31UkapkdzYIg8vELyllPoOK6VWgAw==}
+  oui-data@2.1.55:
+    resolution: {integrity: sha512-Fu4fCHtdfho/89YHBJ7cHz8bObZ15/+j+sB8qQ24KyVgB/Qw4NhXGL6QuC5C/WnUTqbMjIQ6VlMNSNMH4o80RQ==}
 
   own-keys@1.0.2:
     resolution: {integrity: sha512-19YVAg7T+WTrxggPukVq7DjTv6+PJ867TmhCvBsYwmbFCsZd344rq2Ld1p0wo8f8Qrrhgp82c6FJRqdXWtSEhg==}
@@ -7900,7 +7896,7 @@ snapshots:
 
   '@unabandoned/pdf-signature-reader@1.4.5':
     dependencies:
-      node-forge: 1.4.1
+      node-forge: 1.4.3
 
   '@unabandoned/qrcode@1.6.2':
     dependencies:
@@ -10497,8 +10493,6 @@ snapshots:
     dependencies:
       whatwg-url: 5.0.0
 
-  node-forge@1.4.1: {}
-
   node-forge@1.4.3: {}
 
   node-releases@2.0.58: {}
@@ -10551,7 +10545,7 @@ snapshots:
 
   orderedmap@2.1.1: {}
 
-  oui-data@2.1.39: {}
+  oui-data@2.1.55: {}
 
   own-keys@1.0.2:
     dependencies:
