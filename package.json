@@ -88,7 +88,7 @@
     "monaco-editor": "0.57.0",
     "naive-ui": "2.45.3",
     "netmask": "2.1.1",
-    "node-forge": "1.4.1",
+    "node-forge": "1.4.3",
     "oui-data": "2.1.39",
     "pdf-signature-reader": "npm:@unabandoned/pdf-signature-reader@1.4.5",
     "pdfjs-dist": "6.4.299",
