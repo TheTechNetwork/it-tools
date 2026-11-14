@@ -230,8 +230,8 @@ importers:
         specifier: 5.4.4
         version: 5.4.4
       colord:
-        specifier: 2.10.0
-        version: 2.10.0
+        specifier: 2.12.0
+        version: 2.12.0
       country-code-lookup:
         specifier: 0.2.2
         version: 0.2.2
@@ -3109,8 +3109,8 @@ packages:
     resolution: {integrity: sha512-d1uM8k5UZEyPza1n/MG3ko8nKupKN0KJpFsipgPcgaCCvV+IqIfJ+NzTjetlLM+UcXZx3+cLrNr76+eAO7G1Mw==}
     engines: {node: '>=8'}
 
-  colord@2.10.0:
-    resolution: {integrity: sha512-AidJptpBJmjTclAp9BkLwJi0T93fo5epJnbaZslpg6QVzpHjAiveF55mE9AcUJiGMqRHgMDY8soMsQtuNYMHfw==}
+  colord@2.12.0:
+    resolution: {integrity: sha512-SpiONmQPZDqe50ivOTgkVikYsnp6l1HTFYqPRLNBCJJdA2Qympw2yYUzX99XlSbbKZswjiG6r+xsUpPPOHqY+Q==}
 
   colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
@@ -8668,7 +8668,7 @@ snapshots:
 
   ci-info@4.5.0: {}
 
-  colord@2.10.0: {}
+  colord@2.12.0: {}
 
   colorette@2.0.20: {}
 
