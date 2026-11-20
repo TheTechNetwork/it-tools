@@ -39,6 +39,13 @@
   ],
   "packageRules": [
     {
+      "description": "vue-tsc 3.3.14 reports false TS2339 errors on Pinia store access in templates (styleStore.x read as styleStore.value). Skip it; take the next release once it fixes this.",
+      "matchPackageNames": [
+        "vue-tsc"
+      ],
+      "allowedVersions": "!/^3\\.3\\.14$/"
+    },
+    {
       "description": "Never pin engines - .npmrc engine-strict and Vercel require a version range",
       "matchDepTypes": [
         "engines"

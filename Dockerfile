@@ -32,7 +32,7 @@ RUN pnpm build
 # (a non-root process cannot bind ports < 1024). Same nginx config as standard,
 # only the templated listen port differs.
 # ---------------------------------------------------------------------------
-FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:daa17b944bac2b578e962da4c61ad72a59233b3c63abea17113acaf4e6b9aea4 AS rootless
+FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03 AS rootless
 # The pinned base digest can lag Alpine security fixes (CI's Trivy gate blocks
 # on fixable HIGH/CRITICAL CVEs), so pull in patched OS packages at build time.
 # apk needs root; drop back to the image's unprivileged UID afterwards.
@@ -43,8 +43,20 @@ FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:daa17b944bac2b578e962da4c6
 # a fix, and the image keeps the vulnerable package. CI passes a per-run value
 # so the upgrade re-runs every build (the expensive stages above stay cached).
 ARG APK_UPGRADE_CACHE_BUST=0
+#
+# nginx itself comes from nginx.org's apk repo, not Alpine's, and the base
+# image pins it (and its modules) to an exact version, so `apk upgrade` can't
+# patch it. Re-add every installed nginx* package unpinned against that repo
+# (-X) with --upgrade (plain `apk add` keeps a still-matching installed
+# version), so they move together to its latest release. The base image already
+# trusts nginx.org's signing key (/etc/apk/keys), so this picks up an nginx
+# security release before upstream rebuilds its image.
 USER root
-RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" && apk upgrade --no-cache
+RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" \
+  && apk upgrade --no-cache \
+  && apk add --no-cache --upgrade \
+    -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main" \
+    $(apk info | grep '^nginx')
 USER 101
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
@@ -71,12 +83,17 @@ CMD ["-w", "/etc/sws.toml"]
 # standard (default target): stock nginx, runs as root. Listens on 8080 like
 # the other variants so every image uses the same container port.
 # ---------------------------------------------------------------------------
-FROM nginx:stable-alpine@sha256:ef8676b33d681f272ba429b27658bdd7e640963279714c96bddf1dc76307f7b6 AS standard
+FROM nginx:stable-alpine@sha256:caf4e1e032a20f9c3c5e28fc7f25ffd768ad8677b4975c54193075997b3a97e3 AS standard
 # Same as rootless: patch OS packages so a base-image digest that lags an
 # Alpine security fix doesn't trip CI's blocking Trivy gate, and cache-bust the
-# layer so a cached build can't replay a stale upgrade (see rootless above).
+# layer so a cached build can't replay a stale upgrade, and upgrade nginx from
+# nginx.org's repo (see rootless above).
 ARG APK_UPGRADE_CACHE_BUST=0
-RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" && apk upgrade --no-cache
+RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" \
+  && apk upgrade --no-cache \
+  && apk add --no-cache --upgrade \
+    -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main" \
+    $(apk info | grep '^nginx')
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
 ENV NGINX_PORT=8080

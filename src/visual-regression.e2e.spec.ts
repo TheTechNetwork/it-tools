@@ -84,6 +84,12 @@ function freezeRuntime() {
 }
 
 test.describe('Visual regression', () => {
+  // Block service workers: once the PWA's worker finishes caching, it shows an
+  // "App ready to work offline." toast (PwaReloadPrompt) - a fixed-position
+  // overlay that lands inside the `.tool-content` screenshot whenever it
+  // happens to fire before capture, making goldens flip between runs.
+  test.use({ serviceWorkers: 'block' });
+
   for (const tool of tools) {
     test(tool.name, async ({ page }) => {
       test.skip(EXCLUDED.has(tool.name), 'excluded from visual regression (see EXCLUDED)');
