@@ -70,7 +70,9 @@ function handleKeydown(event: KeyboardEvent) {
       .nth(selectedOptionIndex.value)
       .value();
 
-    activateOption(option);
+    if (option) {
+      activateOption(option);
+    }
   }
 }
 

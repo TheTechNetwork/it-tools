@@ -32,7 +32,7 @@ RUN pnpm build
 # (a non-root process cannot bind ports < 1024). Same nginx config as standard,
 # only the templated listen port differs.
 # ---------------------------------------------------------------------------
-FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:daa17b944bac2b578e962da4c61ad72a59233b3c63abea17113acaf4e6b9aea4 AS rootless
+FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03 AS rootless
 # The pinned base digest can lag Alpine security fixes (CI's Trivy gate blocks
 # on fixable HIGH/CRITICAL CVEs), so pull in patched OS packages at build time.
 # apk needs root; drop back to the image's unprivileged UID afterwards.
@@ -71,7 +71,7 @@ CMD ["-w", "/etc/sws.toml"]
 # standard (default target): stock nginx, runs as root. Listens on 8080 like
 # the other variants so every image uses the same container port.
 # ---------------------------------------------------------------------------
-FROM nginx:stable-alpine@sha256:ef8676b33d681f272ba429b27658bdd7e640963279714c96bddf1dc76307f7b6 AS standard
+FROM nginx:stable-alpine@sha256:caf4e1e032a20f9c3c5e28fc7f25ffd768ad8677b4975c54193075997b3a97e3 AS standard
 # Same as rootless: patch OS packages so a base-image digest that lags an
 # Alpine security fix doesn't trip CI's blocking Trivy gate, and cache-bust the
 # layer so a cached build can't replay a stale upgrade (see rootless above).
