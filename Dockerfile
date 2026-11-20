@@ -47,13 +47,14 @@ ARG APK_UPGRADE_CACHE_BUST=0
 # nginx itself comes from nginx.org's apk repo, not Alpine's, and the base
 # image pins it (and its modules) to an exact version, so `apk upgrade` can't
 # patch it. Re-add every installed nginx* package unpinned against that repo
-# (-X) so they move together to its latest release. The base image already
+# (-X) with --upgrade (plain `apk add` keeps a still-matching installed
+# version), so they move together to its latest release. The base image already
 # trusts nginx.org's signing key (/etc/apk/keys), so this picks up an nginx
 # security release before upstream rebuilds its image.
 USER root
 RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" \
   && apk upgrade --no-cache \
-  && apk add --no-cache \
+  && apk add --no-cache --upgrade \
     -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main" \
     $(apk info | grep '^nginx')
 USER 101
@@ -90,7 +91,7 @@ FROM nginx:stable-alpine@sha256:caf4e1e032a20f9c3c5e28fc7f25ffd768ad8677b4975c54
 ARG APK_UPGRADE_CACHE_BUST=0
 RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" \
   && apk upgrade --no-cache \
-  && apk add --no-cache \
+  && apk add --no-cache --upgrade \
     -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main" \
     $(apk info | grep '^nginx')
 COPY --from=build-stage /app/dist /usr/share/nginx/html
