@@ -44,14 +44,18 @@ FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:f5116ed4606f3eb015dd4a8e28
 # so the upgrade re-runs every build (the expensive stages above stay cached).
 ARG APK_UPGRADE_CACHE_BUST=0
 #
-# nginx itself comes from nginx.org's apk repo, not Alpine's, so a plain
-# `apk upgrade` can't patch it. Upgrade against that repo too (-X): the base
-# image already trusts nginx.org's signing key (/etc/apk/keys), so this picks
-# up an nginx security release before upstream rebuilds its image.
+# nginx itself comes from nginx.org's apk repo, not Alpine's, and the base
+# image pins it (and its modules) to an exact version, so `apk upgrade` can't
+# patch it. Re-add every installed nginx* package unpinned against that repo
+# (-X) so they move together to its latest release. The base image already
+# trusts nginx.org's signing key (/etc/apk/keys), so this picks up an nginx
+# security release before upstream rebuilds its image.
 USER root
 RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" \
   && apk upgrade --no-cache \
-    -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main"
+  && apk add --no-cache \
+    -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main" \
+    $(apk info | grep '^nginx')
 USER 101
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
@@ -86,7 +90,9 @@ FROM nginx:stable-alpine@sha256:caf4e1e032a20f9c3c5e28fc7f25ffd768ad8677b4975c54
 ARG APK_UPGRADE_CACHE_BUST=0
 RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" \
   && apk upgrade --no-cache \
-    -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main"
+  && apk add --no-cache \
+    -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main" \
+    $(apk info | grep '^nginx')
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
 ENV NGINX_PORT=8080
