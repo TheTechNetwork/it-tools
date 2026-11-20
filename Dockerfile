@@ -72,7 +72,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
 # http://<host>:8080/ instead. Serving behaviour matches the nginx variants via
 # docker/sws.toml.
 # ---------------------------------------------------------------------------
-FROM joseluisq/static-web-server:2@sha256:94618e3d17802265a21926217e6f9e7832b311b6fbf5933684001739fafed06a AS distroless
+FROM joseluisq/static-web-server:2@sha256:ccf2d666ffe5f8ef2ec96bc40f07757605998c04b78f7d8fdb98a584dd4f5717 AS distroless
 COPY --from=build-stage /app/dist /public
 COPY docker/sws.toml /etc/sws.toml
 USER 65534:65534
