@@ -764,7 +764,10 @@ Jobs:
   build (ci, releases, nightly) passes a per-run `APK_UPGRADE_CACHE_BUST`
   build-arg, because with a pinned base digest that layer would otherwise be a
   permanent cache hit and the image would keep OS packages Alpine has since
-  patched (the Trivy gate then fails on fixable CVEs a rebuild should fix)
+  patched (the Trivy gate then fails on fixable CVEs a rebuild should fix).
+  That upgrade also runs against nginx.org's apk repo (`-X`), since nginx
+  itself is installed from there, not from Alpine - so an nginx security
+  release is picked up even before the upstream base images are rebuilt
 
 #### 2. **actionlint.yml** - Workflow Linting
 

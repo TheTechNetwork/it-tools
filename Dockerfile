@@ -43,8 +43,15 @@ FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:f5116ed4606f3eb015dd4a8e28
 # a fix, and the image keeps the vulnerable package. CI passes a per-run value
 # so the upgrade re-runs every build (the expensive stages above stay cached).
 ARG APK_UPGRADE_CACHE_BUST=0
+#
+# nginx itself comes from nginx.org's apk repo, not Alpine's, so a plain
+# `apk upgrade` can't patch it. Upgrade against that repo too (-X): the base
+# image already trusts nginx.org's signing key (/etc/apk/keys), so this picks
+# up an nginx security release before upstream rebuilds its image.
 USER root
-RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" && apk upgrade --no-cache
+RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" \
+  && apk upgrade --no-cache \
+    -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main"
 USER 101
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
@@ -74,9 +81,12 @@ CMD ["-w", "/etc/sws.toml"]
 FROM nginx:stable-alpine@sha256:caf4e1e032a20f9c3c5e28fc7f25ffd768ad8677b4975c54193075997b3a97e3 AS standard
 # Same as rootless: patch OS packages so a base-image digest that lags an
 # Alpine security fix doesn't trip CI's blocking Trivy gate, and cache-bust the
-# layer so a cached build can't replay a stale upgrade (see rootless above).
+# layer so a cached build can't replay a stale upgrade, and upgrade nginx from
+# nginx.org's repo (see rootless above).
 ARG APK_UPGRADE_CACHE_BUST=0
-RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" && apk upgrade --no-cache
+RUN echo "apk upgrade (cache bust: ${APK_UPGRADE_CACHE_BUST})" \
+  && apk upgrade --no-cache \
+    -X "https://nginx.org/packages/alpine/v$(cut -d. -f1,2 /etc/alpine-release)/main"
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
 ENV NGINX_PORT=8080
