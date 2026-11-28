@@ -375,8 +375,8 @@ importers:
         specifier: 9.5.1
         version: 9.5.1(@typescript-eslint/typescript-estree@8.72.2(typescript@6.0.3))(@typescript-eslint/utils@8.72.2(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3))(@unocss/eslint-plugin@66.12.0(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3))(@vue/compiler-sfc@3.5.45)(eslint@10.14.0(jiti@2.7.0))(typescript@6.0.3)(vitest@5.1.0)
       '@cloudflare/workers-types':
-        specifier: 5.20261110.1
-        version: 5.20261110.1
+        specifier: 5.20261125.1
+        version: 5.20261125.1
       '@eslint/eslintrc':
         specifier: 3.3.7
         version: 3.3.7
@@ -1176,8 +1176,8 @@ packages:
     resolution: {integrity: sha512-tEj8X2No2A1c9NDnZECxiiJ8TP3vmFlN9tLlLeSaMqVW4tUmVG2R4qpv/eP4zymWxnymYLkLcIYVV0VcWj3RCQ==}
     engines: {node: '>= 20.12.0'}
 
-  '@cloudflare/workers-types@5.20261110.1':
-    resolution: {integrity: sha512-XOr3TDQ2sNDiP9zoZtdwYVhuLZ3aFY+G+G4iSeNO9p/HDSveZJpyCbUtmpEElaClLBe9hIzfN26qd0i/S7ksPg==}
+  '@cloudflare/workers-types@5.20261125.1':
+    resolution: {integrity: sha512-FBFIY/srJZZtZjxyH56AerZ0ZDbhr6Ifa5O707q0f7YzHmzqd+2zD3vG6d8cAcSDL/heJvsP7eEAsYRLFd7jpw==}
 
   '@css-render/plugin-bem@0.15.14':
     resolution: {integrity: sha512-QK513CJ7yEQxm/P3EwsI+d+ha8kSOcjGvD6SevM41neEMxdULE+18iuQK6tEChAWMOQNQPLG/Rw3Khb69r5neg==}
@@ -6817,7 +6817,7 @@ snapshots:
       fast-wrap-ansi: 0.2.2
       sisteransi: 2.0.0
 
-  '@cloudflare/workers-types@5.20261110.1': {}
+  '@cloudflare/workers-types@5.20261125.1': {}
 
   '@css-render/plugin-bem@0.15.14(css-render@0.15.14)':
     dependencies:
